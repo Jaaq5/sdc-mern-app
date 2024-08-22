@@ -1,0 +1,36 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+build/
+dist/
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# npm package lock
+package-lock.json
+yarn.lock
+
+# Testing
+coverage/
+
+# Misc
+*.tgz
