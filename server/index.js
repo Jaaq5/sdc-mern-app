@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 // The server listens on the port #############################################
 app.listen(process.env.PORT, () => {
   console.log("");
-  console.log(`Server listening on port bitch:${port}`);
+  console.log(`Server listening on port:${port}`);
   console.log(`Local: http://localhost:${port}`);
   console.log("");
 
