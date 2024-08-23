@@ -1,0 +1,18 @@
+{
+  "name": "sdc-mern-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "concurrently \"cd ./server && npm i\" \"cd ./client && npm i\"",
+    "start": "concurrently \"cd ./client && npm start\" \"cd ./server && npm start\"",
+    "build": "concurrently \"cd ./client && npm run build\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
