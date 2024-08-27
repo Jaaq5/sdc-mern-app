@@ -3,8 +3,15 @@
 
 // IMPORTS ####################################################################
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
-const userRoutes = require("./routes/userRoute");
+
+
+const userRoutes = require("./routes/usuario_route");
+const catCurrRoutes = require("./routes/categoria_curriculum_route");
+const skillRoutes = require("./routes/categoria_habilidad_route");
+const jobRoutes = require("./routes/categoria_puesto_route");
+const templateRoutes = require("./routes/curriculum_template_route");
 
 // Create an instance of an express application
 const app = express();
@@ -14,14 +21,22 @@ const port = process.env.PORT ?? 0;
 
 // Middleware #################################################################
 app.use(express.json());
-
+app.use(cors());
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   next();
 });
 
+
+
+
+
 // Routes #####################################################################
 app.use("/api/users", userRoutes);
+app.use("/api/templates", templateRoutes);
+app.use("/api/cat-curriculums", catCurrRoutes);
+app.use("/api/cat-job", jobRoutes);
+app.use("/api/cat-skill", skillRoutes);
 
 // Connect to MongoDB #########################################################
 const mongoUri = process.env.MONGO_URI;
