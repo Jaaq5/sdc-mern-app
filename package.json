@@ -6,6 +6,9 @@
   "scripts": {
     "install": "concurrently \"cd ./server && npm i\" \"cd ./client && npm i\"",
     "start": "concurrently \"cd ./client && npm start\" \"cd ./server && npm start\"",
+    "format": "concurrently \"cd ./client && npx prettier . --write\" \"cd ./server && npx prettier . --write\"",
+    "lint": "concurrently \"cd ./client/src && npx eslint .\" \"cd ./server && npx eslint .\"",
+    "lint:fix": "concurrently \"cd ./client/src && npx eslint --fix .\" \"cd ./server && npx eslint --fix .\"",
     "build": "concurrently \"cd ./client && npm run build\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,5 +17,12 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "eslint": "9.9.1",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-react": "7.35.0",
+    "prettier": "3.3.3"
   }
 }

@@ -26,10 +26,6 @@ Thumbs.db
 *.njsproj
 *.sln
 
-# npm package lock
-package-lock.json
-yarn.lock
-
 # Testing
 coverage/
 

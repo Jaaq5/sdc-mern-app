@@ -103,6 +103,12 @@ cambie los valores de CHANGEMYNAME por los de su entorno de desarrollo
 
 ### Ejecución del proyecto
 
+Para listar todos los scripts disponibles, ejecute
+
+```sh
+npm run
+```
+
 Para instalar Express, React y otras dependencias , dentro de la carpeta del proyecto, ejecute:
 
 ```sh
@@ -125,33 +131,53 @@ npm run build
 
 El folder estara en /client/build
 
+### Otro scripts
+
+Para aplicar formato, ejecute:
+
+```sh
+npm run format
+```
+
+Para revisar errores de codigo, ejecute:
+
+```sh
+npm run lint
+```
+
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
 ## Documentación oficial
 
 ### Node.js
+
 [Documentación](https://nodejs.org/docs/latest/api/) - [Guía](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs/)
 
 ### Express
+
 [Documentación](https://expressjs.com/en/starter/installing.html) - [Guía](https://expressjs.com/en/guide/routing.html)
 
 ### MongoDb
+
 [Guía](https://www.mongodb.com/docs/manual/introduction/) - [Crud](https://www.mongodb.com/docs/guides/crud/install/)
 
 ### Create React App
+
 [Guía](https://create-react-app.dev/docs/documentation-intro)
 
 ### React
+
 [Documentación](https://react.dev/reference/react) - [Guía](https://react.dev/learn)
 
 ## Documentación externa
 
 ### Guía MERN
+
 [Digital Ocean: Tutorial MERN](https://www.digitalocean.com/community/tutorials/getting-started-with-the-mern-stack)
 
 [Libro: Pro MERN Stack](https://web.archive.org/web/20180219235500id_/http://dl.farinsoft.ir:80/ebooks/Pro-MERN-Stack-Development-Express.pdf)
 
-## Videos 
+## Videos
 
 [Tutorial MERN](https://www.youtube.com/watch?v=8DploTqLstE&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE&index=3)
 
