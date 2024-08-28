@@ -1,6 +1,6 @@
 const Usuarios = require('../models/Usuario_Model');
 const Bloques = require('../models/Bloques_Model');
-const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongodb');
 
 const Crear_Bloque = async (req, res) => {
     const { usuario_id } = req.usuario_id;
@@ -85,13 +85,14 @@ const Actualizar_Bloque = async (req, res) => {
 //Usualmente se borra al borrar el usuario
 const Eliminar_Bloque = async (req, res) => {
     try {
-        const { bloque_id } = req.body;
-
-		const bloque_borrado = await Bloques.findOneAndDelete({ _id: bloque_id });
-
-        if (!bloque_borrado) {
-            return res.status(404).json({ success: false, msg: 'Bloque no borrado' });
+        const { bloque_id } = req.params;
+		
+		const bloque = await Bloques.findById(new ObjectId(bloque_id));
+        if (!bloque) {
+            return res.status(404).json({ success: false, error: "Bloque no encontrado" });
         }
+
+		await Bloques.deleteOne({ _id: new ObjectId(bloque_id) });
 
         return res.status(200).json({ success: true, msg: 'Bloque eliminado correctamente' });
     } catch (error) {

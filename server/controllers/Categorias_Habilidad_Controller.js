@@ -1,4 +1,5 @@
 const Categorias_Habilidad = require('../models/Categorias_Habilidad_Model');
+const { ObjectId } = require('mongodb');
 
 const Crear_Categoria_Habilidad = async (req, res) => {
     const { nombre } = req.nombre;
@@ -68,20 +69,16 @@ const Actualizar_Categoria_Habilidad = async (req, res) => {
 
 const Eliminar_Categoria_Habilidad = async (req, res) => {
     try {
-        const { categoria_id } = req.body;
+        const { categoria_id } = req.params;
 		
 		const categoria = await Categorias_Habilidad.findById(new ObjectId(categoria_id));
         if (!categoria) {
             return res.status(404).json({ success: false, error: "Categoria habilidad no encontrada" });
         }
 
-		const categoria_borrada = await Categorias_Habilidad.findOneAndDelete({ _id: categoria_id });
+		await Categorias_Habilidad.deleteOne({ _id: new ObjectId(categoria_id) });
 
-        if (!categoria_borrada) {
-            return res.status(404).json({ success: false, message: 'Categoria no borrada' });
-        }
-
-        return res.status(200).json({ success: true, message: 'Categoria eliminada correctamente' });
+        return res.status(200).json({ success: true, message: 'Categoria habilidad eliminada correctamente' });
     } catch (error) {
         return res.status(400).send({ success: false, msg: error.message });
     }

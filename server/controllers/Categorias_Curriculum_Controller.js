@@ -1,4 +1,5 @@
 const Categorias_Curriculum = require('../models/Categorias_Curriculum_Model');
+const { ObjectId } = require('mongodb');
 
 const Crear_Categoria_Curriculum = async (req, res) => {
     const { nombre } = req.nombre;
@@ -68,18 +69,14 @@ const Actualizar_Categoria_Curriculum = async (req, res) => {
 
 const Eliminar_Categoria_Curriculum = async (req, res) => {
     try {
-        const { categoria_id } = req.body;
+        const { categoria_id } = req.params;
 		
 		const categoria = await Categorias_Curriculum.findById(new ObjectId(categoria_id));
         if (!categoria) {
             return res.status(404).json({ success: false, error: "Categoria curriculum no encontrada" });
         }
 
-		const categoria_borrada = await Categorias_Curriculum.findOneAndDelete({ _id: categoria_id });
-
-        if (!categoria_borrada) {
-            return res.status(404).json({ success: false, message: 'Categoria no borrada' });
-        }
+		await Categorias_Curriculum.deleteOne({ _id: new ObjectId(categoria_id) });
 
         return res.status(200).json({ success: true, message: 'Categoria eliminada correctamente' });
     } catch (error) {

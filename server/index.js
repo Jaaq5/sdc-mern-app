@@ -11,6 +11,7 @@ const userRoutes = require("./routes/usuario_route");
 const catCurrRoutes = require("./routes/categoria_curriculum_route");
 const skillRoutes = require("./routes/categoria_habilidad_route");
 const jobRoutes = require("./routes/categoria_puesto_route");
+const languageRoutes = require("./routes/idioma_route");
 const templateRoutes = require("./routes/curriculum_template_route");
 
 // Create an instance of an express application

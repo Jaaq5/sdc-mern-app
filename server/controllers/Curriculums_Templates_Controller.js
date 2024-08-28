@@ -1,6 +1,7 @@
 const Usuarios = require('../models/Usuario_Model');
 const Categorias_Curriculum = require('../models/Categorias_Curriculum_Model');
 const Categorias_Puesto = require('../models/Categorias_Puesto_Model');
+const { ObjectId } = require('mongodb');
 
 const Crear_Curriculum_Template_Vacio = async (req, res) => {
     const { categoria_curriculum_id, categoria_puesto_id } = req.body;
@@ -69,7 +70,7 @@ const Actualizar_Curriculum_Template = async (req, res) => {
             return res.status(404).json({ success: false, error: 'No se encontró el template al actualizar' });
         }
 		
-		const cat_puesto = await Categorias_Pueto.findById(new ObjectId(categoria_puesto_id));
+		const cat_puesto = await Categorias_Puesto.findById(new ObjectId(categoria_puesto_id));
         if (!cat_puesto) {
             return res.status(404).json({ success: false, error: 'No se encontró el template al actualizar' });
         }
@@ -88,9 +89,16 @@ const Actualizar_Curriculum_Template = async (req, res) => {
 
 const Eliminar_Curriculum_Template = async (req, res) => {
     try {
-        const { curriculum_id } = req.body;
+        const { curriculum_id } = req.params;
+		
+		const oid = new ObjectId(usuario_id);
+		const deletedItem = await Curriculums_Templates.findById(oid);
 
-		const curriculum_borrado = await Curriculums_Templates.findOneAndDelete({ _id: curriculum_id });
+        if (!deletedItem) {
+            return res.status(404).json({ success: false, msg: 'Template no encontrado al eliminar' });
+        }
+       
+		await Curriculums_Templates.deleteOne({ _id: oid });
 
         if (!curriculum_borrado) {
             return res.status(404).json({ success: false, message: 'Template no encontrado al eliminar' });

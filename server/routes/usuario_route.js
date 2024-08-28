@@ -18,7 +18,7 @@ router.post('/log-out-usuario', Log_Out);
 router.get('/obtener-usuario/:usuario_id', Obtener_Datos_Usuario);
 router.patch('/actualizar-usuario', Actualizar_Usuario);
 router.patch('/actualizar-usuario-bloque', Actualizar_Usuario_Bloque);
-router.delete('/borrar-usuario/:usuario_id', Eliminar_Usuario);
+router.delete('/eliminar-usuario/:usuario_id', Eliminar_Usuario);
 
 
 module.exports = router;

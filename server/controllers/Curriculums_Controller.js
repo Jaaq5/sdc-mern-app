@@ -2,7 +2,7 @@ const Usuarios = require('../models/Usuario_Model');
 const Curriculums = require('../models/Curriculums_Model');
 const Categorias_Curriculum = require('../models/Categorias_Curriculum_Model');
 const Categorias_Puesto = require('../models/Categorias_Puesto_Model');
-const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongodb');
 
 const Crear_Curriculum = async (req, res) => {
     const { usuario_id } = req.usuario;
@@ -91,12 +91,21 @@ const Actualizar_Curriculum = async (req, res) => {
 
 const Eliminar_Curriculum = async (req, res) => {
     try {
-        const { curriculum_id } = req.body;
+        const { curriculum_id } = req.params;
 		
-		const curriculum_id_v = new ObjectId(curriculum_id)
+		const curriculum_id_v = new ObjectId(curriculum_id);
 		
 		const curriculum = await Curriculums.findById(new ObjectId(curriculum_id_v));
+		
+		if (!curriculum) {
+            return res.status(404).json({ success: false, msg: 'Curriculum no encontrado' });
+        }
+		
 		const usuario = await Usuarios.findById(curriculum.ID_Usuario);
+		
+		if (!usuario) {
+            return res.status(404).json({ success: false, msg: 'Usuario de Curriculum no encontrado' });
+        }
 		
 		
 		var nueva_lista = usuario.Curriculums_IDs.filter((id) => id != curriculum_id_v);
@@ -104,11 +113,7 @@ const Eliminar_Curriculum = async (req, res) => {
 		
 		await usuario.save();
 
-		const curriculum_borrado = await Curriculums.findOneAndDelete({ _id: curriculum_id_v });
-
-        if (!curriculum_borrado) {
-            return res.status(404).json({ success: false, msg: 'Curriculum no encontrado' });
-        }
+		await Curriculums.deleteOne({ _id: curriculum_id_v });
 
         return res.status(200).json({ success: true, msg: 'Curriculum eliminado correctamente' });
     } catch (error) {
