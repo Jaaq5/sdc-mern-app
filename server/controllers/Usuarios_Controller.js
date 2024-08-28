@@ -1,6 +1,7 @@
 const Usuarios = require('../models/Usuario_Model');
 const Curriculums = require('../models/Curriculums_Model');
 const Bloques = require('../models/Bloques_Model');
+const { ObjectId } = require('mongodb');
 
 const Crear_Usuario = async (req, res) => {
     const { nombre, email, contrasena } = req.body;
@@ -23,6 +24,7 @@ const Crear_Usuario = async (req, res) => {
 					"Educacion_Formal" : {},
 					"Educacion_Tecnica" : {},
 					"Habilidades" : {},
+					"Idiomas" : {},
 					"Proyectos" : {},
 					"Publicaciones" : {},
 					"Referencias" : {},
@@ -31,6 +33,7 @@ const Crear_Usuario = async (req, res) => {
 					"Educacion_Formal_NID" : 1,
 					"Educacion_Tecnica_NID" : 1,
 					"Habilidades_NID" : 1,
+					"Idiomas_NID" : 1,
 					"Proyectos_NID" : 1,
 					"Publicaciones_NID" : 1,
 					"Referencias_NID" : 1
@@ -139,10 +142,9 @@ const Log_Out = async (req, res) => {
 
 const Obtener_Datos_Usuario = async (req, res) => {
 	const {usuario_id} = req.params;
-	console.log("UserID: "+req.params.usuario_id );
     try {
 		
-        const usuario = await Usuarios.findOne({ _id: usuario_id}); 
+        const usuario = await Usuarios.findById(new ObjectId(usuario_id)); 
 		
         if (!usuario) {
             return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
@@ -168,17 +170,20 @@ const Obtener_Datos_Usuario = async (req, res) => {
 };
 
 const Eliminar_Usuario = async (req, res) => {
+	const { usuario_id } = req.params;
     try {
-        const { usuario_id } = req.params;
-
-        await Bloques.deleteMany({ Usuario_ID: usuario_id });
-		await Curriculums.deleteMany({ Usuario_ID: usuario_id });
-
-        const deletedUser = await Usuarios.findOneAndDelete({ _id: usuario_id });
+		const us_id = new ObjectId(usuario_id);
+		const deletedUser = await Usuarios.findById(us_id);
 
         if (!deletedUser) {
             return res.status(404).json({ success: false, msg: 'Usuario no encontrado' });
         }
+
+        await Bloques.deleteOne({ _id: deletedUser.Bloque_ID });
+		
+		await Curriculums.deleteMany({ Usuario_ID: us_id });
+		
+		await Usuarios.deleteOne({ _id: us_id });
 
         return res.status(200).json({ success: true, msg: 'Usuario eliminado correctamente' });
     } catch (error) {
@@ -190,10 +195,10 @@ const Eliminar_Usuario = async (req, res) => {
 
 module.exports = {
     Crear_Usuario,
-    Actualizar_Usuario,
+	Log_In,
+	Log_Out,
+	Obtener_Datos_Usuario,
+	Actualizar_Usuario,
 	Actualizar_Usuario_Bloque,
-    Eliminar_Usuario,
-    Log_In,
-    Obtener_Datos_Usuario,
-    Log_Out
+	Eliminar_Usuario
 };
