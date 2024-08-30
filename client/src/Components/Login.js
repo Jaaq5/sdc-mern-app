@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Grid, Link, Button, Paper, TextField, Typography } from "@mui/material";
 
+import { Axios_Url } from '../consts';
+
 function Login({ setIsLoggedIn, user_data, setUserData }) {
     const [email, setEmail] = useState("");
     const [contrasena, setPassword] = useState("");
@@ -10,17 +12,17 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:27017/api/users/log-in-usuario", { email, contrasena })
-            .then(result => {
+        axios.post(Axios_Url+'/api/users/log-in-usuario', { email, contrasena })
+			.then(result => {
                 if (result.data.usuario_id) {
 					const usuario_id = result.data.usuario_id;
-					axios.get('http://localhost:27017/api/users/obtener-usuario/'+usuario_id)
+					axios.get(Axios_Url+'/api/users/obtener-usuario/'+usuario_id)
                         .then(response => {
                             if (response.data.data) {
                               setIsLoggedIn(true);
 							  response.data.data.usuario_id = usuario_id;
 							  setUserData(response.data.data);
-                              navigate("/home");//, { state: { usuario_id: result.data.usuario_id, user_data: response.data.data } });
+                              navigate("/home");//, { state: { usuario_id: usuario_id, user_data: response.data.data } });
                             }
                         }).catch(err => {
 							console.log(err);

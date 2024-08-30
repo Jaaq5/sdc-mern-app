@@ -3,12 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { Input, Grid, Button, Paper, TextField, Typography, List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 
-import axios from "axios";
-
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
 function EducacionFormal({user_data, setUserData, manager_bloques}) {
-    const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(!user_data?.usuario_id);
 	
@@ -28,9 +25,10 @@ function EducacionFormal({user_data, setUserData, manager_bloques}) {
     const heading = {fontSize:"2.5rem", fontWeight:"600"}
     const row = {display:"flex", marginTop:"2rem"}
     const btnStyle={marginTop:"2rem", fontSize:"1.2rem", fontWeight:"700", backgroundColor:"blue", borderRadius:"0.5rem"};
+	const fieldTitleStyle = {float:"left"};
 	const listStyle = {border:"solid 3px #999999aa", borderRadius: "5px", marginBottom:"5px", height:"5rem", overflow: "hidden"};
 	const listButtonStyle = {border:"solid 1px #999999aa", height:"3rem", overflow: "hidden"};
-	const [dense, setDense] = useState(true);
+	const dense = true;
 	
 	//Form
 	const [fecha_inicio, setFechaInicio] = useState("-");
@@ -73,7 +71,7 @@ function EducacionFormal({user_data, setUserData, manager_bloques}) {
 	
 	const mapDBListToHTML = (lista) => {
 		setEducaciones(Object.keys(lista).map(l_id => 
-			<ListItemButton key={l_id} style={listStyle}>
+			<ListItemButton key={l_id} style={listButtonStyle}>
 				<ListItemText 
 					primary={lista[l_id].Nombre} 
 					secondary={null}	
@@ -111,21 +109,20 @@ function EducacionFormal({user_data, setUserData, manager_bloques}) {
 			<Grid align="center" container spacing={0} className="wrapper">
 				<div>
 					<Paper style={paperStyle} sx={paperSX}>
-						
-							<List style={{padding:"5px"}} dense={dense} style={{maxHeight: "95%", overflow:"auto"}} >{educaciones}</List>
+							<List dense={dense} style={{padding:"5px", maxHeight: "95%", overflow:"auto"}} >{educaciones}</List>
 					</Paper>
 				</div>
 				<div style={{width:"20px"}}></div>
 				<div>
-					<Grid align="center" className="wrapper" style={{}}>
+					<Grid align="center" className="wrapper">
 						<Paper style={paperStyle} sx={paperSX}>
 							<Typography component="h1" variant="h5" style={heading}> Añadir Educación Formal </Typography>
 							<form onSubmit={manejarDatos}>
-								<h4 style={{float:"left"}}>Fecha de inicio:</h4>
+								<h4 style={fieldTitleStyle}>Fecha de inicio:</h4>
 								<Input style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth type="date" label="Fecha de Inicio" variant="outlined" format="LL"  name="fecha_inicio" required onChange={(e)=>{setFechaInicio(e.target.value); e.target.setCustomValidity("");}} onInvalid={e => e.target.setCustomValidity("Seleccionar la fecha de inicio")} />                    
-								<h4 style={{float:"left"}}>Fecha de finalización:</h4>
+								<h4 style={fieldTitleStyle}>Fecha de finalización:</h4>
 								<Input style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth type="date" label="Fecha de Finalización" variant="outlined" format="LL" name="fecha_final" required onChange={(e)=>{if(e.target.value > fecha_inicio){setFechaFinal(e.target.value); e.target.setCustomValidity("");} else { e.target.setCustomValidity("X") }}} onInvalid={e => e.target.setCustomValidity("Escoger una fecha final que sea despés de la de inicio")}/>  
-								<TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth type="text" label="Programa" name="nombre" placeholder="Titulo" name="programa" required onChange={(e)=>{setPrograma(e.target.value); e.target.setCustomValidity("");}} onInvalid={e => e.target.setCustomValidity("Llenar el nombre del titulo")}></TextField>
+								<TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth type="text" label="Programa" placeholder="Titulo" name="programa" required onChange={(e)=>{setPrograma(e.target.value); e.target.setCustomValidity("");}} onInvalid={e => e.target.setCustomValidity("Llenar el nombre del titulo")}></TextField>
 								<TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth label="Institucion" variant="outlined" placeholder="Institucion" name="institucion" required onChange={(e)=>{setInstitucion(e.target.value); e.target.setCustomValidity("");}} onInvalid={e => e.target.setCustomValidity("Llenar el nombre de la Institución")}/>                    
 								<TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth label="Descripcion" variant="outlined" placeholder="Descripción" name="descripcion" required onChange={(e)=>{setDescripcion(e.target.value); e.target.setCustomValidity("");}}  onInvalid={e => e.target.setCustomValidity("Llenar la descripción")}/>
 								<Button style={btnStyle} variant="contained" type="submit">Crear</Button>

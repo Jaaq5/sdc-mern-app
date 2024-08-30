@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
+
+import { Axios_Url } from '../consts';
 import axios from "axios";
 import { Grid, Link, Button, Paper, TextField, Typography } from "@mui/material";
 
@@ -12,7 +14,7 @@ function SignUp(){
 
     const handleSignup = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:27017/api/users/crear-usuario", { nombre, email, contrasena })
+        axios.post(Axios_Url+'/api/users/crear-usuario', { nombre, email, contrasena })
             .then(result => {
                 if (result.status === 201) {
                     navigate("/login");

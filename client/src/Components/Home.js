@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import { Axios_Url } from '../consts';
 import axios from "axios";
 
 function Home({user_data, setUserData}) {
@@ -12,7 +14,7 @@ function Home({user_data, setUserData}) {
     useEffect(() => {
 		
         if (!user_data) {
-			axios.post('http://localhost:27017/api/users/log-in-usuario')
+			axios.post(Axios_Url+'/api/users/log-in-usuario')
                 .then(response => {
                     if (response.data.user) {
                         setUser(response.data.user);

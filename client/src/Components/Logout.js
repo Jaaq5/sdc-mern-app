@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+import { Axios_Url } from '../consts';
 import axios from "axios";
 import { Button } from "@mui/material";
 
@@ -9,7 +11,7 @@ function Logout({ setIsLoggedIn }) {
 	const [usuario_id, setUser] = useState(location.state?.usuario_id);
 
     const handleLogout = (e) => {
-        axios.post("http://localhost:27017/api/users/log-out-usuario", {})
+        axios.post(Axios_Url+'/api/users/log-out-usuario', {})
             .then(response => {
                 if (response.status === 200) {
 					if (usuario_id)

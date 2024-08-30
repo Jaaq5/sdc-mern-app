@@ -40,6 +40,8 @@
       "last 1 safari version"
     ]
   },
+  
+  "proxy": "http://localhost:27017",
   "devDependencies": {
     "@babel/plugin-transform-private-property-in-object": "^7.24.7"
   }

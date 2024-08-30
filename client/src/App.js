@@ -7,6 +7,8 @@ import SignUp from "./Components/SignUp";
 import EducacionFormal from './Components/EducacionFormal';
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
+
+import { Axios_Url } from './consts';
 import axios from "axios";
 
 function App() {
@@ -40,7 +42,7 @@ function App() {
   }
 
   useEffect(() => {
-      axios.post('http://localhost:27017/api/users/log-in-usuario', { withCredentials: true })
+      axios.post(Axios_Url+'/api/users/log-in-usuario', { withCredentials: true })
           .then(response => {
               if (response.data.usuario_id) {
                   setIsLoggedIn(true);
