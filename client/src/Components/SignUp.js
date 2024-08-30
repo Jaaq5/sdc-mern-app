@@ -19,7 +19,7 @@ function SignUp(){
                 }
             })
             .catch(err => {
-				window.alert(err.response.data.error);
+				//window.alert(err.response.data.error);
 				console.log(err);
             });
     };
