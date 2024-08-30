@@ -42,9 +42,9 @@ function SignUp(){
                 }}}>
                     <Typography component="h1" variant="h5" style={heading}> Signup </Typography>
                     <form onSubmit={handleSignup}>
-                        <TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth type="text" label="Enter Name" name="nombre" onChange={(e)=>setName(e.target.value)}></TextField>
-                        <TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth label="Email" variant="outlined" type="email" placeholder="Enter Email" name="email" onChange={(e)=>setEmail(e.target.value)}/>                    
-                        <TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth label="Password" variant="outlined" type="password" placeholder="Enter Password" name="contrasena" onChange={(e)=>setPassword(e.target.value)} />
+                        <TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth type="text" label="Enter Name" name="nombre" autoComplete="username" required onChange={(e)=>setName(e.target.value)}></TextField>
+                        <TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth label="Email" variant="outlined" type="email" autoComplete="email" placeholder="Enter Email" name="email" required onChange={(e)=>setEmail(e.target.value)}/>                    
+                        <TextField style={row} sx={{label: { fontWeight: '700', fontSize:"1.3rem" }}} fullWidth label="Password" variant="outlined" type="password" autoComplete="new-password" placeholder="Enter Password" name="contrasena" required onChange={(e)=>setPassword(e.target.value)} />
                         <Button style={btnStyle} variant="contained" type="submit">SignUp</Button>
                     </form>
                     <p>Already have an account?<Link href="/login"> Login</Link></p>

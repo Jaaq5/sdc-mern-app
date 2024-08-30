@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Home() {
+function Home({user_data, setUserData}) {
     const location = useLocation();
     const navigate = useNavigate();
     const [usuario_id, setUser] = useState(location.state?.usuario_id);
     const [loading, setLoading] = useState(!usuario_id);
-	const [user_data, setData] = useState(location.state?.user_data);
+	//const [user_data, setData] = useState();
 
     useEffect(() => {
-        if (!usuario_id) {
-            axios.post('http://localhost:27017/api/users/log-in-usuario')
+		
+        if (!user_data) {
+			axios.post('http://localhost:27017/api/users/log-in-usuario')
                 .then(response => {
                     if (response.data.user) {
                         setUser(response.data.user);

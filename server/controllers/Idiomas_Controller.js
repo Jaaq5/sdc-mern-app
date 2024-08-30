@@ -11,7 +11,7 @@ const Crear_Idioma = async (req, res) => {
         }
 		
 		const idioma = new Idiomas({
-				Idioma: nombre
+				Nombre: nombre
 			})
 			
         await idioma.save();
@@ -33,7 +33,7 @@ const Obtener_Idioma = async (req, res) => {
         }
 
         
-        return res.status(200).json({ success: true, msg: 'Se ha encontrado el idioma exitosamente', idioma_id: idioma._id, idioma: idioma.Idioma });
+        return res.status(200).json({ success: true, msg: 'Se ha encontrado el idioma exitosamente', idioma_id: idioma._id, idioma: idioma.Nombre });
     } catch (error) {
         return res.status(500).json({ success: false, error: 'Error interno del servidor' });
     }
@@ -56,7 +56,7 @@ const Actualizar_Idioma = async (req, res) => {
             return res.status(404).json({ success: false, error: "Idioma no encontrado al actualizar" });
         }
 
-        idioma.Idioma = nuevo_nombre;
+        idioma.Nombre = nuevo_nombre;
 
         await idioma.save();
 

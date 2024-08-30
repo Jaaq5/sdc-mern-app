@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,7 +18,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                     </Typography>
                     {!isLoggedIn ? (
                         <>
-                            <Button variant="contained" style={button} color="error" component={Link} to="/login">
+                            <Button variant="contained" style={button} color="error" component={Link} to="/login" >
                                 Login 
                             </Button>
 
@@ -26,8 +26,22 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 Signup
                             </Button>
                         </>
-                    ) : (
-                        <Logout setIsLoggedIn={setIsLoggedIn} />
+                    ) : ( //User Ribbon
+						<>
+							{!(window.location.pathname === '/educacionformal')? ( 
+							
+								<Button variant="contained" style={button} color="success" component={Link} to="/educacionformal">
+									Educacion Formal
+								</Button>
+							) : (<> </>)}
+							{!(window.location.pathname === '/home')? (
+								<Button variant="contained" style={button} color="success" component={Link} to="/home">
+									Principal
+								</Button>
+							) : (<> </>)}
+							<Logout setIsLoggedIn={setIsLoggedIn} />
+							
+						</>
                     )}
                 </Toolbar>
             </AppBar>

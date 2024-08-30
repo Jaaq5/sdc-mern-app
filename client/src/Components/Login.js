@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Grid, Link, Button, Paper, TextField, Typography } from "@mui/material";
 
-function Login({ setIsLoggedIn, isLoggedIn }) {
+function Login({ setIsLoggedIn, user_data, setUserData }) {
     const [email, setEmail] = useState("");
     const [contrasena, setPassword] = useState("");
     const navigate = useNavigate();
@@ -13,14 +13,14 @@ function Login({ setIsLoggedIn, isLoggedIn }) {
         axios.post("http://localhost:27017/api/users/log-in-usuario", { email, contrasena })
             .then(result => {
                 if (result.data.usuario_id) {
-					//setIsLoggedIn(true);
-					//navigate("/home", { state: { usuario_id: result.data.usuario_id } });
 					const usuario_id = result.data.usuario_id;
 					axios.get('http://localhost:27017/api/users/obtener-usuario/'+usuario_id)
                         .then(response => {
                             if (response.data.data) {
                               setIsLoggedIn(true);
-                              navigate("/home", { state: { usuario_id: result.data.usuario_id, user_data: response.data.data } });
+							  response.data.data.usuario_id = usuario_id;
+							  setUserData(response.data.data);
+                              navigate("/home");//, { state: { usuario_id: result.data.usuario_id, user_data: response.data.data } });
                             }
                         }).catch(err => {
 							console.log(err);
@@ -49,10 +49,10 @@ function Login({ setIsLoggedIn, isLoggedIn }) {
                     <Typography component="h1" variant="h5" style={heading}>Login</Typography>
                     <form onSubmit={handleLogin}>
                         <span style={row}>
-                            <TextField sx={{ label: { fontWeight: '700', fontSize: "1.3rem" } }} style={label} label="Email" fullWidth variant="outlined" type="email" placeholder="Enter Email" name="email" onChange={(e) => setEmail(e.target.value)} />
+                            <TextField sx={{ label: { fontWeight: '700', fontSize: "1.3rem" } }} style={label} label="Email" fullWidth variant="outlined" type="email" autoComplete="email" placeholder="Enter Email" name="email" required onChange={(e) => setEmail(e.target.value)} />
                         </span>
                         <span style={row}>
-                            <TextField sx={{ label: { fontWeight: '700', fontSize: "1.3rem" } }} label="Password" fullWidth variant="outlined" type="password" placeholder="Enter Password" name="contrasena" onChange={(e) => setPassword(e.target.value)} />
+                            <TextField sx={{ label: { fontWeight: '700', fontSize: "1.3rem" } }} label="Password" fullWidth variant="outlined" type="password" autoComplete="current-password" placeholder="Enter Password" name="contrasena" required onChange={(e) => setPassword(e.target.value)} />
                         </span>
                         <Button style={btnStyle} variant="contained" type="submit">Login</Button>
                     </form>

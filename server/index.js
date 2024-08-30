@@ -38,6 +38,9 @@ app.use("/api/templates", templateRoutes);
 app.use("/api/cat-curriculums", catCurrRoutes);
 app.use("/api/cat-job", jobRoutes);
 app.use("/api/cat-skill", skillRoutes);
+app.use("/api/cat-skill", languageRoutes);
+
+//app.get("/address", (req, res) => {return res.status(200).json({success: true, msg: "Direccion", address: process.env.PORT});});
 
 // Connect to MongoDB #########################################################
 const mongoUri = process.env.MONGO_URI;
