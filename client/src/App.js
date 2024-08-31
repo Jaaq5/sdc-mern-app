@@ -5,6 +5,7 @@ import Home from "./Components/Home";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import EducacionFormal from "./Components/EducacionFormal";
+import SobreMi from "./Components/SobreMi";
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
 
@@ -97,6 +98,20 @@ function App() {
                 <Navigate to="/login" />
               ) : (
                 <EducacionFormal
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                />
+              )
+            }
+          />
+          <Route
+            path="/sobremi"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <SobreMi
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
