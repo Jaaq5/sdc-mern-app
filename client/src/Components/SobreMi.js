@@ -11,6 +11,7 @@ function SobreMi({user_data, setUserData, manager_bloques}) {
     const [loading, setLoading] = useState(!user_data?.usuario_id);
     const [texto, setTexto] = useState("");
     const [textos, setTextos] = useState([]);
+    const [indx, setIndx] = useState("");
 
 
     const listStyle = {border:"solid 3px #999999aa", borderRadius: "5px", marginBottom:"5px", height:"5rem", overflow: "hidden"};
@@ -33,29 +34,46 @@ function SobreMi({user_data, setUserData, manager_bloques}) {
 
     const mapToHTML = (bloques) => {
 		setTextos(Object.keys(bloques).map(plan_id => 
-			<ListItemButton key={plan_id} style={listStyle} onClick={handlePopUp}>
+			<ListItemButton key={plan_id} style={listStyle} selected={plan_id === indx} onClick={() => {setIndx(plan_id)}}>
 				<ListItemText 
-					primary={bloques[plan_id].Sobre_Mi} 	
+					primary={bloques[plan_id].Correo +" "+ bloques[plan_id].Direccion +" "+ bloques[plan_id].Telefono} 	
 				/>
 			</ListItemButton>));
 	};
+
+
+    const handlePopUpEditar = (e) => {
+        if (indx != ""){
+        setTexto(user_data.bloques["Informacion_Personal"][parseInt(indx)].Sobre_mi);
+        setAnchor(anchor ? null : e.currentTarget);
+        }
+    }
 
     const handlePopUp = (e) => {
         setAnchor(anchor ? null : e.currentTarget);
     }
 
     const savePopUpData = (e) => {
-        //setAnchor(anchor ? null : e.currentTarget);
-        console.log(texto);
+        manager_bloques.ActualizarBloque(user_data, setUserData, "Informacion_Personal", parseInt(indx),{
+            Telefono: user_data.bloques["Informacion_Personal"][indx].Telefono,
+            Correo: user_data.bloques["Informacion_Personal"][indx].Correo,
+            Puesto: user_data.bloques["Informacion_Personal"][indx].Puesto,
+            Direccion: user_data.bloques["Informacion_Personal"][indx].Direccion,
+            Mostrar_Foto: user_data.bloques["Informacion_Personal"][indx].Mostrar_Foto,
+            Mostrar_Puesto: user_data.bloques["Informacion_Personal"][indx].Mostrar_Puesto,
+            ID_Categoria_Puesto: user_data.bloques["Informacion_Personal"][indx].ID_Categoria_Puesto,
+            Sobre_Mi: texto
+          });
+
+        mapToHTML(user_data.bloques.Informacion_Personal);
+        setAnchor(anchor ? null : e.currentTarget);
+        manager_bloques.GuardarCambios(user_data);
+
+
     }
 
     const open = Boolean(anchor);
     const id = open ? 'simple-popup' : undefined;
-
-    const ActualizarSobreMi = (e) => {
-        e.preventDefault();
-
-    };
 
 
 
@@ -74,14 +92,14 @@ function SobreMi({user_data, setUserData, manager_bloques}) {
             <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '80vw', md: '70vw', lg: '60vw', xl: '50vw' }, height: { lg: '50vh' } }}>
                 <Typography component="h1" variant="h5" style={heading}>Parrafos</Typography>
                 <List dense={dense} style={{padding:"5px", maxHeight: "95%", overflow:"auto"}} >{textos}</List>
-                <Button aria-describedby={id} type="button" onClick={handlePopUp}>
-                    Crear parrafo
+                <Button aria-describedby={id} type="button" onClick={handlePopUpEditar}>
+                    Editar parrafo
                 </Button>
             </Paper>
 
             <Dialog id={id} open={open} anchor={anchor} PaperProps={{sx:{ width: { xs: '80vw', sm: '80vw', md: '70vw', lg: '60vw', xl: '50vw' }, height: { lg: '50vh' }, overflow:'auto' }}}>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <TextareaAutosize minRows={4} placeholder="Type anything…" onChange={e => {setTexto(e.target.value)}}/>
+                    <TextareaAutosize minRows={4} placeholder="Type anything…" value = {texto} onChange={e => setTexto(e.target.value)}/>
                 </DialogContent>
                 <DialogActions>
                     <Button aria-describedby={id} type="button" onClick={savePopUpData}>
