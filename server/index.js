@@ -4,8 +4,8 @@
 // IMPORTS ####################################################################
 const express = require("express");
 const cors = require("cors");
+const corsOptions = require("./middleware/corsMiddleware");
 const mongoose = require("mongoose");
-
 
 const userRoutes = require("./routes/usuario_route");
 const catCurrRoutes = require("./routes/categoria_curriculum_route");
@@ -22,15 +22,18 @@ const port = process.env.PORT ?? 0;
 
 // Middleware #################################################################
 app.use(express.json());
-app.use(cors());
+
+// Enable CORS for all origins
+// app.use(cors());
+
+// Enable CORS for specific origins
+app.use(cors(corsOptions));
+
+// Log requests
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   next();
 });
-
-
-
-
 
 // Routes #####################################################################
 app.use("/api/users", userRoutes);

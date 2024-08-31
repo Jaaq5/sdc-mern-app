@@ -15,9 +15,9 @@ try {
   // Send a ping to confirm a successful connection
   await client.db("sdc_database").command({ ping: 1 });
   console.log(
-   "Pinged your deployment. You successfully connected to MongoDB!\n This is /server/connection.js, for db initialization"
+    "Pinged your deployment. You successfully connected to MongoDB!\n This is /server/connection.js, for db initialization",
   );
-} catch(err) {
+} catch (err) {
   console.error(err);
 }
 

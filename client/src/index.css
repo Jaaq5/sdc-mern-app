@@ -1,10 +1,10 @@
 body {
   margin: 0;
   background-color: rgb(18, 68, 185);
-  
+
   height: 100vh;
   width: 100%;
-  
+
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -17,10 +17,10 @@ code {
     monospace;
 }
 
-p{
-    font-size: large;
+p {
+  font-size: large;
 }
 
-.gray-text{
-	color: #ccc;
+.gray-text {
+  color: #ccc;
 }
