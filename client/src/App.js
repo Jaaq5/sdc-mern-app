@@ -30,7 +30,7 @@ function App() {
       user_data.bloques[sub_tabla + "_NID"] =
         user_data.bloques[sub_tabla + "_NID"] + 1; //Incrementar
       setUserData(user_data); //Actualizar variable de sesion
-	  return user_data.bloques[sub_tabla + "_NID"] - 1
+      return user_data.bloques[sub_tabla + "_NID"] - 1;
     },
 
     ActualizarBloque: (user_data, setUserData, sub_tabla, id, data) => {
@@ -49,82 +49,80 @@ function App() {
     },
   };
 
-  
-  const category_manager = {ObtenerCategoriasCurriculum: async () => {
-		  if (listas_categorias.categorias_curriculum)
-			  return listas_categorias.categorias_curriculum;
-		  var categorias = [];
-		  axios
-            .get(apiUrl + "/api/cat-curriculums/obtener-categorias-curriculum")
-            .then((response) => {
-              if (response.data.categorias_curriculum) {
-                categorias = response.data.categorias_curriculum;
-                listas_categorias.categorias_curriculum = categorias;
-                setListas(listas_categorias);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-			return categorias
-		},
-		
-		ObtenerCategoriasPuesto: async () => {
-		  if (listas_categorias.categorias_puesto)
-			  return listas_categorias.categorias_puesto;
-		  var categorias = [];
-		  axios
-            .get(apiUrl + "/api/cat-job/obtener-categorias-puesto")
-            .then((response) => {
-              if (response.data.categorias_puesto) {
-                categorias = response.data.categorias_puesto;
-				listas_categorias.categorias_puesto = categorias;
-                setListas(listas_categorias);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-			return categorias.result
-		},
-		
-		ObtenerCategoriasHabilidad: async () => {
-		  if (listas_categorias.hailidades)
-			  return listas_categorias.hailidades;
-		  var categorias = [];
-		  axios
-            .get(apiUrl + "/api/cat-skill/obtener-categorias-habilidad")
-            .then((response) => {
-              if (response.data.categorias_hailidad) {
-                categorias = response.data.hailidades;
-				listas_categorias.categorias_hailidad = categorias;
-                setListas(listas_categorias);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-			return categorias
-		},
-		
-		ObtenerIdiomas: async () => {
-		  if (listas_categorias.idiomas)
-			  return listas_categorias.idiomas;
-		  var categorias = [];
-		  axios
-            .get(apiUrl + "/api/cat-language/obtener-idiomas")
-            .then((response) => {
-              if (response.data.idiomas) {
-                categorias = response.data.idiomas;
-				listas_categorias.idiomas = categorias;
-                setListas(listas_categorias);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-			return categorias
-		}
+  const category_manager = {
+    ObtenerCategoriasCurriculum: async () => {
+      if (listas_categorias.categorias_curriculum)
+        return listas_categorias.categorias_curriculum;
+      var categorias = [];
+      axios
+        .get(apiUrl + "/api/cat-curriculums/obtener-categorias-curriculum")
+        .then((response) => {
+          if (response.data.categorias_curriculum) {
+            categorias = response.data.categorias_curriculum;
+            listas_categorias.categorias_curriculum = categorias;
+            setListas(listas_categorias);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias;
+    },
+
+    ObtenerCategoriasPuesto: async () => {
+      if (listas_categorias.categorias_puesto)
+        return listas_categorias.categorias_puesto;
+      var categorias = [];
+      axios
+        .get(apiUrl + "/api/cat-job/obtener-categorias-puesto")
+        .then((response) => {
+          if (response.data.categorias_puesto) {
+            categorias = response.data.categorias_puesto;
+            listas_categorias.categorias_puesto = categorias;
+            setListas(listas_categorias);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias.result;
+    },
+
+    ObtenerCategoriasHabilidad: async () => {
+      if (listas_categorias.hailidades) return listas_categorias.hailidades;
+      var categorias = [];
+      axios
+        .get(apiUrl + "/api/cat-skill/obtener-categorias-habilidad")
+        .then((response) => {
+          if (response.data.categorias_hailidad) {
+            categorias = response.data.hailidades;
+            listas_categorias.categorias_hailidad = categorias;
+            setListas(listas_categorias);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias;
+    },
+
+    ObtenerIdiomas: async () => {
+      if (listas_categorias.idiomas) return listas_categorias.idiomas;
+      var categorias = [];
+      axios
+        .get(apiUrl + "/api/cat-language/obtener-idiomas")
+        .then((response) => {
+          if (response.data.idiomas) {
+            categorias = response.data.idiomas;
+            listas_categorias.idiomas = categorias;
+            setListas(listas_categorias);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias;
+    },
   };
 
   useEffect(() => {
@@ -138,16 +136,16 @@ function App() {
         }
       })
       .catch(() => setIsLoggedIn(false));
-	  
-	  //Load DB lists into cache
-	  category_manager.ObtenerCategoriasCurriculum();
-	  category_manager.ObtenerCategoriasPuesto();
-	  category_manager.ObtenerCategoriasHabilidad();
-	  category_manager.ObtenerIdiomas();
-	  
-	  //Initialize db
-			//axios.post(apiUrl + "/api/cat-curriculums/crear-categoria-curriculum", {nombre: "Laboral"}).then((response) => {console.log(response);}).catch((err) => {console.log(err);});
-			//axios.post(apiUrl + "/api/cat-curriculums/crear-categoria-curriculum", {nombre: "Académico"}).then((response) => {console.log(response);}).catch((err) => {console.log(err);});
+
+    //Load DB lists into cache
+    category_manager.ObtenerCategoriasCurriculum();
+    category_manager.ObtenerCategoriasPuesto();
+    category_manager.ObtenerCategoriasHabilidad();
+    category_manager.ObtenerIdiomas();
+
+    //Initialize db
+    //axios.post(apiUrl + "/api/cat-curriculums/crear-categoria-curriculum", {nombre: "Laboral"}).then((response) => {console.log(response);}).catch((err) => {console.log(err);});
+    //axios.post(apiUrl + "/api/cat-curriculums/crear-categoria-curriculum", {nombre: "Académico"}).then((response) => {console.log(response);}).catch((err) => {console.log(err);});
   }, []);
 
   return (
@@ -207,7 +205,7 @@ function App() {
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
-				  category_manager={category_manager}
+                  category_manager={category_manager}
                 />
               )
             }

@@ -56,11 +56,11 @@ const Obtener_Categoria_Curriculum = async (req, res) => {
 
 const Obtener_Categorias_Curriculum = async (req, res) => {
   try {
-	const categorias_curriculum = await Categorias_Curriculum.find();
+    const categorias_curriculum = await Categorias_Curriculum.find();
     return res.status(200).json({
       success: true,
       msg: "Se ha encontrado la categoria exitosamente",
-      categorias_curriculum: categorias_curriculum ,
+      categorias_curriculum: categorias_curriculum,
     });
   } catch (error) {
     return res

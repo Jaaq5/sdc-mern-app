@@ -58,7 +58,7 @@ const Obtener_Categoria_Habilidad = async (req, res) => {
 
 const Obtener_Categorias_Habilidad = async (req, res) => {
   try {
-	const categorias_habilidad =  await Categorias_Habilidad.find();
+    const categorias_habilidad = await Categorias_Habilidad.find();
     return res.status(200).json({
       success: true,
       msg: "Se ha encontrado la categoria exitosamente",

@@ -56,18 +56,17 @@ const Obtener_Idioma = async (req, res) => {
 
 const Obtener_Idiomas = async (req, res) => {
   try {
-	  
-	const idiomas = await Idiomas.find();
+    const idiomas = await Idiomas.find();
     return res.status(200).json({
       success: true,
       msg: "Se han encontrado los idiomas",
-      idiomas: idiomas
+      idiomas: idiomas,
     });
   } catch (error) {
-	console.loh(error);
+    console.loh(error);
     return res
       .status(500)
-      .json({ success: false, error: "Error interno del servidor"});
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
