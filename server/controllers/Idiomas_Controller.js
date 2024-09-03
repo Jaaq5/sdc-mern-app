@@ -6,7 +6,7 @@ const Crear_Idioma = async (req, res) => {
 
   try {
     const idioma_t = await Idiomas.findOne({ Idioma: nombre });
-    if (!idioma_t) {
+    if (idioma_t) {
       return res
         .status(409)
         .json({ success: false, error: "Idioma duplicado" });
@@ -56,15 +56,18 @@ const Obtener_Idioma = async (req, res) => {
 
 const Obtener_Idiomas = async (req, res) => {
   try {
+	  
+	const idiomas = await Idiomas.find();
     return res.status(200).json({
       success: true,
       msg: "Se han encontrado los idiomas",
-      idiomas_puesto: Idiomas.find(),
+      idiomas: idiomas
     });
   } catch (error) {
+	console.loh(error);
     return res
       .status(500)
-      .json({ success: false, error: "Error interno del servidor" });
+      .json({ success: false, error: "Error interno del servidor"});
   }
 };
 

@@ -2,11 +2,11 @@ const Categorias_Curriculum = require("../models/Categorias_Curriculum_Model");
 const { ObjectId } = require("mongodb");
 
 const Crear_Categoria_Curriculum = async (req, res) => {
-  const { nombre } = req.nombre;
+  const { nombre } = req.body;
 
   try {
     const categoria_t = await Categorias_Curriculum.findOne({ Nombre: nombre });
-    if (!categoria_t) {
+    if (categoria_t) {
       return res
         .status(409)
         .json({ success: false, error: "Nombre de categoría duplicado" });
@@ -55,13 +55,12 @@ const Obtener_Categoria_Curriculum = async (req, res) => {
 };
 
 const Obtener_Categorias_Curriculum = async (req, res) => {
-  const categoria_id = req.body.categoria_id;
-
   try {
+	const categorias_curriculum = await Categorias_Curriculum.find();
     return res.status(200).json({
       success: true,
       msg: "Se ha encontrado la categoria exitosamente",
-      categorias_curriculum: Categorias_Curriculum.find(),
+      categorias_curriculum: categorias_curriculum ,
     });
   } catch (error) {
     return res

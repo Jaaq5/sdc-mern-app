@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { apiUrl, Axios_Url } from "../consts";
+import { apiUrl } from "../consts";
 
 function Login({ setIsLoggedIn, user_data, setUserData }) {
   const [email, setEmail] = useState("");
@@ -18,7 +18,6 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
-    console.log(apiUrl);
     e.preventDefault();
     axios
       .post(apiUrl + "/api/users/log-in-usuario", { email, contrasena })

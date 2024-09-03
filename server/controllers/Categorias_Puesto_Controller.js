@@ -6,7 +6,7 @@ const Crear_Categoria_Puesto = async (req, res) => {
 
   try {
     const categoria_t = await Categorias_Puesto.findOne({ Nombre: nombre });
-    if (!categoria_t) {
+    if (categoria_t) {
       return res
         .status(409)
         .json({ success: false, error: "Nombre de categoría duplicado" });
@@ -58,10 +58,11 @@ const Obtener_Categoria_Puesto = async (req, res) => {
 
 const Obtener_Categorias_Puesto = async (req, res) => {
   try {
+	const categorias_puesto = await Categorias_Puesto.find();
     return res.status(200).json({
       success: true,
       msg: "Se ha encontrado la categoria exitosamente",
-      categorias_puesto: Categorias_Puesto.find(),
+      categorias_puesto: categorias_puesto
     });
   } catch (error) {
     return res

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { apiUrl, Axios_Url } from "../consts";
+import { apiUrl } from "../consts";
 import axios from "axios";
 import { Button } from "@mui/material";
 

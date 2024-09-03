@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { apiUrl, Axios_Url } from "../consts";
+import { apiUrl } from "../consts";
 import axios from "axios";
 import {
   Grid,

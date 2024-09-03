@@ -6,7 +6,7 @@ const Crear_Categoria_Habilidad = async (req, res) => {
 
   try {
     const categoria_t = await Categorias_Habilidad.findOne({ Nombre: nombre });
-    if (!categoria_t) {
+    if (categoria_t) {
       return res
         .status(409)
         .json({ success: false, error: "Nombre de categoría duplicado" });
@@ -58,10 +58,11 @@ const Obtener_Categoria_Habilidad = async (req, res) => {
 
 const Obtener_Categorias_Habilidad = async (req, res) => {
   try {
+	const categorias_habilidad =  await Categorias_Habilidad.find();
     return res.status(200).json({
       success: true,
       msg: "Se ha encontrado la categoria exitosamente",
-      categorias_habilidad: Categorias_Habilidad.find(),
+      categorias_habilidad: categorias_habilidad,
     });
   } catch (error) {
     return res
