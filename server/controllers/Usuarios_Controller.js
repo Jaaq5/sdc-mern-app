@@ -28,6 +28,7 @@ const Crear_Usuario = async (req, res) => {
         Informacion_Personal: {},
         Educacion_Formal: {},
         Educacion_Tecnica: {},
+        Experiencias_Laborales: {},
         Habilidades: {},
         Idiomas: {},
         Proyectos: {},
@@ -37,6 +38,7 @@ const Crear_Usuario = async (req, res) => {
         Informacion_Personal_NID: 1,
         Educacion_Formal_NID: 1,
         Educacion_Tecnica_NID: 1,
+        Experiencias_Laborales_NID: 1,
         Habilidades_NID: 1,
         Idiomas_NID: 1,
         Proyectos_NID: 1,
@@ -114,7 +116,7 @@ const Actualizar_Usuario = async (req, res) => {
 };
 
 const Actualizar_Usuario_Bloque = async (req, res) => {
-  const { usuario_id, bloque } = req.body;
+  const { usuario_id, bloques } = req.body;
 
   try {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
@@ -132,7 +134,7 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
       });
     }
 
-    bloque_datos.Bloques = bloque;
+    bloque_datos.Bloques = bloques;
 
     await bloque_datos.save();
 
@@ -142,6 +144,7 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
       usuario_id: user._id,
     });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ success: false, error: "Error interno del servidor" });

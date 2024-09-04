@@ -7,6 +7,7 @@ import SignUp from "./Components/SignUp";
 import EducacionFormal from "./Components/EducacionFormal";
 import SobreMi from "./Components/SobreMi";
 import InformacionPersonal from "./pages/InformacionPersonal";
+import ExperienciaLaboral from "./pages/ExperienciaLaboral";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
@@ -24,6 +25,14 @@ function App() {
     //Funciones dinamicas para manipular bloques
     //Params: user_data(global), setUserData(callback global), sub_tabla(string, eg: Informacion_Personal), id(string, id del bloque dentro del ), data(objeto segun DB_model),
     InsertarBloque: (user_data, setUserData, sub_tabla, data) => {
+      user_data.bloques[sub_tabla] = user_data.bloques[sub_tabla]
+        ? user_data.bloques[sub_tabla]
+        : {};
+      user_data.bloques[sub_tabla + "_NID"] = user_data.bloques[
+        sub_tabla + "_NID"
+      ]
+        ? user_data.bloques[sub_tabla + "_NID"]
+        : 1;
       user_data.bloques[sub_tabla][
         user_data.bloques[sub_tabla + "_NID"].toString()
       ] = data; //Asignar nuevo bloque a la lista
@@ -46,6 +55,20 @@ function App() {
     GuardarCambios: (user_data) => {
       //To-Do
       console.error("Guardar Cambios todavía no está implementada, App.js");
+      axios
+        .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
+          usuario_id: user_data.usuario_id,
+          bloques: user_data.bloques,
+        })
+        .then((response) => {
+          if (!response.data.success) {
+            console.error("Error a actualizar el bloque");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return;
     },
   };
 
@@ -202,6 +225,21 @@ function App() {
                 <Navigate to="/login" />
               ) : (
                 <EducacionFormal
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+          <Route
+            path="/experiencialaboral"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <ExperienciaLaboral
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}

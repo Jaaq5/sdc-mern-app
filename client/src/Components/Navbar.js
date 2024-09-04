@@ -67,6 +67,19 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             ) : (
               <> </>
             )}
+            {!(window.location.pathname === "/experiencialaboral") ? (
+              <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
+                to="/experiencialaboral"
+              >
+                Experiencia Laboral
+              </Button>
+            ) : (
+              <> </>
+            )}
             {!(window.location.pathname === "/sobremi") ? (
               <Button
                 variant="contained"

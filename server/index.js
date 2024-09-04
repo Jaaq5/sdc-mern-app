@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const corsOptions = require("./middleware/corsMiddleware");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 const userRoutes = require("./routes/usuario_route");
 const catCurrRoutes = require("./routes/categoria_curriculum_route");
@@ -28,6 +29,8 @@ app.use(express.json());
 
 // Enable CORS for specific origins
 app.use(cors(corsOptions));
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Log requests
 app.use((req, res, next) => {
