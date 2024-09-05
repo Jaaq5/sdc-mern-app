@@ -60,7 +60,7 @@ function SobreMi({ user_data, setUserData, manager_bloques }) {
         <ListItemButton
           key={plan_id}
           style={listStyle}
-          selected={plan_id === indx}
+          selected={plan_id == indx}
           onClick={() => {
             setIndx(plan_id);
           }}
@@ -71,7 +71,9 @@ function SobreMi({ user_data, setUserData, manager_bloques }) {
               " " +
               bloques[plan_id].Direccion +
               " " +
-              bloques[plan_id].Telefono
+              bloques[plan_id].Telefono +
+              " " +
+              bloques[plan_id].Sobre_Mi
             }
           />
         </ListItemButton>
@@ -82,7 +84,7 @@ function SobreMi({ user_data, setUserData, manager_bloques }) {
   const handlePopUpEditar = (e) => {
     if (indx != "") {
       setTexto(
-        user_data.bloques["Informacion_Personal"][parseInt(indx)].Sobre_mi,
+        user_data.bloques.Informacion_Personal[parseInt(indx)].Sobre_mi
       );
       setAnchor(anchor ? null : e.currentTarget);
     }

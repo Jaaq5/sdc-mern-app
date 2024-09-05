@@ -5,6 +5,7 @@ import Home from "./Components/Home";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import EducacionFormal from "./Components/EducacionFormal";
+import EducacionTecnica from "./Components/EducacionTecnica";
 import SobreMi from "./Components/SobreMi";
 import InformacionPersonal from "./pages/InformacionPersonal";
 import ExperienciaLaboral from "./pages/ExperienciaLaboral";
@@ -226,6 +227,21 @@ function App() {
                 <Navigate to="/login" />
               ) : (
                 <EducacionFormal
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+          <Route
+            path="/educaciontecnica"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <EducacionTecnica
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}

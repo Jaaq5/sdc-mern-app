@@ -67,6 +67,19 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             ) : (
               <> </>
             )}
+            {!(window.location.pathname === "/educaciontecnica") ? (
+              <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
+                to="/educaciontecnica"
+              >
+                Educacion Técnica
+              </Button>
+            ) : (
+              <> </>
+            )}
             {!(window.location.pathname === "/experiencialaboral") ? (
               <Button
                 variant="contained"
