@@ -85,10 +85,10 @@ function InformacionPersonal({
   const [direccion, setDireccion] = useState("");
   const [mostrarFoto, setMostrarFoto] = useState(false);
   const [mostrarPuesto, setMostrarPuesto] = useState(false);
+  //
+  const [id_categoria_puesto, setIdCategoriaPuesto] = useState("");
+  const [sobre_mi, setSobreMi] = useState("");
 
-  // Datos adicionales que no están en el formulario
-  const ID_Categoria_Puesto = user_data?.ID_Categoria_Puesto || "";
-  const Sobre_mi = user_data?.Sobre_mi || "";
 
   // Cargar el bloque de información personal y manejar los datos existentes
   const mapToHTML = (bloques) => {
@@ -166,6 +166,9 @@ function InformacionPersonal({
     setDireccion(bloque.Direccion);
     setMostrarFoto(bloque.Mostrar_Foto);
     setMostrarPuesto(bloque.Mostrar_Puesto);
+    //
+    setIdCategoriaPuesto(bloque.ID_Categoria_Puesto);
+    setSobreMi(bloque.Sobre_Mi);
   };
 
   const manejarDatos = (e) => {
@@ -178,8 +181,8 @@ function InformacionPersonal({
       Direccion: direccion,
       Mostrar_Foto: mostrarFoto,
       Mostrar_Puesto: mostrarPuesto,
-      ID_Categoria_Puesto: ID_Categoria_Puesto,
-      Sobre_mi: Sobre_mi,
+      ID_Categoria_Puesto: id_categoria_puesto,
+      Sobre_Mi: sobre_mi,
     };
 
     if (bloque_id !== true) {
