@@ -10,6 +10,7 @@ import SobreMi from "./Components/SobreMi";
 import InformacionPersonal from "./pages/InformacionPersonal";
 import ExperienciaLaboral from "./pages/ExperienciaLaboral";
 import Publicaciones from "./pages/Publicaciones";
+import Proyectos from "./pages/Proyectos";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
@@ -55,8 +56,6 @@ function App() {
     },
 
     GuardarCambios: (user_data) => {
-      //To-Do
-      console.error("Guardar Cambios todavía no está implementada, App.js");
       axios
         .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
           usuario_id: user_data.usuario_id,
@@ -279,22 +278,24 @@ function App() {
               )
             }
           />
-          <Route
-            path="/educacionformal"
+		  
+		  <Route
+            path="/proyectos"
             element={
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
-                <EducacionFormal
+                <Proyectos
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
-                  category_manager={category_manager}
+				  category_manager={category_manager}
                 />
               )
             }
           />
-          <Route
+		  
+		  <Route
             path="/publicaciones"
             element={
               !isLoggedIn ? (
@@ -304,12 +305,12 @@ function App() {
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
-                  category_manager={category_manager}
+				  category_manager={category_manager}
                 />
               )
             }
           />
-        </Routes>
+		</Routes>
       </BrowserRouter>
     </div>
   );

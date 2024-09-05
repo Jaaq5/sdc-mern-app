@@ -93,6 +93,19 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             ) : (
               <> </>
             )}
+            {!(window.location.pathname === "/proyectos") ? (
+              <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
+                to="/proyectos"
+              >
+                Proyectos
+              </Button>
+            ) : (
+              <> </>
+            )}
             {!(window.location.pathname === "/sobremi") ? (
               <Button
                 variant="contained"
@@ -106,7 +119,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             ) : (
               <> </>
             )}
-            {!(window.location.pathname === "/home") ? (
+            {!(window.location.pathname !== "/home") ? (
               <Button
                 variant="contained"
                 style={button}
