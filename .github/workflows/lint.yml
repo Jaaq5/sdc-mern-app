@@ -1,0 +1,17 @@
+name: Lint Workflow
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Lint code
+      - name: Lint code
+        run: |
+          echo "Installing dependencies..."
+          npm ci
+          echo "Linting code..."
+          npm run lint || true
