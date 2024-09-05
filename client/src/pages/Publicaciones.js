@@ -10,15 +10,14 @@ import {
   List,
   ListItemText,
   ListItemButton,
-  Switch,
   FormControlLabel,
+  Switch,
 } from "@mui/material";
-
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
 // También agregarlos en "App.js" (se pueden agregar otras variables ahí)
-function InformacionPersonal({
+function Publicaciones({
   user_data,
   setUserData,
   manager_bloques,
@@ -26,8 +25,7 @@ function InformacionPersonal({
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
-
-  const [informacion, setInformacion] = useState([]);
+  const [publicaciones, setPublicaciones] = useState([]);
 
   // Estilos
   const paperStyle = {
@@ -58,7 +56,6 @@ function InformacionPersonal({
     backgroundColor: "blue",
     borderRadius: "0.5rem",
   };
-  const fieldTitleStyle = { float: "left" };
   const listStyle = {
     border: "solid 3px #999999aa",
     borderRadius: "5px",
@@ -78,38 +75,50 @@ function InformacionPersonal({
   const dense = true;
 
   // Form
-  const [bloque_id, setBloqueId] = useState(true);
-  const [telefono, setTelefono] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [puesto, setPuesto] = useState("");
-  const [direccion, setDireccion] = useState("");
-  const [mostrarFoto, setMostrarFoto] = useState(false);
-  const [mostrarPuesto, setMostrarPuesto] = useState(false);
+  const [publicacion_id, setPublicacionId] = useState(true);
+  const [fechaPublicacion, setFechaPublicacion] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [publicadora, setPublicadora] = useState("");
+  const [abstract, setAbstract] = useState("");
 
   // Datos adicionales que no están en el formulario
   const ID_Categoria_Puesto = user_data?.ID_Categoria_Puesto || "";
-  const Sobre_mi = user_data?.Sobre_mi || "";
+  const ID_Categoria_Curriculum = user_data?.ID_Categoria_Curriculum || "";
 
-  // Cargar el bloque de información personal y manejar los datos existentes
+  // Cargar el bloque de publicaciones y manejar los datos existentes
   const mapToHTML = (bloques) => {
     if (!bloques) return;
 
-    setInformacion(
-      Object.keys(bloques).map((info_id, index) => {
-        const bloque = bloques[info_id];
+    setPublicaciones(
+      Object.keys(bloques).map((publicacion_id, index) => {
+        const publicacion = bloques[publicacion_id];
         return (
           <ListItemButton
-            key={info_id}
+            key={publicacion_id}
             style={listStyle}
-            onClick={(e) => editarDatos(info_id)}
+            onClick={(e) => editarDatos(publicacion_id)}
           >
             <ListItemText
-              primary={`Tel: ${bloque.Telefono} | ${bloque.Mostrar_Puesto ? `Puesto: ${bloque.Puesto}` : ""}`}
-              secondary={`Dirección: ${bloque.Direccion} | Correo: ${bloque.Correo} | Mostrar Foto: ${bloque.Mostrar_Foto ? "Sí" : "No"}`}
+              primary={`Título: ${publicacion.Titulo} | Publicadora: ${publicacion.Publicadora}`}
+              secondary={
+                <>
+                  <div>Fecha: {publicacion.Fecha_Publicacion}</div>
+                  <div
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "300px", // Ajusta el ancho máximo según sea necesario
+                    }}
+                  >
+                    {publicacion.Abstract}
+                  </div>
+                </>
+              }
             />
             <Button
               style={deleteButton}
-              onClick={(e) => eliminarBloque(info_id, index)}
+              onClick={(e) => eliminarPublicacion(publicacion_id, index)}
             >
               <DeleteForever />
             </Button>
@@ -125,14 +134,13 @@ function InformacionPersonal({
       navigate("/login");
     } else {
       // Crear bloque si no existe
-      user_data.bloques.Informacion_Personal = user_data.bloques
-        .Informacion_Personal
-        ? user_data.bloques.Informacion_Personal
+      user_data.bloques.Publicaciones = user_data.bloques.Publicaciones
+        ? user_data.bloques.Publicaciones
         : {};
       setUserData(user_data);
 
-      // Mapear la lista de información personal a HTML
-      mapToHTML(user_data.bloques.Informacion_Personal);
+      // Mapear la lista de publicaciones a HTML
+      mapToHTML(user_data.bloques.Publicaciones);
       setLoading(false);
     }
   }, [user_data, setUserData, navigate]);
@@ -146,77 +154,71 @@ function InformacionPersonal({
   }
 
   const reiniciarForm = () => {
-    setBloqueId(true);
-    setTelefono("");
-    setCorreo("");
-    setPuesto("");
-    setDireccion("");
-    setMostrarFoto(false);
-    setMostrarPuesto(false);
+    setPublicacionId(true);
+    setFechaPublicacion("");
+    setTitulo("");
+    setPublicadora("");
+    setAbstract("");
   };
 
-  const editarDatos = (info_id) => {
-    const bloque = user_data.bloques.Informacion_Personal[info_id];
-    if (!bloque) return;
+  const editarDatos = (publicacion_id) => {
+    const publicacion = user_data.bloques.Publicaciones[publicacion_id];
+    if (!publicacion) return;
 
-    setBloqueId(info_id);
-    setTelefono(bloque.Telefono);
-    setCorreo(bloque.Correo);
-    setPuesto(bloque.Puesto);
-    setDireccion(bloque.Direccion);
-    setMostrarFoto(bloque.Mostrar_Foto);
-    setMostrarPuesto(bloque.Mostrar_Puesto);
+    setPublicacionId(publicacion_id);
+    setFechaPublicacion(publicacion.Fecha_Publicacion);
+    setTitulo(publicacion.Titulo);
+    setPublicadora(publicacion.Publicadora);
+    setAbstract(publicacion.Abstract);
   };
 
   const manejarDatos = (e) => {
     e.preventDefault();
 
-    const datosBloque = {
-      Telefono: telefono,
-      Correo: correo,
-      Puesto: puesto,
-      Direccion: direccion,
-      Mostrar_Foto: mostrarFoto,
-      Mostrar_Puesto: mostrarPuesto,
+    const datosPublicacion = {
+      Fecha_Publicacion: fechaPublicacion,
+      Titulo: titulo,
+      Publicadora: publicadora,
+      Abstract: abstract,
       ID_Categoria_Puesto: ID_Categoria_Puesto,
-      Sobre_mi: Sobre_mi,
+      ID_Categoria_Curriculum: ID_Categoria_Curriculum,
     };
 
-    if (bloque_id !== true) {
+    if (publicacion_id !== true) {
       manager_bloques.ActualizarBloque(
         user_data,
         setUserData,
-        "Informacion_Personal",
-        bloque_id,
-        datosBloque,
+        "Publicaciones",
+        publicacion_id,
+        datosPublicacion,
       );
     } else {
-      // Crear nuevo bloque
-      const bloque = manager_bloques.InsertarBloque(
+      // Crear nueva publicación
+      const nuevaPublicacion = manager_bloques.InsertarBloque(
         user_data,
         setUserData,
-        "Informacion_Personal",
-        datosBloque,
+        "Publicaciones",
+        datosPublicacion,
       );
 
-      setBloqueId(bloque);
+      setPublicacionId(nuevaPublicacion);
     }
 
     // Mapear los datos actualizados a la lista
-    mapToHTML(user_data.bloques.Informacion_Personal);
+    mapToHTML(user_data.bloques.Publicaciones);
 
     manager_bloques.GuardarCambios(user_data);
   };
 
-  const eliminarBloque = (info_id, index) => {
+  const eliminarPublicacion = (publicacion_id, index) => {
     manager_bloques.BorrarBloque(
       user_data,
       setUserData,
-      "Informacion_Personal",
-      info_id,
+      "Publicaciones",
+      publicacion_id,
     );
-    delete user_data.bloques.Informacion_Personal[info_id];
-    mapToHTML(user_data.bloques.Informacion_Personal);
+    delete user_data.bloques.Publicaciones[publicacion_id];
+    mapToHTML(user_data.bloques.Publicaciones);
 
     manager_bloques.GuardarCambios(user_data);
     reiniciarForm();
@@ -225,9 +227,7 @@ function InformacionPersonal({
   return (
     <>
       <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Información Personal
-        </h1>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>Publicaciones</h1>
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           <Button
             variant="contained"
@@ -245,7 +245,7 @@ function InformacionPersonal({
           <div>
             <Paper style={paperStyle} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
-                Informacion Personal
+                Publicaciones
               </Typography>
               <List
                 dense={dense}
@@ -258,17 +258,17 @@ function InformacionPersonal({
               >
                 <ListItemButton
                   key={true}
-                  style={(listStyle, { backgroundColor: "#4f96" })}
+                  style={{ ...listStyle, backgroundColor: "#4f96" }}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />
                   <div style={{ width: "20px" }}></div>
                   <ListItemText
-                    primary={"Agregar Nueva Información"}
-                    secondary={"Agregar nueva información personal"}
+                    primary={"Agregar Nueva Publicación"}
+                    secondary={"Agregar nueva publicación"}
                   />
                 </ListItemButton>
-                {informacion}
+                {publicaciones}
               </List>
             </Paper>
           </div>
@@ -277,89 +277,65 @@ function InformacionPersonal({
             <Grid align="center" className="wrapper">
               <Paper style={paperStyle} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
-                  {bloque_id === true ? "Añadir" : "Modificar"} Información
-                  Personal
+                  {publicacion_id === true ? "Añadir" : "Modificar"} Publicación
                 </Typography>
                 <form onSubmit={manejarDatos}>
                   <TextField
                     style={row}
                     fullWidth
-                    id="telefono"
-                    type="tel"
-                    label="Teléfono"
-                    placeholder="Teléfono"
-                    name="telefono"
+                    id="fechaPublicacion"
+                    type="date"
+                    label="Fecha Publicación"
+                    placeholder="Fecha Publicación"
+                    name="fechaPublicacion"
                     required
-                    value={telefono}
-                    onChange={(e) => {
-                      const regex = /^[0-9\b]+$/;
-                      if (e.target.value === "" || regex.test(e.target.value)) {
-                        setTelefono(e.target.value);
-                      }
+                    value={fechaPublicacion}
+                    onChange={(e) => setFechaPublicacion(e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
                     }}
-                    onInvalid={(e) =>
-                      e.target.setCustomValidity(
-                        "Introduce un número de teléfono válido",
-                      )
-                    }
                   />
                   <TextField
                     style={row}
                     fullWidth
-                    id="correo"
-                    type="email"
-                    label="Correo"
-                    placeholder="Correo"
-                    name="correo"
+                    id="titulo"
+                    type="text"
+                    label="Título"
+                    placeholder="Título"
+                    name="titulo"
                     required
-                    value={correo}
-                    onChange={(e) => setCorreo(e.target.value)}
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
+                  />
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="publicadora"
+                    type="text"
+                    label="Publicadora"
+                    placeholder="Publicadora"
+                    name="publicadora"
+                    required
+                    value={publicadora}
+                    onChange={(e) => setPublicadora(e.target.value)}
+                  />
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="abstract"
+                    type="text"
+                    label="Abstract"
+                    placeholder="Abstract"
+                    name="abstract"
+                    required
+                    multiline
+                    rows={4}
+                    value={abstract}
+                    onChange={(e) => setAbstract(e.target.value)}
                   />
 
-                  <TextField
-                    style={row}
-                    fullWidth
-                    id="puesto"
-                    type="text"
-                    label="Puesto"
-                    placeholder="Puesto"
-                    name="puesto"
-                    required
-                    value={puesto}
-                    onChange={(e) => setPuesto(e.target.value)}
-                  />
-                  <TextField
-                    style={row}
-                    fullWidth
-                    id="direccion"
-                    type="text"
-                    label="Dirección"
-                    placeholder="Dirección"
-                    name="direccion"
-                    required
-                    value={direccion}
-                    onChange={(e) => setDireccion(e.target.value)}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={mostrarFoto}
-                        onChange={(e) => setMostrarFoto(e.target.checked)}
-                      />
-                    }
-                    label="Mostrar Foto"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={mostrarPuesto}
-                        onChange={(e) => setMostrarPuesto(e.target.checked)}
-                      />
-                    }
-                    label="Mostrar Puesto"
-                  />
                   <Button style={btnStyle} variant="contained" type="submit">
-                    {bloque_id === true ? "Crear" : "Guardar"}
+                    {publicacion_id === true ? "Crear" : "Guardar"}
                   </Button>
                 </form>
               </Paper>
@@ -371,4 +347,4 @@ function InformacionPersonal({
   );
 }
 
-export default InformacionPersonal;
+export default Publicaciones;

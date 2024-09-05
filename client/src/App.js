@@ -8,6 +8,7 @@ import EducacionFormal from "./Components/EducacionFormal";
 import SobreMi from "./Components/SobreMi";
 import InformacionPersonal from "./pages/InformacionPersonal";
 import ExperienciaLaboral from "./pages/ExperienciaLaboral";
+import Publicaciones from "./pages/Publicaciones";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
@@ -258,6 +259,36 @@ function App() {
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
+                />
+              )
+            }
+          />
+          <Route
+            path="/educacionformal"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <EducacionFormal
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+          <Route
+            path="/publicaciones"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <Publicaciones
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
                 />
               )
             }
