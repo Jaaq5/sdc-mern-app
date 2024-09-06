@@ -38,6 +38,10 @@ function Home({ user_data, setUserData }) {
     navigate("/publicaciones");
   };
 
+  const handleNavigateToHabilidades = () => {
+    navigate("/habilidades");
+  };
+
   if (loading) {
     return (
       <center>
@@ -73,6 +77,18 @@ function Home({ user_data, setUserData }) {
         onClick={handleNavigateToPublicaciones}
       >
         Ir a Publicaciones
+      </Button>
+      <br />
+      <Button
+        variant="contained"
+        style={{
+          marginTop: "2rem",
+          fontSize: "1.2rem",
+          backgroundColor: "green",
+        }}
+        onClick={handleNavigateToHabilidades}
+      >
+        Ir a Habilidades y herramientas
       </Button>
     </center>
   );

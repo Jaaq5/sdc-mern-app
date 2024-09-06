@@ -17,6 +17,7 @@ import { Navbar } from "./Components/Navbar";
 
 import { apiUrl } from "./consts";
 import axios from "axios";
+import Habilidades from "./pages/Habilidades";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -278,8 +279,8 @@ function App() {
               )
             }
           />
-		  
-		  <Route
+
+          <Route
             path="/proyectos"
             element={
               !isLoggedIn ? (
@@ -289,13 +290,29 @@ function App() {
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
-				  category_manager={category_manager}
+                  category_manager={category_manager}
                 />
               )
             }
           />
-		  
-		  <Route
+
+          <Route
+            path="/habilidades"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <Habilidades
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+
+          <Route
             path="/publicaciones"
             element={
               !isLoggedIn ? (
@@ -305,12 +322,12 @@ function App() {
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
-				  category_manager={category_manager}
+                  category_manager={category_manager}
                 />
               )
             }
           />
-		</Routes>
+        </Routes>
       </BrowserRouter>
     </div>
   );
