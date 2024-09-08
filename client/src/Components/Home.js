@@ -42,6 +42,10 @@ function Home({ user_data, setUserData }) {
     navigate("/habilidades");
   };
 
+  const handleNavigateToLenguajes = () => {
+    navigate("/lenguajes");
+  };
+
   if (loading) {
     return (
       <center>
@@ -89,6 +93,18 @@ function Home({ user_data, setUserData }) {
         onClick={handleNavigateToHabilidades}
       >
         Ir a Habilidades y herramientas
+      </Button>
+      <br />
+      <Button
+        variant="contained"
+        style={{
+          marginTop: "2rem",
+          fontSize: "1.2rem",
+          backgroundColor: "green",
+        }}
+        onClick={handleNavigateToLenguajes}
+      >
+        Ir a Lenguajes
       </Button>
     </center>
   );
