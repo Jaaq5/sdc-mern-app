@@ -24,3 +24,10 @@ p {
 .gray-text {
   color: #ccc;
 }
+
+body div div div h1 {
+	margin-top: 1.35em;
+}
+body div div center h1 {
+	margin-top: 1.35em;
+}

@@ -285,7 +285,7 @@ function Proyectos({
     <>
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Experiencias Laborales
+          Proyectos
         </h1>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>

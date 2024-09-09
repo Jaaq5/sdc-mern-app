@@ -10,6 +10,7 @@ import SobreMi from "./Components/SobreMi";
 import InformacionPersonal from "./pages/InformacionPersonal";
 import ExperienciaLaboral from "./pages/ExperienciaLaboral";
 import Publicaciones from "./pages/Publicaciones";
+import Referencias from "./pages/Referencias";
 import Proyectos from "./pages/Proyectos";
 
 import { Navbar } from "./Components/Navbar";
@@ -336,6 +337,21 @@ function App() {
                 <Navigate to="/login" />
               ) : (
                 <Publicaciones
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+		  <Route
+            path="/referencias"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <Referencias
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}

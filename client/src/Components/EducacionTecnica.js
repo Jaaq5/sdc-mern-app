@@ -78,13 +78,13 @@ function EducacionTecnica({ user_data, setUserData, manager_bloques,category_man
 
     const [bloque_id, setBloqueId] = useState(true);
 
-    const [fecha_inicio, setFechaInicio] = useState("-");
-    const [fecha_final, setFechaFinal] = useState("-");
-    const [programa, setPrograma] = useState("-");
-    const [institucion, setInstitucion] = useState("-");
-    const [descripcion, setDescripcion] = useState("-");
-    const [categoria_curriculum, setCurriculum] = useState("-");
-    const [categoria_puesto, setPuesto] = useState("-");
+    const [fecha_inicio, setFechaInicio] = useState("");
+    const [fecha_final, setFechaFinal] = useState("");
+    const [programa, setPrograma] = useState("");
+    const [institucion, setInstitucion] = useState("");
+    const [descripcion, setDescripcion] = useState("");
+    const [categoria_curriculum, setCurriculum] = useState("");
+    const [categoria_puesto, setPuesto] = useState("");
 
     useEffect(() => {
     if (!user_data) {
