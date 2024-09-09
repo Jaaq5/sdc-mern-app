@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 //Telefono
-import { PhoneNumberUtil } from 'google-libphonenumber';
-import { PhoneInput } from 'react-international-phone';
-import 'react-international-phone/style.css';
+import { PhoneNumberUtil } from "google-libphonenumber";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
 // También agregarlos en "App.js" (se pueden agregar otras variables ahí)
@@ -82,7 +82,7 @@ function Referencias({
     borderRadius: "5px",
     float: "right",
     cursor: "pointer",
-    color: "#000"
+    color: "#000",
   };
   const dense = true;
 
@@ -94,23 +94,25 @@ function Referencias({
   const [direccion, setDireccion] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
-  
+
   const phoneUtil = PhoneNumberUtil.getInstance();
   const telefonoValido = (telefono) => {
-		if (telefono.length < 7)
-			return false
-		if(telefono[0] === "+" && telefono[1] === "5" && telefono[2] === "0" && telefono[3] === "6")
-		  if (telefono.length === 12)
-			return true
-		  else
-			return false
-		
-		try {
-			return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(telefono));
-		} catch (error) {
-			return false;
-		}
-		//return true
+    if (telefono.length < 7) return false;
+    if (
+      telefono[0] === "+" &&
+      telefono[1] === "5" &&
+      telefono[2] === "0" &&
+      telefono[3] === "6"
+    )
+      if (telefono.length === 12) return true;
+      else return false;
+
+    try {
+      return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(telefono));
+    } catch (error) {
+      return false;
+    }
+    //return true
   };
   const Tvalido = telefonoValido(telefono);
 
@@ -146,7 +148,7 @@ function Referencias({
       }),
     );
   };
-  
+
   const mapDBListToHTML = (setter, lista) => {
     setter(
       Object.keys(lista).map((l_id) => (
@@ -167,8 +169,8 @@ function Referencias({
         ? user_data.bloques.Referencias
         : {};
       setUserData(user_data);
-	  
-	  //Categorias
+
+      //Categorias
       category_manager
         .ObtenerCategoriasCurriculum()
         .then((response) => {
@@ -200,13 +202,13 @@ function Referencias({
   const reiniciarForm = () => {
     setReferenciaId(true);
     setNombre("");
-	setPuesto("");
-	setOrganizacion("");
-	setDireccion("");
-	setEmail("");
-	setTelefono("");
-	setCatPuesto("");
-	setCurriculum("");
+    setPuesto("");
+    setOrganizacion("");
+    setDireccion("");
+    setEmail("");
+    setTelefono("");
+    setCatPuesto("");
+    setCurriculum("");
   };
 
   const editarDatos = (referencia_id) => {
@@ -217,11 +219,11 @@ function Referencias({
     setNombre(referencia.Nombre);
     setOrganizacion(referencia.Organizacion);
     setDireccion(referencia.Direccion);
-	setPuesto(referencia.Puesto);
-	setEmail(referencia.Email);
-	setTelefono(referencia.Telefono)
-	setCatPuesto(referencia.ID_Categoria_Puesto);
-	setCurriculum(referencia.ID_Categoria_Curriculum);
+    setPuesto(referencia.Puesto);
+    setEmail(referencia.Email);
+    setTelefono(referencia.Telefono);
+    setCatPuesto(referencia.ID_Categoria_Puesto);
+    setCurriculum(referencia.ID_Categoria_Curriculum);
   };
 
   const manejarDatos = (e) => {
@@ -232,8 +234,8 @@ function Referencias({
       Organizacion: organizacion,
       Puesto: puesto,
       Direccion: direccion,
-	  Email: email,
-	  Telefono: telefono,
+      Email: email,
+      Telefono: telefono,
       ID_Categoria_Puesto: categoria_puesto,
       ID_Categoria_Curriculum: categoria_curriculum,
     };
@@ -346,7 +348,7 @@ function Referencias({
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                   />
-				  <TextField
+                  <TextField
                     style={row}
                     fullWidth
                     id="puesto"
@@ -358,28 +360,30 @@ function Referencias({
                     value={puesto}
                     onChange={(e) => setPuesto(e.target.value)}
                   />
-				  <PhoneInput 
-					style={row}
+                  <PhoneInput
+                    style={row}
                     fullWidth
                     id="telefono"
                     placeholder="Teléfono del contacto"
                     name="telefono"
                     required
                     rows={4}
-					defaultCountry="cr"
-					value={telefono}
-					onChange={(phone) => setTelefono(phone)}
-				  />
-				  <TextField
-                    style={row, {display:"none"}}
+                    defaultCountry="cr"
+                    value={telefono}
+                    onChange={(phone) => setTelefono(phone)}
+                  />
+                  <TextField
+                    style={(row, { display: "none" })}
                     fullWidth
                     id="telefono_hidden"
                     type="text"
                     required
-					value = {Tvalido? telefono : ""}
+                    value={Tvalido ? telefono : ""}
                     rows={4}
                   />
-				  {!Tvalido && <div style={{ color: 'red' }}>Número no es válido</div>}
+                  {!Tvalido && (
+                    <div style={{ color: "red" }}>Número no es válido</div>
+                  )}
                   <TextField
                     style={row}
                     fullWidth
@@ -405,7 +409,7 @@ function Referencias({
                     value={direccion}
                     onChange={(e) => setDireccion(e.target.value)}
                   />
-				  <TextField
+                  <TextField
                     style={row}
                     fullWidth
                     id="email"
@@ -418,8 +422,8 @@ function Referencias({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-				  
-				  <FormControl style={{ width: "81%", marginTop: "20px" }}>
+
+                  <FormControl style={{ width: "81%", marginTop: "20px" }}>
                     <InputLabel id="id-curriculum-select-label">
                       Tipo de CV
                     </InputLabel>

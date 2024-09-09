@@ -11,7 +11,7 @@ import {
   ListItemButton,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 
@@ -19,8 +19,16 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [lenguajes, setLenguajes] = useState([]);
-  const lenguajes_temp = [{id:1, nombre:"Español"}, {id:2, nombre:"Inglés"}, {id:3, nombre:"Francés"}];
-  const niveles =[{id:1, nombre:"Bajo"}, {id:2, nombre:"Medio"}, {id:3, nombre:"Alto"}];
+  const lenguajes_temp = [
+    { id: 1, nombre: "Español" },
+    { id: 2, nombre: "Inglés" },
+    { id: 3, nombre: "Francés" },
+  ];
+  const niveles = [
+    { id: 1, nombre: "Bajo" },
+    { id: 2, nombre: "Medio" },
+    { id: 3, nombre: "Alto" },
+  ];
   // Estilos
   const paperStyle = {
     padding: "2rem",
@@ -72,7 +80,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
   const [lenguaje, setLenguaje] = useState("");
   const [nivel, setNivel] = useState("");
   //
-  
+
   // Cargar habilidades y mapeo a HTML
   const mapToHTML = (bloques) => {
     if (!bloques) return;
@@ -89,8 +97,8 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
             onClick={() => editarDatos(lenguaje_id)}
           >
             <ListItemText
-              primary={`Nombre: ${lenguajes_temp.find(obj => obj.id == bloque.Id).nombre}`}
-              secondary={`Nivel ${niveles.find(obj => obj.id == bloque.Nivel).nombre}`}
+              primary={`Nombre: ${lenguajes_temp.find((obj) => obj.id == bloque.Id).nombre}`}
+              secondary={`Nivel ${niveles.find((obj) => obj.id == bloque.Nivel).nombre}`}
             />
             <Button
               style={deleteButton}
@@ -100,7 +108,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
             </Button>
           </ListItemButton>
         );
-      })
+      }),
     );
   };
 
@@ -189,7 +197,6 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     reiniciarForm();
   };
 
-
   return (
     <>
       <div>
@@ -229,9 +236,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
                 >
                   <PostAdd />
                   <div style={{ width: "20px" }}></div>
-                  <ListItemText
-                    primary={"Agregar Nuevo Idioma"}
-                  />
+                  <ListItemText primary={"Agregar Nuevo Idioma"} />
                 </ListItemButton>
                 {lenguajes}
               </List>
@@ -245,36 +250,55 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
                   {bloque_id === true ? "Añadir" : "Modificar"} Lenguaje
                 </Typography>
                 <form onSubmit={manejarDatos}>
-
-                <InputLabel id="lenguajesSelect">Lenguaje</InputLabel>
-                <Select style={{ width: "60%" }} variant="outlined" labelId="lenguajesSelect" label={"Lenguaje"} value = {lenguaje} onChange={(e) => {setLenguaje(e.target.value)}}>
-                  {lenguajes_temp.map(option => {return (
-                            <MenuItem key={option.id} value={option.id}>
-                              {option.nombre}
-                            </MenuItem>
-                          )
-                })}
-                
-                </Select>
-                <div>
-                <InputLabel id="nivelesSelect">Nivel</InputLabel>
-                  <Select style={{ width: "60%" }} variant="outlined" labelId="nivelesSelect" label={"Nivel"} value = {nivel} onChange={(e) => {setNivel(e.target.value)}}> 
-                    <option value="Seleccione un nivel"> -- Seleccione un nivel -- </option>
-                    {niveles.map(option => {return (
-                              <MenuItem key={option.id} value={option.id}>
-                                {option.nombre}
-                              </MenuItem>
-                            )
-                  })}
-                  
+                  <InputLabel id="lenguajesSelect">Lenguaje</InputLabel>
+                  <Select
+                    style={{ width: "60%" }}
+                    variant="outlined"
+                    labelId="lenguajesSelect"
+                    label={"Lenguaje"}
+                    value={lenguaje}
+                    onChange={(e) => {
+                      setLenguaje(e.target.value);
+                    }}
+                  >
+                    {lenguajes_temp.map((option) => {
+                      return (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.nombre}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
-                </div>
-                <div>
-                  <Button style={btnStyle} variant="contained" type="submit">
-                    {bloque_id === true ? "Crear" : "Guardar"}
-                  </Button>
-                </div>
-                  
+                  <div>
+                    <InputLabel id="nivelesSelect">Nivel</InputLabel>
+                    <Select
+                      style={{ width: "60%" }}
+                      variant="outlined"
+                      labelId="nivelesSelect"
+                      label={"Nivel"}
+                      value={nivel}
+                      onChange={(e) => {
+                        setNivel(e.target.value);
+                      }}
+                    >
+                      <option value="Seleccione un nivel">
+                        {" "}
+                        -- Seleccione un nivel --{" "}
+                      </option>
+                      {niveles.map((option) => {
+                        return (
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.nombre}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                  <div>
+                    <Button style={btnStyle} variant="contained" type="submit">
+                      {bloque_id === true ? "Crear" : "Guardar"}
+                    </Button>
+                  </div>
                 </form>
               </Paper>
             </Grid>

@@ -284,9 +284,7 @@ function Proyectos({
   return (
     <>
       <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Proyectos
-        </h1>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>Proyectos</h1>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">

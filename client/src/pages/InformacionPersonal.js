@@ -89,7 +89,6 @@ function InformacionPersonal({
   const [id_categoria_puesto, setIdCategoriaPuesto] = useState("");
   const [sobre_mi, setSobreMi] = useState("");
 
-
   // Cargar el bloque de información personal y manejar los datos existentes
   const mapToHTML = (bloques) => {
     if (!bloques) return;

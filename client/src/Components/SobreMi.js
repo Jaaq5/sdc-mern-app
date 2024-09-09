@@ -83,9 +83,7 @@ function SobreMi({ user_data, setUserData, manager_bloques }) {
 
   const handlePopUpEditar = (e) => {
     if (indx != "") {
-      setTexto(
-        user_data.bloques.Informacion_Personal[parseInt(indx)].Sobre_mi
-      );
+      setTexto(user_data.bloques.Informacion_Personal[parseInt(indx)].Sobre_mi);
       setAnchor(anchor ? null : e.currentTarget);
     }
   };
