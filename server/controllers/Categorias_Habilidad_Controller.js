@@ -30,6 +30,26 @@ const Crear_Categoria_Habilidad = async (req, res) => {
   }
 };
 
+// Crea las categorías predeterminadas
+const Crear_Categorias_Habilidad_Defecto = async () => {
+  const categoriasDefault = [
+    { Nombre: "Habilidad Técnica" },
+    { Nombre: "Habilidad Blanda" },
+  ];
+
+  // Search for default categories
+  for (const categoria of categoriasDefault) {
+    const existingCategoria = await Categorias_Habilidad.findOne({
+      Nombre: categoria.Nombre,
+    });
+    // Create the category if it doesn't exist
+    if (!existingCategoria) {
+      const nuevaCategoria = new Categorias_Habilidad(categoria);
+      await nuevaCategoria.save();
+    }
+  }
+};
+
 const Obtener_Categoria_Habilidad = async (req, res) => {
   const categoria_id = req.body.categoria_id;
 
@@ -58,6 +78,9 @@ const Obtener_Categoria_Habilidad = async (req, res) => {
 
 const Obtener_Categorias_Habilidad = async (req, res) => {
   try {
+    // Crear categorías predeterminadas si no existen
+    await Crear_Categorias_Habilidad_Defecto();
+
     const categorias_habilidad = await Categorias_Habilidad.find();
     return res.status(200).json({
       success: true,
@@ -126,6 +149,7 @@ const Eliminar_Categoria_Habilidad = async (req, res) => {
 
 module.exports = {
   Crear_Categoria_Habilidad,
+  Crear_Categorias_Habilidad_Defecto,
   Obtener_Categoria_Habilidad,
   Obtener_Categorias_Habilidad,
   Actualizar_Categoria_Habilidad,

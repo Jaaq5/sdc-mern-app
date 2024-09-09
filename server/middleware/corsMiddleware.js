@@ -5,6 +5,8 @@ const permitedOrigins = [
   "http://localhost:8080",
   "http://www.dominio-oracle-vm.com",
   "http://localhost:3000",
+  "http://localhost:4000",
+  "http://localhost:27017",
 ];
 
 // Enable CORS for specific origins

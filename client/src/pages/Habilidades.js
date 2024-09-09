@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Input,
+  //Input,
   Grid,
   Button,
   Paper,
@@ -10,10 +10,15 @@ import {
   List,
   ListItemText,
   ListItemButton,
-  Switch,
-  FormControlLabel,
+  //Switch,
+  //FormControlLabel,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
+import { apiUrl } from "../consts";
+import axios from "axios";
 
 function Habilidades({ user_data, setUserData, manager_bloques }) {
   const navigate = useNavigate();
@@ -70,6 +75,7 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
   const [bloque_id, setBloqueId] = useState(true);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [categoriasHabilidad, setCategoriasHabilidad] = useState([]);
   //
   const [id_categoria_curriculum, setIdCategoriaCurriculum] = useState("");
   const [id_categoria_puesto, setIdCategoriaPuesto] = useState("");
@@ -80,12 +86,17 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
     if (!bloques) return;
 
     setHabilidades(
-      Object.keys(bloques).map((habilidad_id, index) => {
+      Object.keys(bloques).map((habilidad_id) => {
         const bloque = bloques[habilidad_id];
         const descripcionCorta =
           bloque.Descripcion.length > 10
             ? `${bloque.Descripcion.substring(0, 10)}...`
             : bloque.Descripcion;
+
+        const tipoHabilidad =
+          categoriasHabilidad.find(
+            (categoria) => categoria._id === bloque.ID_Categoria_Habilidad,
+          )?.Nombre || "Desconocido";
 
         return (
           <ListItemButton
@@ -95,11 +106,11 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
           >
             <ListItemText
               primary={`Nombre: ${bloque.Nombre}`}
-              secondary={`Descripción: ${descripcionCorta}`}
+              secondary={`Descripción: ${descripcionCorta} - Tipo: ${tipoHabilidad}`}
             />
             <Button
               style={deleteButton}
-              onClick={(e) => eliminarHabilidad(habilidad_id, index)}
+              onClick={(e) => eliminarHabilidad(habilidad_id)}
             >
               <DeleteForever />
             </Button>
@@ -107,6 +118,17 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
         );
       }),
     );
+  };
+  // Get ability categories
+  const fetchCategoriasHabilidad = async () => {
+    try {
+      const response = await axios.get(
+        apiUrl + "/api/cat-skill/obtener-categorias-habilidad",
+      );
+      setCategoriasHabilidad(response.data.categorias_habilidad); // Actualiza el estado con las categorías de habilidad
+    } catch (error) {
+      console.error("Error al obtener categorías de habilidades:", error);
+    }
   };
 
   useEffect(() => {
@@ -122,6 +144,9 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
       // Mapear la lista de habilidades a HTML
       mapToHTML(user_data.bloques.Habilidades);
       setLoading(false);
+
+      // Load ability categories
+      fetchCategoriasHabilidad();
     }
   }, [user_data, setUserData, navigate]);
 
@@ -284,7 +309,29 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
                   />
+                  <InputLabel id="categoriaHabilidadSelect">
+                    Categoría de Habilidad
+                  </InputLabel>
+                  <Select
+                    style={{ width: "60%" }}
+                    variant="outlined"
+                    labelId="categoriaHabilidadSelect"
+                    label="Categoría de Habilidad"
+                    value={id_categoria_habilidad}
+                    onChange={(e) => setIdCategoriaHabilidad(e.target.value)}
+                    displayEmpty
+                  >
+                    <MenuItem value="" disabled>
+                      Seleccione una categoría
+                    </MenuItem>
+                    {categoriasHabilidad.map((option) => (
+                      <MenuItem key={option._id} value={option._id}>
+                        {option.Nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
 
+                  <br />
                   <Button style={btnStyle} variant="contained" type="submit">
                     {bloque_id === true ? "Crear" : "Guardar"}
                   </Button>

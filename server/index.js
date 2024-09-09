@@ -14,6 +14,7 @@ const skillRoutes = require("./routes/categoria_habilidad_route");
 const jobRoutes = require("./routes/categoria_puesto_route");
 const languageRoutes = require("./routes/idioma_route");
 const templateRoutes = require("./routes/curriculum_template_route");
+const path = require("path");
 
 // Create an instance of an express application
 const app = express();
@@ -48,6 +49,14 @@ app.use("/api/cat-language", languageRoutes);
 
 //app.get("/address", (req, res) => {return res.status(200).json({success: true, msg: "Direccion", address: process.env.PORT});});
 
+// Serve static files from build folder
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+// Serve index.html for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
 // Connect to MongoDB #########################################################
 const mongoUri = process.env.MONGO_URI;
 
@@ -55,7 +64,7 @@ mongoose
   .connect(mongoUri)
   .then(() => {
     // The server listens on the port #############################################
-    app.listen(process.env.PORT, () => {
+    app.listen(port, () => {
       console.log("");
       console.log(`Connected to MongoDB and listening on port:${port}`);
       //console.log(`Local: http://localhost:${port}`);
