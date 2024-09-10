@@ -49,13 +49,22 @@ app.use("/api/cat-language", languageRoutes);
 
 //app.get("/address", (req, res) => {return res.status(200).json({success: true, msg: "Direccion", address: process.env.PORT});});
 
-// Serve static files from build folder
-app.use(express.static(path.join(__dirname, "../client/build")));
+// Serve static files and index.html in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/build")));
 
-// Serve index.html for all other routes
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
+  app.get("*", (req, res) => {
+    const filePath = path.join(__dirname, "../client/build", "index.html");
+
+    // Check if index.html exists
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        // File not found or other error
+        res.status(404).send("Missing index.html from client/build.");
+      }
+    });
+  });
+}
 
 // Connect to MongoDB #########################################################
 const mongoUri = process.env.MONGO_URI;

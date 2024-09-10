@@ -3,7 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --watch --env-file=.env.development index.js ",
+    "install-dev": "npm install",
+    "install-pro": "NODE_ENV=production npm install",
+    "start-dev": "node --watch --env-file=.env.development index.js",
+    "start-pro": "pm2 start index.js --name sdc-server --node-args='--env-file=.env.production'",
+    "server-list": "pm2 list",
+    "server-restart": "pm2 restart sdc-server",
+    "server-stop": "pm2 stop sdc-server",
+    "server-delete": "pm2 delete sdc-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,7 +18,9 @@
   "license": "GPL-3.0-only",
   "description": "",
   "dependencies": {
-    "express": "^4.19.2",
-    "mongoose": "^8.5.3"
+    "express": "4.19.2",
+    "mongoose": "8.5.3",
+    "pm2": "5.4.2",
+    "cors": "2.8.5"
   }
 }
