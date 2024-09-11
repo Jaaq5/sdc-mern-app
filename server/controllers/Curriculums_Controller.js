@@ -109,7 +109,7 @@ const Eliminar_Curriculum = async (req, res) => {
 		
 		
 		var nueva_lista = usuario.Curriculums_IDs.filter((id) => id != curriculum_id_v);
-		usuario = nueva_lista;
+		usuario.Curriculums_IDs = nueva_lista;
 		
 		await usuario.save();
 

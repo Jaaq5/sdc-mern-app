@@ -12,14 +12,15 @@ import ExperienciaLaboral from "./pages/ExperienciaLaboral";
 import Publicaciones from "./pages/Publicaciones";
 import Referencias from "./pages/Referencias";
 import Proyectos from "./pages/Proyectos";
+import Habilidades from "./pages/Habilidades";
+import Lenguajes from "./pages/Lenguajes";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
 
 import { apiUrl } from "./consts";
 import axios from "axios";
-import Habilidades from "./pages/Habilidades";
-import Lenguajes from "./pages/Lenguajes";
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
