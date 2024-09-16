@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "install-dev": "npm install",
-    "install-pro": "NODE_ENV=production npm install",
+    "install-pro": "npm install --omit=dev",
     "start-dev": "node --watch --env-file=.env.development index.js",
-    "start-pro": "pm2 start index.js --name sdc-server --node-args='--env-file=.env.production'",
+    "start-pro": "pm2 start index.js --name sdc-server --node-args='--env-file=.env.production' && pm2 list",
     "server-list": "pm2 list",
     "server-restart": "pm2 restart sdc-server",
     "server-stop": "pm2 stop sdc-server",
