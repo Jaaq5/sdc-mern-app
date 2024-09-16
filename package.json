@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install-dev": "chmod +x ./scripts/install-dev.sh && ./scripts/install-dev.sh",
-    "install-pro": "chmod +x ./scripts/install-pro.sh && ./scripts/install-pro.sh",
-    "start-dev": "chmod +x ./scripts/start-dev.sh && ./scripts/start-dev.sh",
-    "start-pro": "chmod +x ./scripts/start-pro.sh && ./scripts/start-pro.sh",
+    "install-dev": "npm install && cd server && npm run install-dev && cd ../client && npm install",
+    "install-pro": "cd server && npm run install-pro",
+    "start-dev": "concurrently \"cd server && npm run start-dev\" \"cd client && npm start\"",
+    "start-pro": "cd server && npm run start-pro",
     "server-list": "cd server && npm run server-list",
     "server-restart": "cd server && npm run server-restart",
     "server-stop": "cd server && npm run server-stop",
@@ -15,15 +15,13 @@
     "format": "concurrently \"cd client && npx prettier . --write\" \"cd server && npx prettier . --write\"",
     "lint": "concurrently \"cd client/src && npx eslint .\" \"cd server && npx eslint .\"",
     "lint:fix": "concurrently \"cd client/src && npx eslint --fix .\" \"cd server && npx eslint --fix .\"",
-    "build": "chmod +x ./scripts/build.sh && ./scripts/build.sh",
+    "build": "cd client && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
     "concurrently": "8.2.2",
     "eslint": "9.9.1",
