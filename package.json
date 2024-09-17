@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install-dev": "npm install && cd server && npm run install-dev && cd ../client && npm install",
-    "install-pro": "cd server && npm run install-pro",
+    "install-dev": "cd scripts && node install-dev.js",
+    "install-pro": "cd scripts && node install-pro.js",
     "start-dev": "concurrently \"cd server && npm run start-dev\" \"cd client && npm start\"",
     "start-pro": "cd server && npm run start-pro",
     "server-list": "cd server && npm run server-list",

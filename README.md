@@ -11,7 +11,7 @@
   <p align="center">
     Proyecto que permite la creación de curriculums a usuarios para diferentes puesto laborales
     <br />
-    <a href="#">Ver demo</a>
+    <a href="http://129.80.112.63:4000">Ver demo</a>
   </p>
 </div>
 
@@ -26,7 +26,7 @@
       <a href="#instalación-del-proyecto">Instalación del proyecto</a>
     </li>
     <li>
-      <a href="#documentación-de-mern">Documentación de MERN</a>
+      <a href="#documentación-oficial">Documentación oficial</a>
     </li>
   </ol>
 </details>
@@ -89,6 +89,8 @@ db version v7.0
 
 ## Instalación del proyecto
 
+## Development
+
 Para utilizar este repositorio, ejecute:
 
 ```sh
@@ -98,6 +100,10 @@ git clone https://github.com/Jaaq5/sdc-mern-app.git
 ### Clonar el archivo .env.example
 
 En la carpeta /server clone el archivo .env.example, cambie su nombre a .env.development,
+
+cambie los valores de CHANGEMYNAME por los de su entorno de desarrollo
+
+En la carpeta /client clone el archivo .env.example, cambie su nombre a .env.development,
 
 cambie los valores de CHANGEMYNAME por los de su entorno de desarrollo
 
@@ -112,13 +118,13 @@ npm run
 Para instalar Express, React y otras dependencias , dentro de la carpeta del proyecto, ejecute:
 
 ```sh
-npm install
+npm run install-dev
 ```
 
 Para ejecutar el proyecto en modo desarrollador, ejecute:
 
 ```sh
-npm start
+npm run start-dev
 ```
 
 Abra en el navegador: [http://localhost:3000](http://localhost:3000):
@@ -129,7 +135,71 @@ Para hacer una version para el modo producción , ejecute:
 npm run build
 ```
 
-El folder estara en /client/build
+El folder estará en /client/build
+
+## Production
+
+Para utilizar este repositorio, ejecute:
+
+```sh
+git clone https://github.com/Jaaq5/sdc-mern-app.git
+```
+
+### Clonar el archivo .env.example
+
+En la carpeta /server clone el archivo .env.example, cambie su nombre a .env.production,
+
+cambie los valores de CHANGEMYNAME por los de su entorno de producción
+
+En la carpeta /client clone el archivo .env.example, cambie su nombre a .env.production,
+
+cambie los valores de CHANGEMYNAME por los de su entorno de producción
+
+### Ejecución del proyecto
+
+Para listar todos los scripts disponibles, ejecute
+
+```sh
+npm run
+```
+
+Para instalar Express, React y otras dependencias , dentro de la carpeta del proyecto, ejecute:
+
+```sh
+npm run install-pro
+```
+
+Para ejecutar el proyecto en modo producción, ejecute:
+
+```sh
+npm run start-pro
+```
+
+Para controlar el servidor de producción, ejecute:
+
+```sh
+npm run server-list
+```
+
+Para reiniciar el servidor de producción, ejecute:
+
+```sh
+npm run server-restart
+```
+
+Para detener el servidor de producción, ejecute:
+
+```sh
+npm run server-stop
+```
+
+Para eliminar el servidor de producción, ejecute:
+
+```sh
+npm run server-delete
+```
+
+Abra en el navegador: [http://ip-publica:puerto](#)
 
 ### Otro scripts
 
