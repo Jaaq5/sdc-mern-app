@@ -26,7 +26,7 @@ function SobreMi({ user_data, setUserData, manager_bloques }) {
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [texto, setTexto] = useState("");
   const [textos, setTextos] = useState([]);
-  const [indx, setIndx] = useState("");
+  const [indx, setIndx] = useState(null);
 
   const listStyle = {
     border: "solid 3px #999999aa",
@@ -60,7 +60,7 @@ function SobreMi({ user_data, setUserData, manager_bloques }) {
         <ListItemButton
           key={plan_id}
           style={listStyle}
-          selected={plan_id == indx}
+          selected={plan_id === indx}
           onClick={() => {
             setIndx(plan_id);
           }}

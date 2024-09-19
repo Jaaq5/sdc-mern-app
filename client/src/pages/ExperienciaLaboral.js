@@ -104,8 +104,12 @@ function ExperienciaLaboral({
   const mapToHTML = (bloques) => {
     if (!bloques) return;
 
+    const sortedBloques = Object.entries(bloques).sort(
+      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final)
+    );
+
     setTrabajos(
-      Object.keys(bloques).map((plan_id, index) => (
+      sortedBloques.map(([plan_id, bloque], index) => (
         <ListItemButton
           key={plan_id}
           style={listStyle}
@@ -113,17 +117,17 @@ function ExperienciaLaboral({
         >
           <ListItemText
             primary={
-              bloques[plan_id].Puesto +
+              bloque.Puesto +
               " en " +
-              bloques[plan_id].Organizacion +
+              bloque.Organizacion +
               ""
             }
             secondary={
-              bloques[plan_id].Fecha_Inicio +
+              bloque.Fecha_Inicio +
               "-" +
-              bloques[plan_id].Fecha_Final +
+              bloque.Fecha_Final +
               ": " +
-              bloques[plan_id].Descripcion.substring(0, 30)
+              bloque.Descripcion.substring(0, 30)
             }
           />
           <Button

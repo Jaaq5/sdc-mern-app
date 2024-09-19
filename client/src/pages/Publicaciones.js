@@ -89,9 +89,13 @@ function Publicaciones({
   const mapToHTML = (bloques) => {
     if (!bloques) return;
 
+    const sortedBloques = Object.entries(bloques).sort(
+      ([, a], [, b]) => new Date(b.Fecha_Publicacion) - new Date(a.Fecha_Publicacion)
+    );
+
     setPublicaciones(
-      Object.keys(bloques).map((publicacion_id, index) => {
-        const publicacion = bloques[publicacion_id];
+      sortedBloques.map(([publicacion_id, bloque], index) => {
+        const publicacion = bloque;
         return (
           <ListItemButton
             key={publicacion_id}

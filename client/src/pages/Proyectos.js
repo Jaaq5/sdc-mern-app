@@ -101,8 +101,12 @@ function Proyectos({
   const mapToHTML = (bloques) => {
     if (!bloques) return;
 
+    const sortedBloques = Object.entries(bloques).sort(
+      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final)
+    );
+
     setProyectos(
-      Object.keys(bloques).map((plan_id, index) => (
+      sortedBloques.map(([plan_id, bloque], index) => (
         <ListItemButton
           key={plan_id}
           style={listStyle}
@@ -110,17 +114,17 @@ function Proyectos({
         >
           <ListItemText
             primary={
-              bloques[plan_id].Proyecto +
+              bloque.Proyecto +
               " en " +
-              bloques[plan_id].Intitucion +
+              bloque.Intitucion +
               ""
             }
             secondary={
-              bloques[plan_id].Fecha_Inicio +
+              bloque.Fecha_Inicio +
               "-" +
-              bloques[plan_id].Fecha_Final +
+              bloque.Fecha_Final +
               ": " +
-              bloques[plan_id].Descripcion.substring(0, 30)
+              bloque.Descripcion.substring(0, 30)
             }
           />
           <Button
