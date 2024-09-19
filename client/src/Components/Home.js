@@ -30,21 +30,6 @@ function Home({ user_data, setUserData }) {
     }
   }, [usuario_id, user_data, navigate]);
 
-  const handleNavigateToInformacionPersonal = () => {
-    navigate("/informacionPersonal");
-  };
-
-  const handleNavigateToPublicaciones = () => {
-    navigate("/publicaciones");
-  };
-
-  const handleNavigateToHabilidades = () => {
-    navigate("/habilidades");
-  };
-
-  const handleNavigateToLenguajes = () => {
-    navigate("/lenguajes");
-  };
 
   if (loading) {
     return (
@@ -53,61 +38,6 @@ function Home({ user_data, setUserData }) {
       </center>
     );
   }
-
-  return (
-    <center>
-      <h1 style={{ color: "white", fontSize: "5rem" }}>
-        Welcome Home {user_data && user_data.name} !!!
-      </h1>
-      <Button
-        variant="contained"
-        style={{
-          marginTop: "2rem",
-          fontSize: "1.2rem",
-          backgroundColor: "green",
-        }}
-        onClick={handleNavigateToInformacionPersonal}
-      >
-        Ir a Información Personal
-      </Button>
-      <br />
-      <Button
-        variant="contained"
-        style={{
-          marginTop: "2rem",
-          fontSize: "1.2rem",
-          backgroundColor: "green",
-        }}
-        onClick={handleNavigateToPublicaciones}
-      >
-        Ir a Publicaciones
-      </Button>
-      <br />
-      <Button
-        variant="contained"
-        style={{
-          marginTop: "2rem",
-          fontSize: "1.2rem",
-          backgroundColor: "green",
-        }}
-        onClick={handleNavigateToHabilidades}
-      >
-        Ir a Habilidades y herramientas
-      </Button>
-      <br />
-      <Button
-        variant="contained"
-        style={{
-          marginTop: "2rem",
-          fontSize: "1.2rem",
-          backgroundColor: "green",
-        }}
-        onClick={handleNavigateToLenguajes}
-      >
-        Ir a Lenguajes
-      </Button>
-    </center>
-  );
 }
 
 export default Home;

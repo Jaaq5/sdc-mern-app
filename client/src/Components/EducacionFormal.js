@@ -273,6 +273,7 @@ function EducacionFormal({
     mapToHTML(user_data.bloques.Educacion_Formal);
 
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const elminarBloque = (plan_id, index) => {

@@ -210,6 +210,7 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
 
     mapToHTML(user_data.bloques.Habilidades);
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const eliminarHabilidad = (habilidad_id, index) => {

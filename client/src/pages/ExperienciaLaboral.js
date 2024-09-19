@@ -286,6 +286,7 @@ function ExperienciaLaboral({
     mapToHTML(user_data.bloques.Experiencias_Laborales);
 
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const elminarBloque = (plan_id, index) => {

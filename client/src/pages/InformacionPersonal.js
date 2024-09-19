@@ -208,6 +208,7 @@ function InformacionPersonal({
     mapToHTML(user_data.bloques.Informacion_Personal);
 
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const eliminarBloque = (info_id, index) => {

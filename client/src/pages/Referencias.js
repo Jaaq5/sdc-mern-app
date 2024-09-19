@@ -264,6 +264,7 @@ function Referencias({
     mapToHTML(user_data.bloques.Referencias);
 
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const eliminarPublicacion = (referencia_id, index) => {

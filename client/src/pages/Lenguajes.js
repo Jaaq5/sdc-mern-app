@@ -181,6 +181,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
 
     mapToHTML(user_data.bloques.Idiomas);
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const eliminarLenguaje = (lenguaje_id, index) => {

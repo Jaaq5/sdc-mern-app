@@ -273,6 +273,7 @@ function EducacionTecnica({
     mapToHTML(user_data.bloques.Educacion_Tecnica);
 
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const elminarBloque = (plan_id, index) => {

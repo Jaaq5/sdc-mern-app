@@ -13,11 +13,11 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   const button = {
     margin: "5px",
     marginRight: "10px",
-    fontSize: "0.9rem",
+    fontSize: "0.8rem",
     fontWeight: "700",
     padding: "0.1rem 0.4rem",
-    width: "130px",
-    minWidth: "120px",
+    width: "110px",
+    minWidth: "100px",
     height: "50px",
     backgroundColor: "#05c9",
   };
@@ -142,6 +142,18 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
               >
                 X
               </Button>
+
+              <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
+                to="/informacionPersonal"
+                onClick={(e) => setPath("/informacionPersonal")}
+              >
+                Informacion Personal
+              </Button>
+
               <Button
                 variant="contained"
                 style={button}
@@ -202,6 +214,17 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 style={button}
                 color="success"
                 component={Link}
+                to="/habilidades"
+                onClick={(e) => setPath("/habilidades")}
+              >
+                Habilidades y Herramientas
+              </Button>
+
+              <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
                 to="/sobremi"
                 onClick={(e) => setPath("/sobremi")}
               >
@@ -217,6 +240,17 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 onClick={(e) => setPath("/publicaciones")}
               >
                 Publicaciones
+              </Button>
+
+              <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
+                to="/lenguajes"
+                onClick={(e) => setPath("/lenguajes")}
+              >
+                Lenguajes
               </Button>
 
               <Button

@@ -212,6 +212,7 @@ function Publicaciones({
     mapToHTML(user_data.bloques.Publicaciones);
 
     manager_bloques.GuardarCambios(user_data);
+    reiniciarForm();
   };
 
   const eliminarPublicacion = (publicacion_id, index) => {
