@@ -329,8 +329,8 @@ function Publicaciones({
                     fullWidth
                     id="abstract"
                     type="text"
-                    label="Abstract"
-                    placeholder="Abstract"
+                    label="Resumen"
+                    placeholder="Resumen corto"
                     name="abstract"
                     required
                     multiline

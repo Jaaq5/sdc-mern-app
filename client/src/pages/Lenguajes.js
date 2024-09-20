@@ -9,6 +9,7 @@ import {
   List,
   ListItemText,
   ListItemButton,
+  TextField,
   Select,
   MenuItem,
   InputLabel,
@@ -79,6 +80,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
   const [bloque_id, setBloqueId] = useState(true);
   const [lenguaje, setLenguaje] = useState("");
   const [nivel, setNivel] = useState("");
+  const [certificacion, setCertificacion] = useState("");
   //
 
   // Cargar habilidades y mapeo a HTML
@@ -97,7 +99,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
             onClick={() => editarDatos(lenguaje_id)}
           >
             <ListItemText
-              primary={`Nombre: ${lenguajes_temp.find((obj) => obj.id == bloque.Id).nombre}`}
+              primary={`Nombre: ${lenguajes_temp.find((obj) => obj.id == bloque.Id).nombre} | Certificación: ${bloque.Certificacion}`}
               secondary={`Nivel ${niveles.find((obj) => obj.id == bloque.Nivel).nombre}`}
             />
             <Button
@@ -140,6 +142,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     setBloqueId(true);
     setLenguaje("");
     setNivel("");
+    setCertificacion("");
   };
 
   const editarDatos = (lenguaje_id) => {
@@ -149,6 +152,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     setBloqueId(lenguaje_id);
     setLenguaje(bloque.Id);
     setNivel(bloque.Nivel);
+    setCertificacion(bloque.Certificacion);
   };
 
   const manejarDatos = (e) => {
@@ -157,6 +161,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     const datosBloque = {
       Id: lenguaje,
       Nivel: nivel,
+      Certificacion: certificacion
     };
 
     if (bloque_id !== true) {
@@ -295,6 +300,18 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
                       })}
                     </Select>
                   </div>
+                    <TextField
+                      style={row}
+                      fullWidth
+                      id="certificacion"
+                      type="text"
+                      label="Certificación"
+                      placeholder="Certificación"
+                      name="certificacion"
+                      required
+                      value={certificacion}
+                      onChange={(e) => setCertificacion(e.target.value)}
+                    />
                   <div>
                     <Button style={btnStyle} variant="contained" type="submit">
                       {bloque_id === true ? "Crear" : "Guardar"}
