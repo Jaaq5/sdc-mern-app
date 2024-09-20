@@ -153,6 +153,8 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 to="/curriculo-menu"
                 onClick={(e) => setPath("/curriculo-menu")}
               >
+				Currículos
+              </Button>
 
               <Button
                 variant="contained"
