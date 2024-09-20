@@ -23,6 +23,9 @@ const Usuario_Model = mongoose.Schema({
     type: [mongoose.ObjectId],
     required: true,
   },
+  userImage: {
+    type: Buffer,
+  },
 });
 
 module.exports = mongoose.model("Usuarios", Usuario_Model);
