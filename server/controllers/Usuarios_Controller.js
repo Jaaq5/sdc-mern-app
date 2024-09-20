@@ -2,6 +2,119 @@ const Usuarios = require("../models/Usuario_Model");
 const Curriculums = require("../models/Curriculums_Model");
 const Bloques = require("../models/Bloques_Model");
 const { ObjectId } = require("mongodb");
+// Dependiencia para manejar archivos
+const multer = require("multer");
+
+// Configuración de multer para manejar la carga de archivos
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // Limitar el tamaño del archivo a 2 MB
+});
+
+// Controlador para subir la imagen de usuario
+const Subir_Imagen_Usuario = async (req, res) => {
+  const { usuario_id } = req.body;
+
+  try {
+    const user = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!user) {
+      return res
+      .status(404)
+      .json({ success: false, error: "Usuario no encontrado" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "No se ha proporcionado ninguna imagen",
+      });
+    }
+
+    // Guarda la imagen en el campo 'userImage' del modelo como Buffer
+    user.userImage = req.file.buffer;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Imagen de usuario actualizada exitosamente",
+      usuario_id: user._id,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
+  }
+};
+
+// Controlador para actualizar la imagen de usuario
+const Actualizar_Imagen_Usuario = async (req, res) => {
+  const { usuario_id } = req.params;
+
+  try {
+    const user = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!user) {
+      return res
+      .status(404)
+      .json({ success: false, error: "Usuario no encontrado" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "No se ha proporcionado ninguna imagen",
+      });
+    }
+
+    // Guarda la imagen en el campo 'userImage' del modelo como Buffer
+    user.userImage = req.file.buffer;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Imagen de usuario actualizada exitosamente",
+      usuario_id: user._id,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
+  }
+};
+
+// Controlador para eliminar la imagen de usuario
+const Eliminar_Imagen_Usuario = async (req, res) => {
+  const { usuario_id } = req.params;
+
+  try {
+    const user = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!user) {
+      return res
+      .status(404)
+      .json({ success: false, error: "Usuario no encontrado" });
+    }
+
+    // Elimina la imagen del campo 'userImage'
+    user.userImage = null;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Imagen de usuario eliminada exitosamente",
+      usuario_id: user._id,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
+  }
+};
 
 const Crear_Usuario = async (req, res) => {
   const { nombre, email, contrasena } = req.body;
@@ -59,14 +172,14 @@ const Crear_Usuario = async (req, res) => {
     await user.save();
 
     /*await Bloques.updateOne(
-			{ _id: Bloque._id },
-				{
-					$set{ ID_Usuario: user._id }
-				}
-				function (err, res) {
-					if (err) 
-						throw err
-				});*/
+     *			{ _id: Bloque._id },
+     *				{
+     *					$set{ ID_Usuario: user._id }
+  }
+  function (err, res) {
+  if (err)
+    throw err
+  });*/
     Bloque.ID_Usuario = user._id;
     await Bloque.save();
 
@@ -80,8 +193,8 @@ const Crear_Usuario = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-      .status(500)
-      .json({ success: false, error: "Error interno del servidor" });
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -93,8 +206,8 @@ const Actualizar_Usuario = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-        .status(404)
-        .json({ success: false, error: "No se encontró al usuario" });
+      .status(404)
+      .json({ success: false, error: "No se encontró al usuario" });
     }
 
     if (nombre) user.Nombre = nombre;
@@ -110,8 +223,8 @@ const Actualizar_Usuario = async (req, res) => {
     });
   } catch (error) {
     return res
-      .status(500)
-      .json({ success: false, error: "Error interno del servidor" });
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -122,8 +235,8 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-        .status(404)
-        .json({ success: false, error: "No se encontró al usuario" });
+      .status(404)
+      .json({ success: false, error: "No se encontró al usuario" });
     }
 
     const bloque_datos = await Bloques.findById(user.Bloque_ID);
@@ -146,8 +259,8 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-      .status(500)
-      .json({ success: false, error: "Error interno del servidor" });
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -290,8 +403,8 @@ const Log_In = async (req, res) => {
 
   usuario_id = usuario._id;
   return res
-    .status(200)
-    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario_id });
+  .status(200)
+  .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario_id });
 };
 
 const Log_Out = async (req, res) => {
@@ -305,8 +418,8 @@ const Obtener_Datos_Usuario = async (req, res) => {
 
     if (!usuario) {
       return res
-        .status(404)
-        .json({ success: false, error: "Usuario no encontrado" });
+      .status(404)
+      .json({ success: false, error: "Usuario no encontrado" });
     }
 
     const bloques = await Bloques.findById(usuario.Bloque_ID);
@@ -319,18 +432,21 @@ const Obtener_Datos_Usuario = async (req, res) => {
       _id: usuario._id,
       name: usuario.Nombre,
       email: usuario.Email,
+      userImage: usuario.userImage
+      ? usuario.userImage.toString("base64")
+      : null,
       bloques: bloques.Bloques,
       curriculums: curriculums ? curriculums : [],
     };
 
     return res
-      .status(200)
-      .json({ success: true, msg: "Usuario encontrado", data: userData });
+    .status(200)
+    .json({ success: true, msg: "Usuario encontrado", data: userData });
   } catch (error) {
     console.log(error.message);
     return res
-      .status(400)
-      .json({ success: false, error: "Error interno del servidor" });
+    .status(400)
+    .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -342,8 +458,8 @@ const Eliminar_Usuario = async (req, res) => {
 
     if (!deletedUser) {
       return res
-        .status(404)
-        .json({ success: false, msg: "Usuario no encontrado" });
+      .status(404)
+      .json({ success: false, msg: "Usuario no encontrado" });
     }
 
     await Bloques.deleteOne({ _id: deletedUser.Bloque_ID });
@@ -353,14 +469,18 @@ const Eliminar_Usuario = async (req, res) => {
     await Usuarios.deleteOne({ _id: us_id });
 
     return res
-      .status(200)
-      .json({ success: true, msg: "Usuario eliminado correctamente" });
+    .status(200)
+    .json({ success: true, msg: "Usuario eliminado correctamente" });
   } catch (error) {
     return res.status(400).send({ success: false, msg: error.message });
   }
 };
 
 module.exports = {
+  Actualizar_Imagen_Usuario,
+  Eliminar_Imagen_Usuario,
+  Subir_Imagen_Usuario,
+  upload,
   Crear_Usuario,
   Log_In,
   Log_Out,
