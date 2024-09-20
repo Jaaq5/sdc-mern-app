@@ -5,7 +5,7 @@ const Categorias_Puesto = require('../models/Categorias_Puesto_Model');
 const { ObjectId } = require('mongodb');
 
 const Crear_Curriculum = async (req, res) => {
-    const { usuario_id } = req.usuario;
+    const { usuario_id, categoria_curriculum_id, categoria_puesto_id } = req.usuario;
     
     try {
         const usuario = await Usuarios.findById(new ObjectId(usuario_id));
@@ -14,8 +14,12 @@ const Crear_Curriculum = async (req, res) => {
         }
 		
 		const curriculum = new Curriculums({
-				Documento: "",
-				ID_Usuario: usuario._id
+				Documento: {
+					vacio: true
+				},
+				ID_Usuario: usuario._id,
+				ID_Categoria_Curriculum: new ObjectId(categoria_curriculum_id),
+				ID_Categoria_Puesto: new ObjectId(categoria_puesto_id)
 			})
 			
         await curriculum.save();
@@ -69,12 +73,12 @@ const Actualizar_Curriculum = async (req, res) => {
 		
 		const cat_curr = await Categorias_Curriculum.findById(new ObjectId(categoria_curriculum_id));
         if (!cat_curr) {
-            return res.status(404).json({ success: false, error: 'No se encontró el template al actualizar' });
+            return res.status(404).json({ success: false, error: 'No se encontró el curriculum al actualizar' });
         }
 		
 		const cat_puesto = await Categorias_Pueto.findById(new ObjectId(categoria_puesto_id));
         if (!cat_puesto) {
-            return res.status(404).json({ success: false, error: 'No se encontró el template al actualizar' });
+            return res.status(404).json({ success: false, error: 'No se encontró el curriculum al actualizar' });
         }
 
         curriculum.Documento = nuevo_documento;

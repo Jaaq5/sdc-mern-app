@@ -7,8 +7,13 @@ const {
   Obtener_Datos_Usuario,
   Actualizar_Usuario,
   Actualizar_Usuario_Bloque,
-  Eliminar_Usuario,
+  Crear_Curriculum,
+  Actualizar_Usuario_Curriculum,
+  Eliminar_Usuario_Curriculum,
+  Eliminar_Usuario
 } = require("../controllers/Usuarios_Controller");
+
+
 
 const router = express.Router();
 
@@ -16,8 +21,11 @@ router.post("/crear-usuario", Crear_Usuario);
 router.post("/log-in-usuario", Log_In);
 router.post("/log-out-usuario", Log_Out);
 router.get("/obtener-usuario/:usuario_id", Obtener_Datos_Usuario);
+router.patch("/crear-curriculum", Crear_Curriculum);
 router.patch("/actualizar-usuario", Actualizar_Usuario);
 router.patch("/actualizar-usuario-bloque", Actualizar_Usuario_Bloque);
+router.patch("/actualizar-usuario-curr", Actualizar_Usuario_Curriculum);
+router.delete("/actualizar-usuario-curr/:usuario_id:curriculum_id", Eliminar_Usuario_Curriculum);
 router.delete("/eliminar-usuario/:usuario_id", Eliminar_Usuario);
 
 module.exports = router;

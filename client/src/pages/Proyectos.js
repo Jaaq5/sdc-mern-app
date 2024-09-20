@@ -295,7 +295,7 @@ function Proyectos({
           <div>
             <Paper style={paperStyle} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
-                Trabajos:
+                Mis Proyectos:
               </Typography>
               <List
                 dense={dense}

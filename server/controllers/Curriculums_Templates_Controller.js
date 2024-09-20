@@ -1,4 +1,4 @@
-const Usuarios = require("../models/Usuario_Model");
+const Curriculums_Templates = require("../models/Curriculums_Templates_Model");
 const Categorias_Curriculum = require("../models/Categorias_Curriculum_Model");
 const Categorias_Puesto = require("../models/Categorias_Puesto_Model");
 const { ObjectId } = require("mongodb");

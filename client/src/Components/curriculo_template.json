@@ -1,0 +1,81 @@
+{
+	//IDs dentro del bloque de usuario
+	"ID_Categoria_Curriculum" : "1",
+	"ID_Categoria_Puesto" : "1",
+	"Documento":{
+		"datos" : {
+			"Informacion_Personal" : "id",
+			"Secciones" : {
+				"Experiencia_Laboral" : {
+					"Cantidad" : 3,
+					"IDs" : [] //IDs de bloque incluidas escogidas por el usuario, no las automaticas
+				},
+				"Educacion_Formal" : {
+					"Cantidad" : 2,
+					"IDs" : []
+				},
+				"Educacion_Informal" : {
+					"Cantidad" : 2,
+					"IDs" : []
+				},
+				"Habilidades" : {
+					"Cantidad" : 3,
+					"IDs" : []
+				},
+				"Idiomas" : {
+					"Cantidad" : 2,
+					"IDs" : []
+				}
+				"Proyectos" : {
+					"Cantidad" : 1,
+					"IDs" : []
+				},
+				"Publicaciones" : {
+					"Cantidad" : 1,
+					"IDs" : []
+				},
+				"Referencias" : {
+					"Cantidad" : 3,
+					"IDs" : []
+				}
+			}
+		},
+		"diseno": {
+			"Informacion_Personal" : {
+				"Foto" : {"style": {"top": "5px", "left": "5px"}} //CSS, formato React
+			},
+			"Secciones" : {
+				"Experiencia_Laboral" : {
+					"Mostrar" : true,
+					"campos" : {
+						"Fecha_Inicial" : {"Tipo" : "span", "style" : {"fontWeight":"800"}},
+						"Fecha_Final" : {"Tipo" : "span", "style" : {"fontWeight":"800"}},
+					}
+					
+				},
+				"Educacion_Formal" : {
+					"Mostrar" : true
+				},
+				"Educacion_Informal" : {
+					"Mostrar" : true
+				},
+				"Habilidades" : {
+					"Mostrar" : true
+				},
+				"Idiomas" : {
+					"Mostrar" : true
+				}
+				"Proyectos" : {
+					"Mostrar" : true
+				},
+				"Publicaciones" : {
+					"Mostrar" : true
+				},
+				"Referencias" : {
+					"Mostrar" : true
+				}
+			}
+			
+		}
+	}
+}

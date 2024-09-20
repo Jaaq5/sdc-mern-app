@@ -42,6 +42,8 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     "/publicaciones": "Publicaciones",
     "/habilidades": "Habilidades y Herramientas",
     "/referencias": "Referencias",
+	"/curriculo-menu": "Currículos",
+	"/editor-curriculo": "Currículos",
     "/login": "",
     "/home": "",
   };
@@ -142,6 +144,15 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
               >
                 X
               </Button>
+			  
+			  <Button
+                variant="contained"
+                style={button}
+                color="success"
+                component={Link}
+                to="/curriculo-menu"
+                onClick={(e) => setPath("/curriculo-menu")}
+              >
 
               <Button
                 variant="contained"

@@ -151,6 +151,128 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
   }
 };
 
+const Crear_Curriculum = async (req, res) => {
+    const { usuario_id, documento, categoria_curriculum_id, categoria_puesto_id } = req.usuario;
+    
+    try {
+        const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+        if (!usuario) {
+            return res.status(409).json({ success: false, error: "Usuario no encontrado al crear curriculum" });
+        }
+		
+		const curriculum = new Curriculums({
+				Documento: documento,
+				ID_Usuario: usuario._id,
+				ID_Categoria_Curriculum: new ObjectId(categoria_curriculum_id),
+				ID_Categoria_Puesto: new ObjectId(categoria_puesto_id)
+			})
+			
+        await curriculum.save();
+		
+		await Usuarios.update({"_id": usuario._id} ,
+				{
+					"$push" : {
+						Curriculums_IDs: curriculum._id
+					}
+				}
+		);
+		
+		if(!res)
+			return true
+        
+        return res.status(200).json({ success: true, msg: 'Se ha creado el curriculum exitosamente', curriculum_id: curriculum._id });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    }
+};
+
+const Actualizar_Usuario_Curriculum = async (req, res) => {
+  const { usuario_id, curriculum_id, documento, categoria_curriculum_id, categoria_puesto_id } = req.body;
+
+  try {
+    const user = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, error: "No se encontró al usuario" });
+    }
+	
+	if(!user.curriculums_ids.contains(new ObjectID(curriculum_id)))
+		return res.status(403).json({ success: false, error: "Curriculo sin acceso." });
+
+    const curriculum = await Curriculums.findById(new ObjectId(curriculum_id));
+    if (!curriculum) {
+      return res.status(404).json({
+        success: false,
+        error: "No se encontró el curriculum del usuario",
+      });
+    }
+	
+	const cat_curr = await Categorias_Curriculum.findById(new ObjectId(categoria_curriculum_id));
+	if (!cat_curr) {
+		return res.status(404).json({ success: false, error: 'No se encontró el curriculum al actualizar' });
+	}
+	
+	const cat_puesto = await Categorias_Pueto.findById(new ObjectId(categoria_puesto_id));
+	if (!cat_puesto) {
+		return res.status(404).json({ success: false, error: 'No se encontró el curriculum al actualizar' });
+	}
+
+	curriculum.Documento = documento;
+	curriculum.ID_Categoria_Curriculum = new ObjectId(categoria_curriculum_id)
+	curriculum.ID_Categoria_Puesto = new ObjectId(categoria_puesto_id)
+	
+    await curriculum.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Se ha actualizado al curriculum exitosamente",
+      curriculum_id: curriculum_id,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
+  }
+};
+
+const Eliminar_Usuario_Curriculum = async (req, res) => {
+    try {
+        const { usuario_id, curriculum_id } = req.params;
+		
+		const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+		if (!usuario) {
+		  return res
+			.status(404)
+			.json({ success: false, error: "No se encontró al usuario" });
+		}
+		
+		if(!usuario.Curriculums_IDs.contains(new ObjectID(curriculum_id)))
+			return res.status(403).json({ success: false, error: "Curriculo sin acceso." });
+		
+		const curriculum_id_v = new ObjectId(curriculum_id);
+		const curriculum = await Curriculums.findById(new ObjectId(curriculum_id_v));
+		if (!curriculum) {
+		  return res.status(404).json({
+			success: false,
+			error: "No se encontró el curriculum del usuario",
+		  });
+		}
+		
+		var nueva_lista = usuario.Curriculums_IDs.filter((id) => id != curriculum_id_v);
+		usuario.Curriculums_IDs = nueva_lista;
+		
+		await usuario.save();
+
+		await Curriculums.deleteOne({ _id: curriculum_id_v });
+
+        return res.status(200).json({ success: true, msg: 'Curriculum eliminado correctamente' });
+    } catch (error) {
+        return res.status(400).send({ success: false, msg: error.message });
+    }
+};
+
 const Log_In = async (req, res) => {
   const email = req.body.email;
   const contrasena = req.body.contrasena;
@@ -245,5 +367,8 @@ module.exports = {
   Obtener_Datos_Usuario,
   Actualizar_Usuario,
   Actualizar_Usuario_Bloque,
+  Crear_Curriculum,
+  Actualizar_Usuario_Curriculum,
+  Eliminar_Usuario_Curriculum,
   Eliminar_Usuario,
 };
