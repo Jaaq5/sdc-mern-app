@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
-
 import {
   Input,
   InputLabel,
@@ -20,6 +19,7 @@ import {
 } from "@mui/material";
 
 import { DeleteForever, PostAdd } from "@mui/icons-material";
+import HarvardExampleTemplate from "../Components/HarvardExampleTemplate";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
@@ -37,6 +37,10 @@ function CurriculosMenu({
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
+  const [tituloPlantilla, setTituloPlantilla] = useState("Plantilla Simple");
+  const [plantillaTexto, setPlantillaTexto] = useState(
+    "Una plantilla que no tiene elementos ni estructura especial.",
+  );
 
   //Style
   const paperStyle = {
@@ -44,7 +48,7 @@ function CurriculosMenu({
     margin: "10px auto",
     borderRadius: "1rem",
     boxShadow: "10px 10px 10px",
-    minHeight: "800px"
+    minHeight: "800px",
   };
   const paperSX = {
     width: {
@@ -73,12 +77,12 @@ function CurriculosMenu({
     borderRadius: "5px",
     margin: "5px",
     height: "420px",
-	minWidth: "300px",
-	maxWidth: "300px",
+    minWidth: "300px",
+    maxWidth: "300px",
     overflow: "hidden",
     backgroundColor: "#fff",
-	display: "block",
-	verticalAlign: "top",
+    display: "block",
+    verticalAlign: "top",
   };
   const listButtonStyle = {
     border: "solid 1px #999999aa",
@@ -111,15 +115,18 @@ function CurriculosMenu({
         <ListItemButton
           key={plan_id}
           style={listStyle}
-          onClick={(e) => {id_callback(plan_id); manejarDatos();}}
+          onClick={(e) => {
+            id_callback(plan_id);
+            manejarDatos();
+          }}
         >
           <ListItemText
             primary={
-              user_data.bloques.Informacion_Personal[curriculos[plan_id].Documento.datos.Informacion_Personal]?.Telefono
+              user_data.bloques.Informacion_Personal[
+                curriculos[plan_id].Documento.datos.Informacion_Personal
+              ]?.Telefono
             }
-            secondary={
-              ""
-            }
+            secondary={""}
           />
           <Button
             style={deleteButton}
@@ -148,7 +155,9 @@ function CurriculosMenu({
       navigate("/login");
     } else {
       //Crear bloque si no existe
-      user_data.curriculums = user_data.curriculums? user_data.curriculums : {};
+      user_data.curriculums = user_data.curriculums
+        ? user_data.curriculums
+        : {};
       setUserData(user_data);
 
       //Categorias
@@ -168,9 +177,10 @@ function CurriculosMenu({
 
       //Mapear lista de curriculos a HTML
       mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId);
-	  
-	  //Mapear plantillas a HTML
-      curriculum_manager.ObtenerPlantillas(null)
+
+      //Mapear plantillas a HTML
+      curriculum_manager
+        .ObtenerPlantillas(null)
         .then((response) => {
           mapToHTML(response, setPlantillas, setPlantilla);
         })
@@ -196,58 +206,77 @@ function CurriculosMenu({
     );
   }
 
+  const handleCurriculumChange = (value) => {
+    setCurriculum(value);
+    if (value === "harvard") {
+      setPlantillaTexto("Una plantilla que utiliza el formato Harvard.");
+      setTituloPlantilla("Plantilla Harvard");
+    } else {
+      setPlantillaTexto(
+        "Una plantilla que no tiene elementos ni estructura especial.",
+      );
+      setTituloPlantilla("Plantilla Simple");
+    }
+  };
+
   const reiniciarForm = () => {
     setCurriculoId(true);
-	setDocumento("");
+    setDocumento("");
     setCurriculum("");
     setCatPuesto("");
   };
 
   const editarCurriculo = (_id) => {
     navigate("/editor-curriculo", {
-		  user_data: user_data, 
-		  setUserData: setUserData, 
-		  manager_bloques: manager_bloques, 
-		  category_manager: category_manager, 
-		  curriculum_manager: curriculum_manager,
-		  curriculo_id: _id
-		  });
+      user_data: user_data,
+      setUserData: setUserData,
+      manager_bloques: manager_bloques,
+      category_manager: category_manager,
+      curriculum_manager: curriculum_manager,
+      curriculo_id: _id,
+    });
   };
-  
+
   const manejarDatos = () => {
     //TODO
-	//Enviar a la pagina de edicion de curriculo con los datos seleccionados
-	var _id = "";
+    //Enviar a la pagina de edicion de curriculo con los datos seleccionados
+    var _id = "";
     if (curriculo_id !== true) {
-      curriculum_manager.ActualizarCurriculo(
-        user_data,
-        setUserData,
-        curriculo_id,
-		documento,
-        categoria_curriculum,
-        categoria_puesto,
-      ).then((response) => {
-		  if(response){
-			  setCurriculoId(response);
-			  editarCurriculo(_id);
-		  }
-	  }).catch((e) => {});
+      curriculum_manager
+        .ActualizarCurriculo(
+          user_data,
+          setUserData,
+          curriculo_id,
+          documento,
+          categoria_curriculum,
+          categoria_puesto,
+        )
+        .then((response) => {
+          if (response) {
+            setCurriculoId(response);
+            editarCurriculo(_id);
+          }
+        })
+        .catch((e) => {});
     } else {
       //Crear Bloque
-      curriculum_manager.CrearCurriculo(
-        user_data,
-        setUserData,
-		plantilla_id,
-        categoria_curriculum,
-        categoria_puesto,
-      ).then((response) => {
-		  if(response){
-			  setCurriculoId(response);
-			  editarCurriculo(_id);
-		  }
-	  }).catch((e) => {});
+      curriculum_manager
+        .CrearCurriculo(
+          user_data,
+          setUserData,
+          plantilla_id,
+          categoria_curriculum,
+          categoria_puesto,
+        )
+        .then((response) => {
+          if (response) {
+            setCurriculoId(response);
+            editarCurriculo(_id);
+          }
+        })
+        .catch((e) => {});
     }
-	editarCurriculo(_id); //DELETE
+    editarCurriculo(_id); //DELETE
   };
 
   //TODO
@@ -256,11 +285,7 @@ function CurriculosMenu({
     const bloque = user_data.bloques.Experiencias_Laborales[plan_id];
     if (!bloque) return;
 
-    curriculum_manager.EliminarCurriculo(
-      user_data,
-      setUserData,
-      plan_id,
-    );
+    curriculum_manager.EliminarCurriculo(user_data, setUserData, plan_id);
     delete user_data.curriculums[plan_id];
     mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId);
 
@@ -270,9 +295,7 @@ function CurriculosMenu({
   return (
     <>
       <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Tus Currículos
-        </h1>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>Tus Currículos</h1>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" className="wrapper">
@@ -288,16 +311,19 @@ function CurriculosMenu({
                   maxHeight: "95%",
                   overflow: "auto",
                   backgroundColor: "#ccd5",
-				  display: "flex",
-				  flexWrap: "wrap",
-				  flexDirection: "row",
-				  
+                  display: "flex",
+                  flexWrap: "wrap",
+                  flexDirection: "row",
                 }}
               >
                 <ListItemButton
                   key={true}
                   style={listStyle}
-                  onClick={(e) => {document.getElementById("plantilla-selector")?.scrollIntoView({ behavior: "smooth", block: "start" });}}
+                  onClick={(e) => {
+                    document
+                      .getElementById("plantilla-selector")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
                 >
                   <PostAdd />
                   <div style={{ width: "20px" }}></div>
@@ -310,41 +336,44 @@ function CurriculosMenu({
               </List>
             </Paper>
           </div>
-		  <div id="plantilla-selector">
+          <div id="plantilla-selector">
             <Paper style={paperStyle} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Plantillas:
               </Typography>
-			  <form style={{margin: "10px"}}>
-				<FormControl style={{ width: "40%", marginRight: "20px" }}>
-                    <InputLabel id="id-curriculum-select-label">
-                      Tipo de CV
-                    </InputLabel>
-                    <Select
-                      labelId="id-curriculum-select-label"
-                      id="id-curriculum-simple-select"
-                      defaultValue={""}
-                      value={categoria_curriculum}
-                      label="Tipo de CV"
-                      onChange={(e) => setCurriculum(e.target.value)}
-                    >
-                      {cats_curr}
-                    </Select>
-                  </FormControl>
-                  <FormControl style={{ width: "40%", marginRight: "20px" }}>
-                    <InputLabel id="id-puesto-select-label">Puesto</InputLabel>
-                    <Select
-                      labelId="id-puesto-select-label"
-                      id="id-puesto-simple-select"
-                      defaultValue={""}
-                      value={categoria_puesto}
-                      label="Puesto"
-                      onChange={(e) => setCatPuesto(e.target.value)}
-                    >
-                      {cats_puesto}
-                    </Select>
-                  </FormControl>
-			  </form>
+              <form style={{ margin: "10px" }}>
+                <FormControl style={{ width: "40%", marginRight: "20px" }}>
+                  <InputLabel id="id-curriculum-select-label">
+                    Tipo de CV
+                  </InputLabel>
+                  <Select
+                    labelId="id-curriculum-select-label"
+                    id="id-curriculum-simple-select"
+                    defaultValue={""}
+                    value={categoria_curriculum}
+                    label="Tipo de CV"
+                    onChange={(e) => handleCurriculumChange(e.target.value)} // Usar la función para manejar el cambio
+                  >
+                    <MenuItem value="harvard">Harvard</MenuItem>
+                    {cats_curr}
+                  </Select>
+                </FormControl>
+                <FormControl style={{ width: "40%", marginRight: "20px" }}>
+                  <InputLabel id="id-puesto-select-label">Puesto</InputLabel>
+                  <Select
+                    labelId="id-puesto-select-label"
+                    id="id-puesto-simple-select"
+                    defaultValue={""}
+                    value={categoria_puesto}
+                    label="Puesto"
+                    onChange={(e) => setCatPuesto(e.target.value)}
+                  >
+                    {cats_puesto}
+                  </Select>
+                </FormControl>
+              </form>
+
+              {/* Lista de plantillas */}
               <List
                 dense={dense}
                 style={{
@@ -352,26 +381,40 @@ function CurriculosMenu({
                   maxHeight: "95%",
                   overflow: "auto",
                   backgroundColor: "#ccd5",
-				  display: "flex",
-				  flexWrap: "wrap",
-				  flexDirection: "row",
-				  
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                <ListItemButton
-                  key={true}
-                  style={listStyle}
-                  onClick={(e) => {setPlantilla("vacia"); setCurriculoId(true); manejarDatos();}}
-                >
-                  <PostAdd />
-                  <div style={{ width: "20px" }}></div>
-                  <ListItemText
-                    primary={"Plantilla Simple"}
-                    secondary={"Una plantilla que no tiene elementos ni estructura especial."}
-                  />
-                </ListItemButton>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  {" "}
+                  <ListItemButton
+                    key={true}
+                    style={listStyle}
+                    onClick={(e) => {
+                      setPlantilla("vacia");
+                      setCurriculoId(true);
+                      manejarDatos();
+                    }}
+                  >
+                    <PostAdd />
+                    <div style={{ width: "20px" }}></div>
+                    <ListItemText
+                      primary={tituloPlantilla}
+                      secondary={plantillaTexto}
+                    />
+                  </ListItemButton>
+                  {/* Ejemplo de Currículum Harvard */}
+                  {categoria_curriculum === "harvard" && (
+                    <div style={{ marginLeft: "20px" }}>
+                      {" "}
+                      {/* Añade margen a la izquierda */}
+                      <HarvardExampleTemplate />
+                    </div>
+                  )}
+                </div>
                 {plantillas}
               </List>
+              {/* Fin Lista de plantillas */}
             </Paper>
           </div>
         </Grid>
