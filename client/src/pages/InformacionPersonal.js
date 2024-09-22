@@ -190,6 +190,7 @@ function InformacionPersonal({
     setCorreo("");
     setPuesto("");
     setDireccion("");
+    setSobreMi("");
     setMostrarFoto(false);
     setMostrarPuesto(false);
     setImagen(null);
@@ -205,6 +206,7 @@ function InformacionPersonal({
     setCorreo(bloque.Correo);
     setPuesto(bloque.Puesto);
     setDireccion(bloque.Direccion);
+    setSobreMi(bloque.Sobre_Mi);
     setMostrarFoto(bloque.Mostrar_Foto);
     setMostrarPuesto(bloque.Mostrar_Puesto);
     setIdCategoriaPuesto(bloque.ID_Categoria_Puesto);
@@ -231,6 +233,7 @@ function InformacionPersonal({
       Correo: correo,
       Puesto: puesto,
       Direccion: direccion,
+      Sobre_Mi: sobre_mi,
       Mostrar_Foto: mostrarFoto,
       Mostrar_Puesto: mostrarPuesto,
       ID_Categoria_Puesto: id_categoria_puesto,
@@ -439,6 +442,18 @@ function InformacionPersonal({
     required
     value={direccion}
     onChange={(e) => setDireccion(e.target.value)}
+    />
+    <TextField
+    style={row}
+    fullWidth
+    id="sobre_mi"
+    type="text"
+    label="Sobre Mí"
+    placeholder="Acerca de mí"
+    name="sobre_mi"
+    required
+    value={sobre_mi}
+    onChange={(e) => setSobreMi(e.target.value)}
     />
     <br />
     <Button

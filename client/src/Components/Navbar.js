@@ -238,17 +238,6 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 style={button}
                 color="success"
                 component={Link}
-                to="/sobremi"
-                onClick={(e) => setPath("/sobremi")}
-              >
-                Sobre Mi
-              </Button>
-
-              <Button
-                variant="contained"
-                style={button}
-                color="success"
-                component={Link}
                 to="/publicaciones"
                 onClick={(e) => setPath("/publicaciones")}
               >

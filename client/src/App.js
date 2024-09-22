@@ -6,7 +6,6 @@ import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import EducacionFormal from "./Components/EducacionFormal";
 import EducacionTecnica from "./Components/EducacionTecnica";
-import SobreMi from "./Components/SobreMi";
 import InformacionPersonal from "./pages/InformacionPersonal";
 import ExperienciaLaboral from "./pages/ExperienciaLaboral";
 import Publicaciones from "./pages/Publicaciones";
@@ -367,20 +366,6 @@ function App() {
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
-                />
-              )
-            }
-          />
-          <Route
-            path="/sobremi"
-            element={
-              !isLoggedIn ? (
-                <Navigate to="/login" />
-              ) : (
-                <SobreMi
-                  user_data={user_data}
-                  setUserData={setUserData}
-                  manager_bloques={manager_bloques}
                 />
               )
             }
