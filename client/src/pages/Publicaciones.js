@@ -90,7 +90,8 @@ function Publicaciones({
     if (!bloques) return;
 
     const sortedBloques = Object.entries(bloques).sort(
-      ([, a], [, b]) => new Date(b.Fecha_Publicacion) - new Date(a.Fecha_Publicacion)
+      ([, a], [, b]) =>
+        new Date(b.Fecha_Publicacion) - new Date(a.Fecha_Publicacion),
     );
 
     setPublicaciones(

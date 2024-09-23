@@ -88,11 +88,10 @@ const Crear_Usuario = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
-
 
 // Controlador para subir la imagen de usuario
 const Subir_Imagen_Usuario = async (req, res) => {
@@ -102,8 +101,8 @@ const Subir_Imagen_Usuario = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-      .status(404)
-      .json({ success: false, error: "Usuario no encontrado" });
+        .status(404)
+        .json({ success: false, error: "Usuario no encontrado" });
     }
 
     if (!req.file) {
@@ -126,8 +125,8 @@ const Subir_Imagen_Usuario = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -139,8 +138,8 @@ const Actualizar_Imagen_Usuario = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-      .status(404)
-      .json({ success: false, error: "Usuario no encontrado" });
+        .status(404)
+        .json({ success: false, error: "Usuario no encontrado" });
     }
 
     if (!req.file) {
@@ -163,8 +162,8 @@ const Actualizar_Imagen_Usuario = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -176,8 +175,8 @@ const Eliminar_Imagen_Usuario = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-      .status(404)
-      .json({ success: false, error: "Usuario no encontrado" });
+        .status(404)
+        .json({ success: false, error: "Usuario no encontrado" });
     }
 
     // Elimina la imagen del campo 'userImage'
@@ -193,8 +192,8 @@ const Eliminar_Imagen_Usuario = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -206,8 +205,8 @@ const Actualizar_Usuario = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-      .status(404)
-      .json({ success: false, error: "No se encontró al usuario" });
+        .status(404)
+        .json({ success: false, error: "No se encontró al usuario" });
     }
 
     if (nombre) user.Nombre = nombre;
@@ -223,8 +222,8 @@ const Actualizar_Usuario = async (req, res) => {
     });
   } catch (error) {
     return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -235,8 +234,8 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
     if (!user) {
       return res
-      .status(404)
-      .json({ success: false, error: "No se encontró al usuario" });
+        .status(404)
+        .json({ success: false, error: "No se encontró al usuario" });
     }
 
     const bloque_datos = await Bloques.findById(user.Bloque_ID);
@@ -259,48 +258,72 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
 const Crear_Curriculum = async (req, res) => {
-    const { usuario_id, documento, categoria_curriculum_id, categoria_puesto_id } = req.body;
-    
-    try {
-        const usuario = await Usuarios.findById(new ObjectId(usuario_id));
-        if (!usuario) {
-            return res.status(409).json({ success: false, error: "Usuario no encontrado al crear curriculum" });
-        }
-		
-		const curriculum = new Curriculums({
-				Documento: documento,
-				ID_Usuario: usuario._id,
-				ID_Categoria_Curriculum: new ObjectId(categoria_curriculum_id),
-				ID_Categoria_Puesto: new ObjectId(categoria_puesto_id)
-			})
-			
-        await curriculum.save();
-		
-		await Usuarios.updateOne({"_id": usuario._id} ,
-				{
-					"$push" : {
-						Curriculums_IDs: curriculum._id
-					}
-				}
-		);
-		
-		if(!res)
-			return true
-        
-        return res.status(200).json({ success: true, msg: 'Se ha creado el curriculum exitosamente', curriculum_id: curriculum._id });
-    } catch (error) {
-        return res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  const {
+    usuario_id,
+    documento,
+    categoria_curriculum_id,
+    categoria_puesto_id,
+  } = req.body;
+
+  try {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
+      return res
+        .status(409)
+        .json({
+          success: false,
+          error: "Usuario no encontrado al crear curriculum",
+        });
     }
+
+    const curriculum = new Curriculums({
+      Documento: documento,
+      ID_Usuario: usuario._id,
+      ID_Categoria_Curriculum: new ObjectId(categoria_curriculum_id),
+      ID_Categoria_Puesto: new ObjectId(categoria_puesto_id),
+    });
+
+    await curriculum.save();
+
+    await Usuarios.updateOne(
+      { _id: usuario._id },
+      {
+        $push: {
+          Curriculums_IDs: curriculum._id,
+        },
+      },
+    );
+
+    if (!res) return true;
+
+    return res
+      .status(200)
+      .json({
+        success: true,
+        msg: "Se ha creado el curriculum exitosamente",
+        curriculum_id: curriculum._id,
+      });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
+  }
 };
 
 const Actualizar_Usuario_Curriculum = async (req, res) => {
-  const { usuario_id, curriculum_id, documento, categoria_curriculum_id, categoria_puesto_id } = req.body;
+  const {
+    usuario_id,
+    curriculum_id,
+    documento,
+    categoria_curriculum_id,
+    categoria_puesto_id,
+  } = req.body;
 
   try {
     const user = await Usuarios.findById(new ObjectId(usuario_id));
@@ -309,9 +332,11 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
-	
-	if(!user.curriculums_ids.contains(new ObjectID(curriculum_id)))
-		return res.status(403).json({ success: false, error: "Curriculo sin acceso." });
+
+    if (!user.curriculums_ids.contains(new ObjectID(curriculum_id)))
+      return res
+        .status(403)
+        .json({ success: false, error: "Curriculo sin acceso." });
 
     const curriculum = await Curriculums.findById(new ObjectId(curriculum_id));
     if (!curriculum) {
@@ -320,21 +345,35 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         error: "No se encontró el curriculum del usuario",
       });
     }
-	
-	const cat_curr = await Categorias_Curriculum.findById(new ObjectId(categoria_curriculum_id));
-	if (!cat_curr) {
-		return res.status(404).json({ success: false, error: 'No se encontró el curriculum al actualizar' });
-	}
-	
-	const cat_puesto = await Categorias_Pueto.findById(new ObjectId(categoria_puesto_id));
-	if (!cat_puesto) {
-		return res.status(404).json({ success: false, error: 'No se encontró el curriculum al actualizar' });
-	}
 
-	curriculum.Documento = documento;
-	curriculum.ID_Categoria_Curriculum = new ObjectId(categoria_curriculum_id)
-	curriculum.ID_Categoria_Puesto = new ObjectId(categoria_puesto_id)
-	
+    const cat_curr = await Categorias_Curriculum.findById(
+      new ObjectId(categoria_curriculum_id),
+    );
+    if (!cat_curr) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          error: "No se encontró el curriculum al actualizar",
+        });
+    }
+
+    const cat_puesto = await Categorias_Pueto.findById(
+      new ObjectId(categoria_puesto_id),
+    );
+    if (!cat_puesto) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          error: "No se encontró el curriculum al actualizar",
+        });
+    }
+
+    curriculum.Documento = documento;
+    curriculum.ID_Categoria_Curriculum = new ObjectId(categoria_curriculum_id);
+    curriculum.ID_Categoria_Puesto = new ObjectId(categoria_puesto_id);
+
     await curriculum.save();
 
     return res.status(200).json({
@@ -351,39 +390,47 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
 };
 
 const Eliminar_Usuario_Curriculum = async (req, res) => {
-    try {
-        const { usuario_id, curriculum_id } = req.params;
-		
-		const usuario = await Usuarios.findById(new ObjectId(usuario_id));
-		if (!usuario) {
-		  return res
-			.status(404)
-			.json({ success: false, error: "No se encontró al usuario" });
-		}
-		
-		if(!usuario.Curriculums_IDs.contains(new ObjectID(curriculum_id)))
-			return res.status(403).json({ success: false, error: "Curriculo sin acceso." });
-		
-		const curriculum_id_v = new ObjectId(curriculum_id);
-		const curriculum = await Curriculums.findById(new ObjectId(curriculum_id_v));
-		if (!curriculum) {
-		  return res.status(404).json({
-			success: false,
-			error: "No se encontró el curriculum del usuario",
-		  });
-		}
-		
-		var nueva_lista = usuario.Curriculums_IDs.filter((id) => id != curriculum_id_v);
-		usuario.Curriculums_IDs = nueva_lista;
-		
-		await usuario.save();
+  try {
+    const { usuario_id, curriculum_id } = req.params;
 
-		await Curriculums.deleteOne({ _id: curriculum_id_v });
-
-        return res.status(200).json({ success: true, msg: 'Curriculum eliminado correctamente' });
-    } catch (error) {
-        return res.status(400).send({ success: false, msg: error.message });
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
+      return res
+        .status(404)
+        .json({ success: false, error: "No se encontró al usuario" });
     }
+
+    if (!usuario.Curriculums_IDs.contains(new ObjectID(curriculum_id)))
+      return res
+        .status(403)
+        .json({ success: false, error: "Curriculo sin acceso." });
+
+    const curriculum_id_v = new ObjectId(curriculum_id);
+    const curriculum = await Curriculums.findById(
+      new ObjectId(curriculum_id_v),
+    );
+    if (!curriculum) {
+      return res.status(404).json({
+        success: false,
+        error: "No se encontró el curriculum del usuario",
+      });
+    }
+
+    var nueva_lista = usuario.Curriculums_IDs.filter(
+      (id) => id != curriculum_id_v,
+    );
+    usuario.Curriculums_IDs = nueva_lista;
+
+    await usuario.save();
+
+    await Curriculums.deleteOne({ _id: curriculum_id_v });
+
+    return res
+      .status(200)
+      .json({ success: true, msg: "Curriculum eliminado correctamente" });
+  } catch (error) {
+    return res.status(400).send({ success: false, msg: error.message });
+  }
 };
 
 const Log_In = async (req, res) => {
@@ -403,8 +450,8 @@ const Log_In = async (req, res) => {
 
   usuario_id = usuario._id;
   return res
-  .status(200)
-  .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario_id });
+    .status(200)
+    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario_id });
 };
 
 const Log_Out = async (req, res) => {
@@ -418,8 +465,8 @@ const Obtener_Datos_Usuario = async (req, res) => {
 
     if (!usuario) {
       return res
-      .status(404)
-      .json({ success: false, error: "Usuario no encontrado" });
+        .status(404)
+        .json({ success: false, error: "Usuario no encontrado" });
     }
 
     const bloques = await Bloques.findById(usuario.Bloque_ID);
@@ -433,20 +480,20 @@ const Obtener_Datos_Usuario = async (req, res) => {
       name: usuario.Nombre,
       email: usuario.Email,
       userImage: usuario.userImage
-      ? usuario.userImage.toString("base64")
-      : null,
+        ? usuario.userImage.toString("base64")
+        : null,
       bloques: bloques.Bloques,
       curriculums: curriculums ? curriculums : [],
     };
 
     return res
-    .status(200)
-    .json({ success: true, msg: "Usuario encontrado", data: userData });
+      .status(200)
+      .json({ success: true, msg: "Usuario encontrado", data: userData });
   } catch (error) {
     console.log(error.message);
     return res
-    .status(400)
-    .json({ success: false, error: "Error interno del servidor" });
+      .status(400)
+      .json({ success: false, error: "Error interno del servidor" });
   }
 };
 
@@ -458,8 +505,8 @@ const Eliminar_Usuario = async (req, res) => {
 
     if (!deletedUser) {
       return res
-      .status(404)
-      .json({ success: false, msg: "Usuario no encontrado" });
+        .status(404)
+        .json({ success: false, msg: "Usuario no encontrado" });
     }
 
     await Bloques.deleteOne({ _id: deletedUser.Bloque_ID });
@@ -469,8 +516,8 @@ const Eliminar_Usuario = async (req, res) => {
     await Usuarios.deleteOne({ _id: us_id });
 
     return res
-    .status(200)
-    .json({ success: true, msg: "Usuario eliminado correctamente" });
+      .status(200)
+      .json({ success: true, msg: "Usuario eliminado correctamente" });
   } catch (error) {
     return res.status(400).send({ success: false, msg: error.message });
   }

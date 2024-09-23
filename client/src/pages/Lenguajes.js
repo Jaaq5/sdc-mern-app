@@ -161,7 +161,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     const datosBloque = {
       Id: lenguaje,
       Nivel: nivel,
-      Certificacion: certificacion
+      Certificacion: certificacion,
     };
 
     if (bloque_id !== true) {
@@ -300,18 +300,18 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
                       })}
                     </Select>
                   </div>
-                    <TextField
-                      style={row}
-                      fullWidth
-                      id="certificacion"
-                      type="text"
-                      label="Certificación"
-                      placeholder="Certificación"
-                      name="certificacion"
-                      required
-                      value={certificacion}
-                      onChange={(e) => setCertificacion(e.target.value)}
-                    />
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="certificacion"
+                    type="text"
+                    label="Certificación"
+                    placeholder="Certificación"
+                    name="certificacion"
+                    required
+                    value={certificacion}
+                    onChange={(e) => setCertificacion(e.target.value)}
+                  />
                   <div>
                     <Button style={btnStyle} variant="contained" type="submit">
                       {bloque_id === true ? "Crear" : "Guardar"}
