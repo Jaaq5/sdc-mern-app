@@ -105,7 +105,7 @@ function EducacionTecnica({
     if (!bloques) return;
 
     const sortedBloques = Object.entries(bloques).sort(
-      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final)
+      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
     );
 
     setEducaciones(
@@ -116,12 +116,7 @@ function EducacionTecnica({
           onClick={(e) => editarDatos(plan_id)}
         >
           <ListItemText
-            primary={
-              bloque.Programa +
-              " en " +
-              bloque.Institucion +
-              ""
-            }
+            primary={bloque.Programa + " en " + bloque.Institucion + ""}
             secondary={
               bloque.Fecha_Inicio +
               "-" +

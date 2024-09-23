@@ -30,20 +30,26 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
               if (response.data.data) {
                 setIsLoggedIn(true);
                 response.data.data.usuario_id = usuario_id;
-				Object.keys(response.data.data.curriculums).map((curriculum_id) => {response.data.data.curriculums[curriculum_id].Documento = JSON.parse(response.data.data.curriculums[curriculum_id].Documento)});
+                Object.keys(response.data.data.curriculums).map(
+                  (curriculum_id) => {
+                    response.data.data.curriculums[curriculum_id].Documento =
+                      JSON.parse(
+                        response.data.data.curriculums[curriculum_id].Documento,
+                      );
+                  },
+                );
                 setUserData(response.data.data);
                 navigate("/home"); //, { state: { usuario_id: usuario_id, user_data: response.data.data } });
               }
-
             })
-			.catch(err => {
-				console.log(err);
-			});
-		}
-		})
-		.catch(err => {
-			console.log(err);
-		});
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const paperStyle = {

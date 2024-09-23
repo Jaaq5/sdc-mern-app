@@ -17,14 +17,13 @@ import Lenguajes from "./pages/Lenguajes";
 
 import CurriculosMenu from "./pages/CurriculosMenu";
 import EditorCurriculo from "./pages/EditorCurriculo";
-import plantilla_simple from "./Components/curriculotemplate"
+import plantilla_simple from "./Components/curriculotemplate";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
 
 import { apiUrl } from "./consts";
 import axios from "axios";
-
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -157,110 +156,135 @@ function App() {
       return categorias;
     },
   };
-  
+
   const curriculum_manager = {
-	ObtenerCurriculos: async (user_data) => {
+    ObtenerCurriculos: async (user_data) => {
       if (user_data?.curriculums) return user_data.curriculums;
       return [];
     },
-	
-	CrearCurriculo: async (user_data, setUserData, plantilla) => {
-		if(!plantilla)
-			return null
-		
-		axios
+
+    CrearCurriculo: async (user_data, setUserData, plantilla) => {
+      if (!plantilla) return null;
+
+      axios
         .post(apiUrl + "/api/users/crear-curriculum", {
           usuario_id: user_data.usuario_id,
-		  documento: JSON.stringify(plantilla.Documento),
-		  categoria_curriculum_id: plantilla.ID_Categoria_Curriculum,
-		  categoria_puesto_id: plantilla.ID_Categoria_Puesto
+          documento: JSON.stringify(plantilla.Documento),
+          categoria_curriculum_id: plantilla.ID_Categoria_Curriculum,
+          categoria_puesto_id: plantilla.ID_Categoria_Puesto,
         })
         .then((response) => {
-			if(response.data.success){
-				//user_data.curriculums.push(plantilla);
-				//setUserData(user_data);
-				return user_data.curriculums.length - 1;
-			}
+          if (response.data.success) {
+            //user_data.curriculums.push(plantilla);
+            //setUserData(user_data);
+            return user_data.curriculums.length - 1;
+          }
         })
         .catch((err) => {
           console.log(err);
         });
       return null;
-	},
-	
-	ActualizarCurriculo: async (user_data, setUserData, curriculo_id, documento, cat_curr_id, cat_puesto_id) => {
-		axios
+    },
+
+    ActualizarCurriculo: async (
+      user_data,
+      setUserData,
+      curriculo_id,
+      documento,
+      cat_curr_id,
+      cat_puesto_id,
+    ) => {
+      axios
         .patch(apiUrl + "/api/users/actualizar-usuario-curr", {
           usuario_id: user_data.usuario_id,
           curriculum_id: curriculo_id,
-		  documento: JSON.stringify(documento),
-		  categoria_curriculum_id: cat_curr_id,
-		  categoria_puesto_id: cat_puesto_id
+          documento: JSON.stringify(documento),
+          categoria_curriculum_id: cat_curr_id,
+          categoria_puesto_id: cat_puesto_id,
         })
         .then((response) => {
-			//Revisar respuesta si es necesario
-			if(response.data.success && response.data.curriculum_id){
-				return response.data.curriculum_id;
-			}
+          //Revisar respuesta si es necesario
+          if (response.data.success && response.data.curriculum_id) {
+            return response.data.curriculum_id;
+          }
         })
         .catch((err) => {
           console.log(err);
         });
       return null;
-	},
-	
-	EliminarCurriculo: async (user_data, setUserData, index, curriculo_id) => {
-	  axios
-        .delete(apiUrl + "/api/users/eliminar-usuario-curr/"+user_data.usuario_id+"&"+curriculo_id,{params:{usuario_id: user_data.usuario_id, curriculum_id: curriculo_id}})
+    },
+
+    EliminarCurriculo: async (user_data, setUserData, index, curriculo_id) => {
+      axios
+        .delete(
+          apiUrl +
+            "/api/users/eliminar-usuario-curr/" +
+            user_data.usuario_id +
+            "&" +
+            curriculo_id,
+          {
+            params: {
+              usuario_id: user_data.usuario_id,
+              curriculum_id: curriculo_id,
+            },
+          },
+        )
         .then((response) => {
           if (!response.data.success) {
             console.error("Error a eliminar el currículo");
-          }else{
-			  delete user_data.curriculums[index]; //Eliminar bloque
-			  setUserData(user_data); //Actualizar variable de sesion
-		  }
+          } else {
+            delete user_data.curriculums[index]; //Eliminar bloque
+            setUserData(user_data); //Actualizar variable de sesion
+          }
         })
         .catch((err) => {
           console.log(err);
         });
       return;
-	},
-	
-	ObtenerPlantillas: async (filtros) => {
-		if (plantillas) return plantillas;
-		var plant = [];
-		axios
-			.get(apiUrl + "/api/templates/obtener-templates")
-			.then((response) => {
-			  if (response.data.curriculums) {
-				plant = response.data.curriculums;
-				setPlantillas(plant);
-			  }
-			})
-			.catch((err) => {
-			  console.log(err);
-			});
-		return plant;
-	},
-	
-	CopiarPlantilla: (plantilla_id, lista_categorias_curriculum, lista_categorias_puesto) => {
-		if(plantilla_id !== "simple" && !plantillas[plantilla_id])
-			return null
-		
-		let plantilla = null;
-		if(plantilla_id === "simple")
-			plantilla = JSON.parse(JSON.stringify(plantilla_simple));
-		else
-			plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
-		
-		if(plantilla.Documento.datos.Informacion_Personal === 'id'){
-			plantilla.Documento.datos.Informacion_Personal = Object.keys(user_data.bloques.Informacion_Personal)[0]; //TODO, Filtrar por categorias
-			plantilla.ID_Categoria_Curriculum = lista_categorias_curriculum.find((cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum)._id;
-			plantilla.ID_Categoria_Puesto = lista_categorias_puesto.find((cat) => cat.Nombre === plantilla.ID_Categoria_Puesto)._id;
-		}
-		return plantilla;
-	}
-  
+    },
+
+    ObtenerPlantillas: async (filtros) => {
+      if (plantillas) return plantillas;
+      var plant = [];
+      axios
+        .get(apiUrl + "/api/templates/obtener-templates")
+        .then((response) => {
+          if (response.data.curriculums) {
+            plant = response.data.curriculums;
+            setPlantillas(plant);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return plant;
+    },
+
+    CopiarPlantilla: (
+      plantilla_id,
+      lista_categorias_curriculum,
+      lista_categorias_puesto,
+    ) => {
+      if (plantilla_id !== "simple" && !plantillas[plantilla_id]) return null;
+
+      let plantilla = null;
+      if (plantilla_id === "simple")
+        plantilla = JSON.parse(JSON.stringify(plantilla_simple));
+      else plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
+
+      if (plantilla.Documento.datos.Informacion_Personal === "id") {
+        plantilla.Documento.datos.Informacion_Personal = Object.keys(
+          user_data.bloques.Informacion_Personal,
+        )[0]; //TODO, Filtrar por categorias
+        plantilla.ID_Categoria_Curriculum = lista_categorias_curriculum.find(
+          (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
+        )._id;
+        plantilla.ID_Categoria_Puesto = lista_categorias_puesto.find(
+          (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
+        )._id;
+      }
+      return plantilla;
+    },
   };
 
   useEffect(() => {
@@ -269,7 +293,7 @@ function App() {
     category_manager.ObtenerCategoriasPuesto();
     category_manager.ObtenerCategoriasHabilidad();
     category_manager.ObtenerIdiomas();
-	curriculum_manager.ObtenerPlantillas();
+    curriculum_manager.ObtenerPlantillas();
   });
 
   return (
@@ -305,8 +329,8 @@ function App() {
               )
             }
           />
-		  <Route
-			path="/curriculo-menu"
+          <Route
+            path="/curriculo-menu"
             element={
               !isLoggedIn ? (
                 <Navigate to="/login" />
@@ -314,9 +338,9 @@ function App() {
                 <CurriculosMenu
                   user_data={user_data}
                   setUserData={setUserData}
-				  manager_bloques={manager_bloques}
+                  manager_bloques={manager_bloques}
                   curriculum_manager={curriculum_manager}
-				  category_manager={category_manager}
+                  category_manager={category_manager}
                 />
               )
             }
@@ -473,8 +497,8 @@ function App() {
               )
             }
           />
-		  <Route
-			path="/editor-curriculo"
+          <Route
+            path="/editor-curriculo"
             element={
               !isLoggedIn ? (
                 <Navigate to="/login" />
@@ -482,13 +506,13 @@ function App() {
                 <EditorCurriculo
                   user_data={user_data}
                   setUserData={setUserData}
-				  manager_bloques={manager_bloques}
+                  manager_bloques={manager_bloques}
                   curriculum_manager={curriculum_manager}
-				  category_manager={category_manager}
+                  category_manager={category_manager}
                 />
               )
             }
-		  />
+          />
         </Routes>
       </BrowserRouter>
     </div>
