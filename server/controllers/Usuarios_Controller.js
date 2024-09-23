@@ -265,7 +265,7 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
 };
 
 const Crear_Curriculum = async (req, res) => {
-    const { usuario_id, documento, categoria_curriculum_id, categoria_puesto_id } = req.usuario;
+    const { usuario_id, documento, categoria_curriculum_id, categoria_puesto_id } = req.body;
     
     try {
         const usuario = await Usuarios.findById(new ObjectId(usuario_id));
