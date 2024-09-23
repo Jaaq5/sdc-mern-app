@@ -238,7 +238,6 @@ function CurriculosMenu({
     setCatPuesto("");
   };
 
-
   const editarCurriculo = (curriculo_id) => {
     if(!user_data.curriculums[curriculo_id])
       return;
@@ -269,60 +268,18 @@ function CurriculosMenu({
           console.log(e);
         });
 
-      user_data.curriculums.push(plantilla);
+      user_data.curriculums.push(plantilla); 
       setUserData(user_data);
       editarCurriculo(user_data.curriculums.length - 1);
     }
   };
 
-  const manejarDatos = () => {
-    //TODO
-    //Enviar a la pagina de edicion de curriculo con los datos seleccionados
-    var _id = "";
-    if (curriculo_id !== true) {
-      curriculum_manager
-        .ActualizarCurriculo(
-          user_data,
-          setUserData,
-          curriculo_id,
-          documento,
-          categoria_curriculum,
-          categoria_puesto,
-        )
-        .then((response) => {
-          if (response) {
-            setCurriculoId(response);
-            editarCurriculo(_id);
-          }
-        })
-        .catch((e) => {});
-    } else {
-      //Crear Bloque
-      curriculum_manager
-        .CrearCurriculo(
-          user_data,
-          setUserData,
-          plantilla_id,
-          categoria_curriculum,
-          categoria_puesto,
-        )
-        .then((response) => {
-          if (response) {
-            setCurriculoId(response);
-            editarCurriculo(_id);
-          }
-        })
-        .catch((e) => {});
-    }
-    editarCurriculo(_id); //DELETE
-  };
 
   //TODO
   //Preguntar si esta seguro
   const eliminarCurriculo = (plan_id, index) => {
     const bloque = user_data.curriculums[index];
     if (!bloque) return;
-
 	
 	delete user_data.curriculums[index];
 	setUserData(user_data);
