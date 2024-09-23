@@ -318,6 +318,9 @@ function EditorCurriculo({
 				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} document={<MyDocument />} fileName="curriculum.pdf">
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
+				  <span style={{color: "white"}}>Por ahora, la plantilla simple es la utilizada</span>
+			  </div>
+			  <div id="overlay" style={{position: "absolute", width: "100px", height: "100px"}}>
 			  </div>
 			  <PDFViewer style={{minWidth: "22cm", height: "100%"}} showToolbar={false}>
 				<MyDocument />
