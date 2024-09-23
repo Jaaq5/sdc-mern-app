@@ -11,6 +11,88 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 2 * 1024 * 1024 }, // Limitar el tamaño del archivo a 2 MB
 });
+const Crear_Usuario = async (req, res) => {
+  const { nombre, email, contrasena } = req.body;
+  //const profilePicture = req.file;
+
+  try {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(401).json({
+        success: false,
+        error: "Formato de correo electrónico inválido",
+      });
+    }
+
+    const existingEmail = await Usuarios.findOne({ Email: email });
+    if (existingEmail) {
+      return res.status(402).json({
+        success: false,
+        error: "Dirección de correo electrónico ya está en uso",
+      });
+    }
+
+    const Bloque = new Bloques({
+      Bloques: {
+        Informacion_Personal: {},
+        Educacion_Formal: {},
+        Educacion_Tecnica: {},
+        Experiencias_Laborales: {},
+        Habilidades: {},
+        Idiomas: {},
+        Proyectos: {},
+        Publicaciones: {},
+        Referencias: {},
+
+        Informacion_Personal_NID: 1,
+        Educacion_Formal_NID: 1,
+        Educacion_Tecnica_NID: 1,
+        Experiencias_Laborales_NID: 1,
+        Habilidades_NID: 1,
+        Idiomas_NID: 1,
+        Proyectos_NID: 1,
+        Publicaciones_NID: 1,
+        Referencias_NID: 1,
+      },
+    });
+    await Bloque.save();
+
+    const user = new Usuarios({
+      Nombre: nombre,
+      Email: email,
+      Contrasena: contrasena, //TO-DO: Encrypt
+      Curriculums_IDs: [],
+      Bloque_ID: Bloque._id,
+    });
+
+    await user.save();
+
+    /*await Bloques.updateOne(
+     *			{ _id: Bloque._id },
+     *				{
+     *					$set{ ID_Usuario: user._id }
+  }
+  function (err, res) {
+  if (err)
+    throw err
+  });*/
+    Bloque.ID_Usuario = user._id;
+    await Bloque.save();
+
+    if (!res) return true;
+
+    return res.status(201).json({
+      success: true,
+      msg: "Se ha registrado el usuario exitosamente",
+      usuario_id: user._id,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+    .status(500)
+    .json({ success: false, error: "Error interno del servidor" });
+  }
+};
+
 
 // Controlador para subir la imagen de usuario
 const Subir_Imagen_Usuario = async (req, res) => {
@@ -116,88 +198,6 @@ const Eliminar_Imagen_Usuario = async (req, res) => {
   }
 };
 
-const Crear_Usuario = async (req, res) => {
-  const { nombre, email, contrasena } = req.body;
-  //const profilePicture = req.file;
-
-  try {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(401).json({
-        success: false,
-        error: "Formato de correo electrónico inválido",
-      });
-    }
-
-    const existingEmail = await Usuarios.findOne({ Email: email });
-    if (existingEmail) {
-      return res.status(402).json({
-        success: false,
-        error: "Dirección de correo electrónico ya está en uso",
-      });
-    }
-
-    const Bloque = new Bloques({
-      Bloques: {
-        Informacion_Personal: {},
-        Educacion_Formal: {},
-        Educacion_Tecnica: {},
-        Experiencias_Laborales: {},
-        Habilidades: {},
-        Idiomas: {},
-        Proyectos: {},
-        Publicaciones: {},
-        Referencias: {},
-
-        Informacion_Personal_NID: 1,
-        Educacion_Formal_NID: 1,
-        Educacion_Tecnica_NID: 1,
-        Experiencias_Laborales_NID: 1,
-        Habilidades_NID: 1,
-        Idiomas_NID: 1,
-        Proyectos_NID: 1,
-        Publicaciones_NID: 1,
-        Referencias_NID: 1,
-      },
-    });
-    await Bloque.save();
-
-    const user = new Usuarios({
-      Nombre: nombre,
-      Email: email,
-      Contrasena: contrasena, //TO-DO: Encrypt
-      Curriculums_IDs: [],
-      Bloque_ID: Bloque._id,
-    });
-
-    await user.save();
-
-    /*await Bloques.updateOne(
-     *			{ _id: Bloque._id },
-     *				{
-     *					$set{ ID_Usuario: user._id }
-  }
-  function (err, res) {
-  if (err)
-    throw err
-  });*/
-    Bloque.ID_Usuario = user._id;
-    await Bloque.save();
-
-    if (!res) return true;
-
-    return res.status(201).json({
-      success: true,
-      msg: "Se ha registrado el usuario exitosamente",
-      usuario_id: user._id,
-    });
-  } catch (error) {
-    console.log(error);
-    return res
-    .status(500)
-    .json({ success: false, error: "Error interno del servidor" });
-  }
-};
-
 const Actualizar_Usuario = async (req, res) => {
   const { nombre, usuario_id } = req.body;
   const { curriculums_ids } = req.curriculums;
@@ -282,7 +282,7 @@ const Crear_Curriculum = async (req, res) => {
 			
         await curriculum.save();
 		
-		await Usuarios.update({"_id": usuario._id} ,
+		await Usuarios.updateOne({"_id": usuario._id} ,
 				{
 					"$push" : {
 						Curriculums_IDs: curriculum._id

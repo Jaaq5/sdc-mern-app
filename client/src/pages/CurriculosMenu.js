@@ -37,10 +37,15 @@ function CurriculosMenu({
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
+
+  const [lista_categorias_curriculum, setListaCatCurrs] = useState([]);
+  const [lista_categorias_puesto, setListaPuestoCurrs] = useState([]);
+
   const [tituloPlantilla, setTituloPlantilla] = useState("Plantilla Simple");
   const [plantillaTexto, setPlantillaTexto] = useState(
     "Una plantilla que no tiene elementos ni estructura especial.",
   );
+
 
   //Style
   const paperStyle = {
@@ -106,34 +111,36 @@ function CurriculosMenu({
   const [categoria_curriculum, setCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
   const [documento, setDocumento] = useState(null);
-
-  const mapToHTML = (curriculos, callback, id_callback) => {
+//user_data.bloques.Informacion_Personal[curriculos[plan_id].Documento.datos.Informacion_Personal]?.Telefono
+  const mapToHTML = (curriculos, callback, id_callback, nuevo) => {
     if (!curriculos) return;
-
     callback(
       Object.keys(curriculos).map((plan_id, index) => (
         <ListItemButton
           key={plan_id}
           style={listStyle}
-          onClick={(e) => {
-            id_callback(plan_id);
-            manejarDatos();
-          }}
+          onClick={(e) => {id_callback(curriculos[plan_id]._id); manejarDatos(plan_id, nuevo);}}
         >
           <ListItemText
             primary={
-              user_data.bloques.Informacion_Personal[
-                curriculos[plan_id].Documento.datos.Informacion_Personal
-              ]?.Telefono
+              "Hello"
             }
-            secondary={""}
+            secondary={
+              ""
+            }
           />
-          <Button
-            style={deleteButton}
-            onClick={(e) => eliminarCurriculo(plan_id, index)}
-          >
-            <DeleteForever />
-          </Button>
+		  {!nuevo? (
+			  
+			  <Button
+				style={deleteButton}
+				onClick={(e) => eliminarCurriculo(curriculos[plan_id]._id, index)}
+			  >
+				<DeleteForever />
+			  </Button>
+			  ) 
+			  : 
+			  (<></>)
+		  }
         </ListItemButton>
       )),
     );
@@ -165,6 +172,7 @@ function CurriculosMenu({
         .ObtenerCategoriasCurriculum()
         .then((response) => {
           mapDBListToHTML(setCatCurr, response);
+		  setListaCatCurrs(response);
         })
         .catch((e) => {});
 
@@ -172,17 +180,21 @@ function CurriculosMenu({
         .ObtenerCategoriasPuesto()
         .then((response) => {
           mapDBListToHTML(setCatsPuesto, response);
+		  setListaPuestoCurrs(response);
         })
         .catch((e) => {});
 
       //Mapear lista de curriculos a HTML
-      mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId);
+
+      mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
+	  
+	  //Mapear plantillas a HTML
 
       //Mapear plantillas a HTML
       curriculum_manager
         .ObtenerPlantillas(null)
         .then((response) => {
-          mapToHTML(response, setPlantillas, setPlantilla);
+          mapToHTML(response, setPlantillas, setPlantilla, true);
         })
         .catch((e) => {});
 
@@ -226,15 +238,41 @@ function CurriculosMenu({
     setCatPuesto("");
   };
 
-  const editarCurriculo = (_id) => {
-    navigate("/editor-curriculo", {
-      user_data: user_data,
-      setUserData: setUserData,
-      manager_bloques: manager_bloques,
-      category_manager: category_manager,
-      curriculum_manager: curriculum_manager,
-      curriculo_id: _id,
-    });
+
+  const editarCurriculo = (curriculo_id) => {
+    if(!user_data.curriculums[curriculo_id])
+      return;
+    user_data.editando_curriculo = curriculo_id;
+    setUserData(user_data);
+    navigate("/editor-curriculo");
+  };
+  
+  const manejarDatos = (curriculo_id, nuevo) => {
+    
+    if(Object.keys(user_data.bloques.Informacion_Personal).length == 0){
+      //TODO
+      //Mostrar mensaje de error, no de enviar al editor
+    }
+	
+    if (!nuevo) {
+	    editarCurriculo(curriculo_id);
+    } else {
+      //Crear Curriculo
+      const plantilla_id = curriculo_id;
+      const plantilla = curriculum_manager.CopiarPlantilla(plantilla_id, lista_categorias_curriculum, lista_categorias_puesto);
+        curriculum_manager.CrearCurriculo(
+          user_data,
+          setUserData,
+          plantilla
+          ).then((response) => {
+        }).catch((e) => {
+          console.log(e);
+        });
+
+      user_data.curriculums.push(plantilla);
+      setUserData(user_data);
+      editarCurriculo(user_data.curriculums.length - 1);
+    }
   };
 
   const manejarDatos = () => {
@@ -282,14 +320,21 @@ function CurriculosMenu({
   //TODO
   //Preguntar si esta seguro
   const eliminarCurriculo = (plan_id, index) => {
-    const bloque = user_data.bloques.Experiencias_Laborales[plan_id];
+    const bloque = user_data.curriculums[index];
     if (!bloque) return;
 
-    curriculum_manager.EliminarCurriculo(user_data, setUserData, plan_id);
-    delete user_data.curriculums[plan_id];
-    mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId);
-
-    reiniciarForm();
+	
+	delete user_data.curriculums[index];
+	setUserData(user_data);
+	
+    curriculum_manager.EliminarCurriculo(
+      user_data,
+      setUserData,
+	    index,
+      plan_id,
+    );
+	
+    mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
   };
 
   return (
@@ -385,6 +430,20 @@ function CurriculosMenu({
                   flexDirection: "column",
                 }}
               >
+
+                <ListItemButton
+                  key={true}
+                  style={listStyle}
+                  onClick={(e) => {setPlantilla("simple"); setCurriculoId(true); manejarDatos("simple", true);}}
+                >
+                  <PostAdd />
+                  <div style={{ width: "20px" }}></div>
+                  <ListItemText
+                    primary={"Plantilla Simple"}
+                    secondary={"Una plantilla que no tiene elementos ni estructura especial."}
+                  />
+                </ListItemButton>
+
                 <div style={{ display: "flex", alignItems: "flex-start" }}>
                   {" "}
                   <ListItemButton

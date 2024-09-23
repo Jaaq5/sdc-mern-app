@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Lenguajes from "./Lenguajes";
 
+import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+
 
 import {
   Input,
@@ -29,8 +31,7 @@ function EditorCurriculo({
   setUserData,
   manager_bloques,
   curriculum_manager,
-  category_manager,
-  curriculo_id
+  category_manager
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -39,6 +40,7 @@ function EditorCurriculo({
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
+  const [curriculo_id, setCurriculoId] = useState(null);
 
   //Style
   const paperStyle = {
@@ -89,6 +91,37 @@ function EditorCurriculo({
     color: "#000",
   };
   const dense = true;
+  
+  //PDF
+  const styles = StyleSheet.create({
+	  page: {
+		flexDirection: 'row',
+		backgroundColor: '#EF0FEF33',
+	  },
+	  section: {
+		margin: 10,
+		padding: 10,
+		flexGrow: 1
+	  }
+	});
+	
+  //
+  const MyDocument = () => {
+	  if(!documento)
+		  return (<></>);
+	  else
+		  return (
+	  <Document style={{minHeight: "29.7cm",minWidth: "20cm", backgroundColor: '#EFEFEF',}}>
+		<Page size="A4" style={styles.page} pageMode="useThumbs">
+		  <View style={styles.section}>
+			<Text>{documento.diseno.Informacion_Personal.Mostrar_Puesto? user_data.bloques.Informacion_Personal[documento.datos.Informacion_Personal].Puesto : "Sin Puesto"}</Text>
+		  </View>
+		  <View style={styles.section}>
+			<Text>Section #2</Text>
+		  </View>
+		</Page>
+	  </Document>
+	)};
 
   //Editor
   const [categoria_curriculum, setCatCurriculum] = useState("");
@@ -169,7 +202,7 @@ function EditorCurriculo({
 
   //Al inicio de carga del componente
   useEffect(() => {
-    if (!user_data) {
+    if (!user_data || !user_data.editando_curriculo) {
       navigate("/login");
     } else {
       //Categorias
@@ -186,17 +219,18 @@ function EditorCurriculo({
           mapDBListToHTML(setCatsPuesto, response);
         })
         .catch((e) => {});
-
-      //setDocumento(user_data.curriculums[curriculo_id].Documento);
-	  //setCatCurriculum(user_data.curriculums[curriculo_id].ID_Categoria_Curriculo);
-	  //setCatPuesto(user_data.curriculums[curriculo_id].ID_Categoria_Puesto)
+		
+	  setCurriculoId(user_data.editando_curriculo)	
+	  console.log(user_data.editando_curriculo);
+      setDocumento(user_data.curriculums[user_data.editando_curriculo].Documento);
+	  setCatCurriculum(user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo);
+	  setCatPuesto(user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto)
       setLoading(false);
     }
   }, [
     user_data,
     setUserData,
     category_manager,
-	curriculo_id,
     navigate,
     setCatCurr,
     setCatPuesto,
@@ -229,9 +263,7 @@ function EditorCurriculo({
 					  category_manager={category_manager}
 				/>
 			</div>
-			<Paper style={paperStyle} sx={paperSX}>
-			 
-			</Paper>
+			<MyDocument />
         </div>
       </div>
     </>
