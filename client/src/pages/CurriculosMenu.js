@@ -238,7 +238,6 @@ function CurriculosMenu({
     setCatPuesto("");
   };
 
-
   const editarCurriculo = (curriculo_id) => {
     if(!user_data.curriculums[curriculo_id])
       return;
