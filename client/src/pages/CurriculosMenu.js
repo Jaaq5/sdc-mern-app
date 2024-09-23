@@ -96,7 +96,7 @@ function CurriculosMenu({
   const deleteButton = {
     backgroundColor: "#f55",
     border: "0px",
-    borderRadius: "1px",
+    borderRadius: "5px",
     //float: "right",
     cursor: "pointer",
     color: "#000",
@@ -118,9 +118,17 @@ function CurriculosMenu({
     callback(
       Object.keys(curriculos).map((plan_id, index) =>  (
 		<div 
-			style={{backgroundColor: "#FFFFFF", border: "solid 1px #999a", margin: "0px 7px"}} 
+			style={{backgroundColor: "#FFFFFF", border: "solid 1px #999a", margin: "5px 5px"}} 
 			key={plan_id}
 		>
+		<div style={{paddingTop: "2px"}}>
+			<span style={{backgroundColor: "#4139d4", borderRadius:"10px", fontWeight: "900", padding: "5px", color: "white", marginRight: "5px"}}>
+				{category_manager.IdANombreCurriculo(curriculos[plan_id].ID_Categoria_Curriculum)}
+			</span>
+			<span style={{backgroundColor: "#d47a39", borderRadius:"10px", fontWeight: "900", padding: "5px", color: "white", marginRight: "5px"}}>
+				{category_manager.IdANombrePuesto(curriculos[plan_id].ID_Categoria_Puesto)}
+			</span>
+		
 		{!nuevo ? (
             <Button
               style={deleteButton}
@@ -131,6 +139,7 @@ function CurriculosMenu({
           ) : (
             <></>
           )}
+		</div>
         <ListItemButton
           key={plan_id}
           style={listStyle}
@@ -257,9 +266,7 @@ function CurriculosMenu({
       //Crear Curriculo
       const plantilla_id = curriculo_id;
       const plantilla = curriculum_manager.CopiarPlantilla(
-        plantilla_id,
-        lista_categorias_curriculum,
-        lista_categorias_puesto,
+        plantilla_id
       );
       curriculum_manager
         .CrearCurriculo(user_data, setUserData, plantilla)
