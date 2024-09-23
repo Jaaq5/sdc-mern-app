@@ -3,33 +3,29 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Grid, Link, Button, Paper, TextField, Typography } from "@mui/material";
 
-function Login({ setIsLoggedIn, isLoggedIn }) {
-    const [email, setEmail] = useState("");
-    const [contrasena, setPassword] = useState("");
-    const navigate = useNavigate();
+function Login({ setIsLoggedIn, user_data, setUserData }) {
+  const [email, setEmail] = useState("");
+  const [contrasena, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        axios.post("http://localhost:27017/api/users/log-in-usuario", { email, contrasena })
-            .then(result => {
-                if (result.data.usuario_id) {
-					//setIsLoggedIn(true);
-					//navigate("/home", { state: { usuario_id: result.data.usuario_id } });
-					const usuario_id = result.data.usuario_id;
-					axios.get('http://localhost:27017/api/users/obtener-usuario/'+usuario_id)
-                        .then(response => {
-                            if (response.data.data) {
-                              setIsLoggedIn(true);
-                              navigate("/home", { state: { usuario_id: result.data.usuario_id, user_data: response.data.data } });
-                            }
-                        }).catch(err => {
-							console.log(err);
-						});;
-                     
-                } else {
-                   window.alert(result.data.error);
-				   console.log(result.data.error);
-                }
+  const handleLogin = (e) => {
+    e.preventDefault();
+    axios
+      .post(apiUrl + "/api/users/log-in-usuario", { email, contrasena })
+      .then((result) => {
+        if (result.data.usuario_id) {
+          const usuario_id = result.data.usuario_id;
+          axios
+            .get(apiUrl + "/api/users/obtener-usuario/" + usuario_id)
+            .then((response) => {
+              if (response.data.data) {
+                setIsLoggedIn(true);
+                response.data.data.usuario_id = usuario_id;
+				Object.keys(response.data.data.curriculums).map((curriculum_id) => {response.data.data.curriculums[curriculum_id].Documento = JSON.parse(response.data.data.curriculums[curriculum_id].Documento)});
+                setUserData(response.data.data);
+                navigate("/home"); //, { state: { usuario_id: usuario_id, user_data: response.data.data } });
+              }
+
             })
 			.catch(err => {
 				console.log(err);

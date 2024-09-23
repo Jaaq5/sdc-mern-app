@@ -2,24 +2,32 @@ const Categorias_Puesto = require('../models/Categorias_Puesto_Model');
 const { ObjectId } = require('mongodb');
 
 const Crear_Categoria_Puesto = async (req, res) => {
-    const { nombre } = req.nombre;
-    
-    try {
-        const categoria_t = await Categorias_Puesto.findOne({Nombre: nombre});
-        if (!categoria_t) {
-            return res.status(409).json({ success: false, error: "Nombre de categoría duplicado" });
-        }
-		
-		const categoria = new Categorias_Puesto({
-				Nombre: nombre
-			})
-			
-        await categoria.save();
-        
-        return res.status(200).json({ success: true, msg: 'Se ha creado la categoria de puesto exitosamente', categoria_id: categoria._id });
-    } catch (error) {
-        return res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  const { nombre } = req.body;
+  try {
+    const categoria_t = await Categorias_Puesto.findOne({ Nombre: nombre });
+    if (categoria_t) {
+      return res
+        .status(409)
+        .json({ success: false, error: "Nombre de categoría duplicado" });
     }
+
+    const categoria = new Categorias_Puesto({
+      Nombre: nombre,
+    });
+
+    await categoria.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Se ha creado la categoria de puesto exitosamente",
+      categoria_id: categoria._id,
+    });
+  } catch (error) {
+	console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
+  }
 };
 
 
