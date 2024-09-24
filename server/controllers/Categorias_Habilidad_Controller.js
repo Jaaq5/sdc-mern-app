@@ -1,6 +1,6 @@
 const Categorias_Habilidad = require("../models/Categorias_Habilidad_Model");
 const { ObjectId } = require("mongodb");
-
+/*
 const Crear_Categoria_Habilidad = async (req, res) => {
   const { nombre } = req.nombre;
 
@@ -29,7 +29,7 @@ const Crear_Categoria_Habilidad = async (req, res) => {
       .json({ success: false, error: "Error interno del servidor" });
   }
 };
-
+*/
 // Crea las categorías predeterminadas
 const Crear_Categorias_Habilidad_Defecto = async () => {
   const categoriasDefault = [
@@ -49,7 +49,7 @@ const Crear_Categorias_Habilidad_Defecto = async () => {
     }
   }
 };
-
+/*
 const Obtener_Categoria_Habilidad = async (req, res) => {
   const categoria_id = req.body.categoria_id;
 
@@ -75,7 +75,7 @@ const Obtener_Categoria_Habilidad = async (req, res) => {
       .json({ success: false, error: "Error interno del servidor" });
   }
 };
-
+*/
 const Obtener_Categorias_Habilidad = async (req, res) => {
   try {
     // Crear categorías predeterminadas si no existen
@@ -93,7 +93,7 @@ const Obtener_Categorias_Habilidad = async (req, res) => {
       .json({ success: false, error: "Error interno del servidor" });
   }
 };
-
+/*
 const Actualizar_Categoria_Habilidad = async (req, res) => {
   const { categoria_id, nuevo_nombre } = req.body;
 
@@ -146,12 +146,12 @@ const Eliminar_Categoria_Habilidad = async (req, res) => {
     return res.status(400).send({ success: false, msg: error.message });
   }
 };
-
+*/
 module.exports = {
-  Crear_Categoria_Habilidad,
+  //Crear_Categoria_Habilidad,
   Crear_Categorias_Habilidad_Defecto,
-  Obtener_Categoria_Habilidad,
+  //Obtener_Categoria_Habilidad,
   Obtener_Categorias_Habilidad,
-  Actualizar_Categoria_Habilidad,
-  Eliminar_Categoria_Habilidad,
+  //Actualizar_Categoria_Habilidad,
+  //Eliminar_Categoria_Habilidad,
 };
