@@ -30,7 +30,6 @@ function Home({ user_data, setUserData }) {
     }
   }, [usuario_id, user_data, navigate]);
 
-
   if (loading) {
     return (
       <center>

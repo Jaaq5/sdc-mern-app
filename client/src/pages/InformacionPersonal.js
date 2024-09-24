@@ -99,36 +99,36 @@ function InformacionPersonal({
 
     const fotoUsuario = imagen ? (
       <div style={{ display: "flex", alignItems: "center" }}>
-      <img
-      src={URL.createObjectURL(imagen)} // Usar el objeto de la imagen seleccionada
-      alt="Usuario"
-      style={{ width: "100px", height: "100px", marginRight: "10px" }}
-      />
-      <Button style={deleteButton} onClick={eliminarImagen}>
-      <DeleteForever />
-      </Button>
+        <img
+          src={URL.createObjectURL(imagen)} // Usar el objeto de la imagen seleccionada
+          alt="Usuario"
+          style={{ width: "100px", height: "100px", marginRight: "10px" }}
+        />
+        <Button style={deleteButton} onClick={eliminarImagen}>
+          <DeleteForever />
+        </Button>
       </div>
     ) : user_data.userImage ? (
       <div style={{ display: "flex", alignItems: "center" }}>
-      <img
-      src={`data:image/png;base64,${user_data.userImage}`} // Imagen del usuario
-      alt="Usuario"
-      style={{ width: "100px", height: "100px", marginRight: "10px" }}
-      />
-      <Button style={deleteButton} onClick={eliminarImagen}>
-      <DeleteForever />
-      </Button>
+        <img
+          src={`data:image/png;base64,${user_data.userImage}`} // Imagen del usuario
+          alt="Usuario"
+          style={{ width: "100px", height: "100px", marginRight: "10px" }}
+        />
+        <Button style={deleteButton} onClick={eliminarImagen}>
+          <DeleteForever />
+        </Button>
       </div>
     ) : (
       <div style={{ display: "flex", alignItems: "center" }}>
-      <img
-      src="/default-user-image.webp" // Ruta de la imagen por defecto
-      alt="Usuario por defecto"
-      style={{ width: "100px", height: "100px", marginRight: "10px" }}
-      />
-      <Button style={deleteButton} onClick={eliminarImagen}>
-      <DeleteForever />
-      </Button>
+        <img
+          src="/default-user-image.webp" // Ruta de la imagen por defecto
+          alt="Usuario por defecto"
+          style={{ width: "100px", height: "100px", marginRight: "10px" }}
+        />
+        <Button style={deleteButton} onClick={eliminarImagen}>
+          <DeleteForever />
+        </Button>
       </div>
     );
 
@@ -138,20 +138,20 @@ function InformacionPersonal({
         const bloque = bloques[info_id];
         return (
           <ListItemButton
-          key={info_id}
-          style={listStyle}
-          onClick={(e) => editarDatos(info_id)}
+            key={info_id}
+            style={listStyle}
+            onClick={(e) => editarDatos(info_id)}
           >
-          <ListItemText
-          primary={`Tel: ${bloque.Telefono} | ${bloque.Mostrar_Puesto ? `Puesto: ${bloque.Puesto}` : ""}`}
-          secondary={`Dirección: ${bloque.Direccion} | Correo: ${bloque.Correo} | Mostrar Foto: ${bloque.Mostrar_Foto ? "Sí" : "No"}`}
-          />
-          <Button
-          style={deleteButton}
-          onClick={(e) => eliminarBloque(info_id, index)}
-          >
-          <DeleteForever />
-          </Button>
+            <ListItemText
+              primary={`Tel: ${bloque.Telefono} | ${bloque.Mostrar_Puesto ? `Puesto: ${bloque.Puesto}` : ""}`}
+              secondary={`Dirección: ${bloque.Direccion} | Correo: ${bloque.Correo} | Mostrar Foto: ${bloque.Mostrar_Foto ? "Sí" : "No"}`}
+            />
+            <Button
+              style={deleteButton}
+              onClick={(e) => eliminarBloque(info_id, index)}
+            >
+              <DeleteForever />
+            </Button>
           </ListItemButton>
         );
       }),
@@ -165,9 +165,9 @@ function InformacionPersonal({
     } else {
       // Crear bloque si no existe
       user_data.bloques.Informacion_Personal = user_data.bloques
-      .Informacion_Personal
-      ? user_data.bloques.Informacion_Personal
-      : {};
+        .Informacion_Personal
+        ? user_data.bloques.Informacion_Personal
+        : {};
       setUserData(user_data);
 
       // Mapear la lista de información personal a HTML
@@ -179,7 +179,7 @@ function InformacionPersonal({
   if (loading) {
     return (
       <center>
-      <h1>Loading...</h1>
+        <h1>Loading...</h1>
       </center>
     );
   }
@@ -328,176 +328,164 @@ function InformacionPersonal({
 
   return (
     <>
-    <div>
-    <h1 style={{ color: "white", fontSize: "5rem" }}>
-    Información Personal
-    </h1>
-    <div style={{ marginTop: "2rem", textAlign: "center" }}>
-    <Button
-    variant="contained"
-    style={{ ...btnStyle, backgroundColor: "green" }}
-    color="success"
-    component={Link}
-    to="/home"
-    >
-    Volver a Inicio
-    </Button>
-    </div>
-    </div>
-    <div style={{ padding: "10px", width: "100%" }}>
-    <Grid align="center" container spacing={0} className="wrapper">
-    <div>
-    <Paper style={paperStyle} sx={paperSX}>
-    <Typography component="h3" variant="h3" style={heading}>
-    Información Personal
-    </Typography>
-    <List
-    dense={dense}
-    style={{
-      padding: "5px",
-      maxHeight: "95%",
-      overflow: "auto",
-      backgroundColor: "#ccd5",
-    }}
-    >
-    <ListItemButton
-    key={true}
-    style={{ ...listStyle, backgroundColor: "#4f96" }}
-    onClick={(e) => reiniciarForm()}
-    >
-    <PostAdd />
-    <div style={{ width: "20px" }}></div>
-    <ListItemText
-    primary={"Agregar Nueva Información"}
-    secondary={"Agregar nueva información personal"}
-    />
-    </ListItemButton>
-    {informacion}
-    </List>
-    </Paper>
-    </div>
-    <div style={{ width: "20px" }}></div>
-    <div>
-    <Grid align="center" className="wrapper">
-    <Paper style={paperStyle} sx={paperSX}>
-    <Typography component="h3" variant="h3" style={heading}>
-    {bloque_id === true ? "Añadir" : "Modificar"} Información
-    Personal
-    </Typography>
-    <form onSubmit={manejarDatos}>
-    <TextField
-    style={row}
-    fullWidth
-    id="telefono"
-    type="tel"
-    label="Teléfono"
-    placeholder="Teléfono"
-    name="telefono"
-    required
-    value={telefono}
-    onChange={(e) => {
-      const regex = /^[0-9\b]+$/;
-      if (e.target.value === "" || regex.test(e.target.value)) {
-        setTelefono(e.target.value);
-      }
-    }}
-    onInvalid={(e) =>
-      e.target.setCustomValidity(
-        "Introduce un número de teléfono válido",
-      )
-    }
-    />
-    <TextField
-    style={row}
-    fullWidth
-    id="correo"
-    type="email"
-    label="Correo"
-    placeholder="Correo"
-    name="correo"
-    required
-    value={correo}
-    onChange={(e) => setCorreo(e.target.value)}
-    />
-    <TextField
-    style={row}
-    fullWidth
-    id="puesto"
-    type="text"
-    label="Puesto"
-    placeholder="Puesto"
-    name="puesto"
-    required
-    value={puesto}
-    onChange={(e) => setPuesto(e.target.value)}
-    />
-    <TextField
-    style={row}
-    fullWidth
-    id="direccion"
-    type="text"
-    label="Dirección"
-    placeholder="Dirección"
-    name="direccion"
-    required
-    value={direccion}
-    onChange={(e) => setDireccion(e.target.value)}
-    />
-    <TextField
-    style={row}
-    fullWidth
-    id="sobre_mi"
-    type="text"
-    label="Sobre Mí"
-    placeholder="Acerca de mí"
-    name="sobre_mi"
-    required
-    value={sobre_mi}
-    onChange={(e) => setSobreMi(e.target.value)}
-    />
-    <br />
-    <Button
-    variant="contained"
-    component="label"
-    style={{ marginRight: "10px" }}
-    >
-    Subir Imagen
-    <input
-    type="file"
-    hidden
-    accept="image/*"
-    onChange={manejarImagen}
-    />
-    </Button>
-    <Typography variant="body1">{nombreArchivo}</Typography>
-    <br />
-    <FormControlLabel
-    control={
-      <Switch
-      checked={mostrarFoto}
-      onChange={(e) => setMostrarFoto(e.target.checked)}
-      />
-    }
-    label="Mostrar Foto"
-    />
-    <FormControlLabel
-    control={
-      <Switch
-      checked={mostrarPuesto}
-      onChange={(e) => setMostrarPuesto(e.target.checked)}
-      />
-    }
-    label="Mostrar Puesto"
-    />
-    <Button style={btnStyle} variant="contained" type="submit">
-    {bloque_id === true ? "Crear" : "Guardar"}
-    </Button>
-    </form>
-    </Paper>
-    </Grid>
-    </div>
-    </Grid>
-    </div>
+      <div>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>
+          Información Personal
+        </h1>
+        <div style={{ marginTop: "2rem", textAlign: "center" }}>
+          <Button
+            variant="contained"
+            style={{ ...btnStyle, backgroundColor: "green" }}
+            color="success"
+            component={Link}
+            to="/home"
+          >
+            Volver a Inicio
+          </Button>
+        </div>
+      </div>
+      <div style={{ padding: "10px", width: "100%" }}>
+        <Grid align="center" container spacing={0} className="wrapper">
+          <div>
+            <Paper style={paperStyle} sx={paperSX}>
+              <Typography component="h3" variant="h3" style={heading}>
+                Información Personal
+              </Typography>
+              <List
+                dense={dense}
+                style={{
+                  padding: "5px",
+                  maxHeight: "95%",
+                  overflow: "auto",
+                  backgroundColor: "#ccd5",
+                }}
+              >
+                <ListItemButton
+                  key={true}
+                  style={{ ...listStyle, backgroundColor: "#4f96" }}
+                  onClick={(e) => reiniciarForm()}
+                >
+                  <PostAdd />
+                  <div style={{ width: "20px" }}></div>
+                  <ListItemText
+                    primary={"Agregar Nueva Información"}
+                    secondary={"Agregar nueva información personal"}
+                  />
+                </ListItemButton>
+                {informacion}
+              </List>
+            </Paper>
+          </div>
+          <div style={{ width: "20px" }}></div>
+          <div>
+            <Grid align="center" className="wrapper">
+              <Paper style={paperStyle} sx={paperSX}>
+                <Typography component="h3" variant="h3" style={heading}>
+                  {bloque_id === true ? "Añadir" : "Modificar"} Información
+                  Personal
+                </Typography>
+                <form onSubmit={manejarDatos}>
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="telefono"
+                    type="tel"
+                    label="Teléfono"
+                    placeholder="Teléfono"
+                    name="telefono"
+                    required
+                    value={telefono}
+                    onChange={(e) => {
+                      const regex = /^[0-9\b]+$/;
+                      if (e.target.value === "" || regex.test(e.target.value)) {
+                        setTelefono(e.target.value);
+                      }
+                    }}
+                    onInvalid={(e) =>
+                      e.target.setCustomValidity(
+                        "Introduce un número de teléfono válido",
+                      )
+                    }
+                  />
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="correo"
+                    type="email"
+                    label="Correo"
+                    placeholder="Correo"
+                    name="correo"
+                    required
+                    value={correo}
+                    onChange={(e) => setCorreo(e.target.value)}
+                  />
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="puesto"
+                    type="text"
+                    label="Puesto"
+                    placeholder="Puesto"
+                    name="puesto"
+                    required
+                    value={puesto}
+                    onChange={(e) => setPuesto(e.target.value)}
+                  />
+                  <TextField
+                    style={row}
+                    fullWidth
+                    id="direccion"
+                    type="text"
+                    label="Dirección"
+                    placeholder="Dirección"
+                    name="direccion"
+                    required
+                    value={direccion}
+                    onChange={(e) => setDireccion(e.target.value)}
+                  />
+                  <br />
+                  <Button
+                    variant="contained"
+                    component="label"
+                    style={{ marginRight: "10px" }}
+                  >
+                    Subir Imagen
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={manejarImagen}
+                    />
+                  </Button>
+                  <Typography variant="body1">{nombreArchivo}</Typography>
+                  <br />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={mostrarFoto}
+                        onChange={(e) => setMostrarFoto(e.target.checked)}
+                      />
+                    }
+                    label="Mostrar Foto"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={mostrarPuesto}
+                        onChange={(e) => setMostrarPuesto(e.target.checked)}
+                      />
+                    }
+                    label="Mostrar Puesto"
+                  />
+                  <Button style={btnStyle} variant="contained" type="submit">
+                    {bloque_id === true ? "Crear" : "Guardar"}
+                  </Button>
+                </form>
+              </Paper>
+            </Grid>
+          </div>
+        </Grid>
+      </div>
     </>
   );
 }

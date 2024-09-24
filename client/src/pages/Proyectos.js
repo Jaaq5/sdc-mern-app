@@ -102,7 +102,7 @@ function Proyectos({
     if (!bloques) return;
 
     const sortedBloques = Object.entries(bloques).sort(
-      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final)
+      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
     );
 
     setProyectos(
@@ -113,12 +113,7 @@ function Proyectos({
           onClick={(e) => editarDatos(plan_id)}
         >
           <ListItemText
-            primary={
-              bloque.Proyecto +
-              " en " +
-              bloque.Intitucion +
-              ""
-            }
+            primary={bloque.Proyecto + " en " + bloque.Intitucion + ""}
             secondary={
               bloque.Fecha_Inicio +
               "-" +

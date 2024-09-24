@@ -105,7 +105,7 @@ function ExperienciaLaboral({
     if (!bloques) return;
 
     const sortedBloques = Object.entries(bloques).sort(
-      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final)
+      ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
     );
 
     setTrabajos(
@@ -116,12 +116,7 @@ function ExperienciaLaboral({
           onClick={(e) => editarDatos(plan_id)}
         >
           <ListItemText
-            primary={
-              bloque.Puesto +
-              " en " +
-              bloque.Organizacion +
-              ""
-            }
+            primary={bloque.Puesto + " en " + bloque.Organizacion + ""}
             secondary={
               bloque.Fecha_Inicio +
               "-" +
