@@ -424,7 +424,7 @@ function InformacionPersonal({
                     fullWidth
                     id="puesto"
                     type="text"
-                    label="Puesto"
+                    label="Puesto a aplicar"
                     placeholder="Puesto"
                     name="puesto"
                     required
