@@ -279,8 +279,8 @@ function App() {
         plantilla = JSON.parse(JSON.stringify(plantilla_simple));
       else plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
 
-      if (plantilla.Documento.datos.Informacion_Personal === "id") {
-        plantilla.Documento.datos.Informacion_Personal = Object.keys(
+      if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
+        plantilla.Documento.datos.Secciones.Informacion_Personal = Object.keys(
           user_data.bloques.Informacion_Personal,
         )[0]; //TODO, Filtrar por categorias
         plantilla.ID_Categoria_Curriculum =
@@ -291,6 +291,7 @@ function App() {
           listas_categorias.categorias_puesto.find(
             (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
           )._id;
+		plantilla.Documento.diseno.Secciones.Informacion_Personal.Titulo = user_data.name;
       }
       return plantilla;
     },
