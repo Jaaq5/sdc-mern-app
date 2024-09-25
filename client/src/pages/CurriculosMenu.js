@@ -20,6 +20,7 @@ import {
 
 import { DeleteForever, PostAdd } from "@mui/icons-material";
 import HarvardExampleTemplate from "../Components/HarvardExampleTemplate";
+import LaboralExampleTemplate from "../Components/LaboralExampleTemplate";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
@@ -228,10 +229,17 @@ function CurriculosMenu({
   }
 
   const handleCurriculumChange = (value) => {
+    console.log(value);
     setCurriculum(value);
     if (value === "harvard") {
       setPlantillaTexto("Una plantilla que utiliza el formato Harvard.");
       setTituloPlantilla("Plantilla Harvard");
+
+    //value of categoria laboral en BD
+    }else if(value === "66f3500d9f9e95c4e9d9bd45"){
+      setPlantillaTexto("Una plantilla que utiliza el formato Laboral.");
+      setTituloPlantilla("Plantilla Laboral");
+
     } else {
       setPlantillaTexto(
         "Una plantilla que no tiene elementos ni estructura especial.",
@@ -418,9 +426,14 @@ function CurriculosMenu({
                     key={true}
                     style={listStyle}
                     onClick={(e) => {
-                      setPlantilla("vacia");
+                      //de nuevo valor de laboral en bd tengo que buscar como darle otro valor
+                      if (categoria_curriculum === "66f3500d9f9e95c4e9d9bd45"){
+                        setPlantilla("laboral");
+                      }else{
+                        setPlantilla("vacia");
+                      }
                       setCurriculoId(true);
-                      manejarDatos();
+                      manejarDatos("laboral", true);
                     }}
                   >
                     <PostAdd />
@@ -436,6 +449,14 @@ function CurriculosMenu({
                       {" "}
                       {/* Añade margen a la izquierda */}
                       <HarvardExampleTemplate />
+                    </div>
+                  )}
+                  {/*de nuevo valor de laboral en bd tengo que buscar como darle otro valor*/}
+                  {categoria_curriculum === "66f3500d9f9e95c4e9d9bd45" && (
+                    <div style={{ marginLeft: "20px" }}>
+                      {" "}
+                      {/* Añade margen a la izquierda */}
+                      <LaboralExampleTemplate />
                     </div>
                   )}
                 </div>

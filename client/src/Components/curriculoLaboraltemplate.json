@@ -1,0 +1,93 @@
+{
+    "ID_Categoria_Curriculum": "Laboral",
+    "ID_Categoria_Puesto": "Software",
+    "Documento": {
+      "datos": {
+        "Informacion_Personal": "id",
+        "Secciones": {
+          "Experiencia_Laboral": {
+            "Cantidad": 3,
+            "IDs": []
+          },
+          "Habilidades": {
+            "Cantidad": 3,
+            "IDs": []
+          },
+          "Idiomas": {
+            "Cantidad": 2,
+            "IDs": []
+          },
+          "Proyectos": {
+            "Cantidad": 1,
+            "IDs": []
+          },
+          "Publicaciones": {
+            "Cantidad": 1,
+            "IDs": []
+          },
+          "Referencias": {
+            "Cantidad": 3,
+            "IDs": []
+          }
+        }
+      },
+      "diseno": {
+        "Informacion_Personal": {
+          "Foto": { "Style": { "top": "5px", "left": "5px" } }
+        },
+        "Secciones": {
+          "Orden" : ["Experiencia_Laboral", "Educacion_Formal", "Educacion_Informal", "Idiomas", "Habilidades", "Proyectos", "Publicaciones", "Referencias"],
+          "Experiencia_Laboral": {
+            "Mostrar": true,
+            "Titulo" : "Experiencia Laboral",
+            "Campos": {
+              "Fecha_Inicial": {
+                "Style": { "fontWeight": "800" },
+                "Celdas" : [15, 10],
+                "Mostrar" : true
+              },
+              "Fecha_Final": {
+                "Style": { "fontWeight": "800" },
+                "Mostrar" : true
+              }
+            }
+          },
+          "Educacion_Formal": {
+            "Mostrar": true,
+            "Celdas" : [15, 10],
+            "Titulo" : "Títulos",
+            "Campos" : {
+                "Descripcion" : {
+                    "Mostrar" : false
+                }
+            }
+          },
+          "Educacion_Informal": {
+            "Mostrar": true,
+            "Titulo" : "Certificados"
+          },
+          "Habilidades": {
+            "Mostrar": true,
+            "Titulo" : "Habilidades"
+          },
+          "Idiomas": {
+            "Mostrar": true,
+            "Titulo" : "Idiomas"
+          },
+          "Proyectos": {
+            "Mostrar": true,
+            "Titulo" : "Proyectos"
+          },
+          "Publicaciones": {
+            "Mostrar": true,
+            "Titulo" : "Publicaciones"
+          },
+          "Referencias": {
+            "Mostrar": true,
+            "Titulo" : "Referencias"
+          }
+        }
+      }
+    }
+  }
+  
