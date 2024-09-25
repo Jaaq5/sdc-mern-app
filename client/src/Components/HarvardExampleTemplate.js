@@ -1,6 +1,6 @@
-// HarvardExampleTemplate.js
 import React from "react";
 import { Paper, Typography } from "@mui/material";
+import curriculumData from "./curriculotemplate";
 
 const paperStyle = {
   padding: "2rem",
@@ -11,10 +11,14 @@ const paperStyle = {
 };
 
 const HarvardExampleTemplate = () => {
+  const {
+    Documento: {
+      datos: { Informacion_Personal, Secciones },
+    },
+  } = curriculumData;
+
   return (
     <div style={{ width: "80%", paddingLeft: "20px" }}>
-      {" "}
-      {/* Ejemplo de Currículum Harvard */}
       <Paper
         style={{
           ...paperStyle,
@@ -30,49 +34,89 @@ const HarvardExampleTemplate = () => {
         >
           Ejemplo de Currículum Harvard:
         </Typography>
-        <div
-          style={{
-            padding: "10px",
-            fontSize: "0.9rem",
-            lineHeight: "1.5",
-          }}
-        >
-          <strong>Your Name</strong>
+
+        <div style={{ padding: "10px", fontSize: "0.9rem", lineHeight: "1.5" }}>
+          <strong>Información Personal:</strong>
           <br />
-          Home Street Address • City, State Zip • name@college.harvard.edu •
-          (123) 456-7890
+          <strong>{Informacion_Personal.Nombre || "Nombre Apellido"}</strong>
           <br />
+          {Informacion_Personal.Direccion ||
+            "Dirección • Ciudad, Estado, Código Postal"}
           <br />
-          <strong>Education</strong>
-          <br />
-          HARVARD UNIVERSITY, Cambridge, MA
-          <br />
-          B.A. in Psychology, GPA: 3.8/4.0 (May 2023)
-          <br />
-          Thesis: "Impact of Social Media on Mental Health"
+          {Informacion_Personal.Email || "email@example.com"} •{" "}
+          {Informacion_Personal.Telefono || "(123) 456-7890"}
           <br />
           <br />
-          <strong>Experience</strong>
-          <br />
-          ORG NAME, City, State
-          <br />
-          Intern, Marketing Dept. (June 2022 – Aug 2022)
-          <br />
-          • Developed campaigns that increased engagement by 30%
-          <br />
-          • Conducted market research and presented findings
-          <br />
-          <br />
-          <strong>Skills & Interests</strong>
-          <br />
-          Technical: MS Office, Adobe Creative Suite
-          <br />
-          Language: Spanish (fluent), French (conversational)
-          <br />
-          Interests: Hiking, photography
+          {Object.entries(Secciones).map(([key, value]) => {
+            if (value.Mostrar) {
+              return (
+                <div key={key}>
+                  <strong>{value.Titulo}</strong>
+                  <br />
+                  <ul>
+                    {value.IDs && value.IDs.length > 0 ? (
+                      value.IDs.map((id) => <li key={id}>ID: {id}</li>)
+                    ) : (
+                      <li>No hay información disponible.</li>
+                    )}
+                  </ul>
+                  <br />
+                </div>
+              );
+            }
+            return null;
+          })}
+          {/* Mostrar detalles adicionales de cada sección (Ejemplo) */}
+          <strong>Experiencia Laboral:</strong>
+          <ul>
+            {Secciones.Experiencia_Laboral.IDs.map((id, index) => (
+              <li key={index}>Experiencia ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Educación Formal:</strong>
+          <ul>
+            {Secciones.Educacion_Formal.IDs.map((id, index) => (
+              <li key={index}>Título ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Educación Informal:</strong>
+          <ul>
+            {Secciones.Educacion_Informal.IDs.map((id, index) => (
+              <li key={index}>Certificado ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Habilidades:</strong>
+          <ul>
+            {Secciones.Habilidades.IDs.map((id, index) => (
+              <li key={index}>Habilidad ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Idiomas:</strong>
+          <ul>
+            {Secciones.Idiomas.IDs.map((id, index) => (
+              <li key={index}>Idioma ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Proyectos:</strong>
+          <ul>
+            {Secciones.Proyectos.IDs.map((id, index) => (
+              <li key={index}>Proyecto ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Publicaciones:</strong>
+          <ul>
+            {Secciones.Publicaciones.IDs.map((id, index) => (
+              <li key={index}>Publicación ID: {id}</li>
+            ))}
+          </ul>
+          <strong>Referencias:</strong>
+          <ul>
+            {Secciones.Referencias.IDs.map((id, index) => (
+              <li key={index}>Referencia ID: {id}</li>
+            ))}
+          </ul>
         </div>
       </Paper>
-      {/* Fin Ejemplo de Currículum Harvard */}
     </div>
   );
 };
