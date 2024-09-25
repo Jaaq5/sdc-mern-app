@@ -28,6 +28,9 @@
     <li>
       <a href="#documentación-oficial">Documentación oficial</a>
     </li>
+    <li>
+      <a href="#cómo-hacer-un-pull-request">Cómo hacer un Pull Request</a>
+    </li>
   </ol>
 </details>
 
@@ -256,6 +259,118 @@ npm run lint
 [Proyecto Scrum](https://jaaq5.atlassian.net/jira/software/projects/SDC/boards/2)
 
 [Referenciar historias/tareas en los commits](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/)
+
+<p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+
+## Cómo hacer un Pull Request
+
+Para realizar un Pull Request desde otra rama (por ejemplo, `my-branch`) a la rama `master`, sigue estos pasos:
+
+### 1. **Preparar la Rama Master**
+
+- Cambia a la rama `master` y actualízala:
+
+  ```bash
+  git checkout master
+  git pull origin master
+  ```
+
+### 2. **Crear y Cambiar a una Nueva Rama**
+
+- Crea una nueva rama (`my-branch`) y cámbiate a ella:
+
+  ```bash
+  git checkout -b my-branch
+  ```
+
+### 3. **Guardar Cambios No Confirmados (Si es Necesario)**
+
+- Si tienes cambios no confirmados, guárdalos:
+
+  ```bash
+  git stash
+  ```
+
+- Después, asegúrate de que tu rama esté actualizada:
+
+  ```bash
+  git pull origin master
+  ```
+
+- Si aplicaste `stash`, vuelve a aplicar los cambios guardados:
+
+  ```bash
+  git stash apply
+  ```
+
+### 4. **Realizar Cambios y Confirmarlos**
+
+- Añade y confirma tus cambios en `my-branch`:
+
+  ```bash
+  git add .
+  git commit -m "Commit message"
+  ```
+
+### 5. **Subir Cambios a la Rama Remota**
+
+- Sube tus cambios a la rama remota `my-branch`:
+
+  ```bash
+  git push origin my-branch
+  ```
+
+### 6. **Limpiar Stash (Opcional)**
+
+- Si no necesitas los cambios guardados en `stash`, límpialos:
+
+  ```bash
+  git stash clear
+  ```
+
+### 7 **Crear un Pull Request**
+
+1. Selecciona la rama `my-branch`.
+2. Selecciona la opcion `Compare and pull request`.
+3. Selecciona la rama `my-branch` y la rama `master`.
+4. Haz clic en el botón `Create pull request`.
+
+### 8. **Fusionar Cambios de Master en tu Rama**
+
+- Cambia a `master` para asegurarte de que esté actualizado:
+
+  ```bash
+  git checkout master
+  git pull origin master
+  ```
+
+- Luego, cambia a `my-branch` y fusiona `master`:
+
+  ```bash
+  git checkout my-branch
+  git merge master
+  ```
+
+### Resumen de Comandos
+
+| Comando                          | Acción                                              |
+| :------------------------------- | :-------------------------------------------------- |
+| `git checkout master`            | Cambia a la rama `master`.                          |
+| `git pull origin master`         | Actualiza la rama `master` con los últimos cambios. |
+| `git checkout -b my-branch`      | Crea y cambia a la rama `my-branch`.                |
+| `git stash`                      | Guarda cambios no confirmados.                      |
+| `git stash list`                 | Lista los cambios guardados con `stash`.            |
+| `git stash apply`                | Aplica los cambios guardados con `stash`.           |
+| `git add .`                      | Añade los cambios a la rama `my-branch`.            |
+| `git commit -m "Commit message"` | Confirma los cambios en la rama `my-branch`.        |
+| `git push origin my-branch`      | Sube tus cambios a la rama remota `my-branch`.      |
+| `git stash clear`                | Borra los cambios guardados con `stash`.            |
+| `git merge master`               | Fusiona la rama `master` con la rama `my-branch`.   |
+
+### Notas
+
+- Resuelve conflictos si surgen durante el proceso de fusión.
+- Utiliza `git stash list` para ver los cambios guardados en `stash` antes de aplicar o limpiar.
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 

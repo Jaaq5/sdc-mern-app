@@ -155,14 +155,18 @@ function App() {
         });
       return categorias;
     },
-	IdANombreCurriculo: (cat_id) => {
-		const cat = listas_categorias.categorias_curriculum.find((cat) => cat._id === cat_id);
-		return (cat && cat.Nombre)? cat.Nombre : "-";
-	},
-	IdANombrePuesto: (cat_id) => {
-		const cat = listas_categorias.categorias_puesto.find((cat) => cat._id === cat_id);
-		return (cat && cat.Nombre)? cat.Nombre : "-";
-	}
+    IdANombreCurriculo: (cat_id) => {
+      const cat = listas_categorias.categorias_curriculum.find(
+        (cat) => cat._id === cat_id,
+      );
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
+    IdANombrePuesto: (cat_id) => {
+      const cat = listas_categorias.categorias_puesto.find(
+        (cat) => cat._id === cat_id,
+      );
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
   };
 
   const curriculum_manager = {
@@ -282,16 +286,19 @@ function App() {
         plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
       }
 
-      if (plantilla.Documento.datos.Informacion_Personal === "id") {
-        plantilla.Documento.datos.Informacion_Personal = Object.keys(
+      if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
+        plantilla.Documento.datos.Secciones.Informacion_Personal = Object.keys(
           user_data.bloques.Informacion_Personal,
         )[0]; //TODO, Filtrar por categorias
-        plantilla.ID_Categoria_Curriculum = listas_categorias.categorias_curriculum.find(
-          (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
-        )._id;
-        plantilla.ID_Categoria_Puesto = listas_categorias.categorias_puesto.find(
-          (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
-        )._id;
+        plantilla.ID_Categoria_Curriculum =
+          listas_categorias.categorias_curriculum.find(
+            (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
+          )._id;
+        plantilla.ID_Categoria_Puesto =
+          listas_categorias.categorias_puesto.find(
+            (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
+          )._id;
+		plantilla.Documento.diseno.Secciones.Informacion_Personal.Titulo = user_data.name;
       }
       return plantilla;
     },

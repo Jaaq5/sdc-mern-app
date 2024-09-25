@@ -14,7 +14,7 @@ categoria_habilidad_route.patch(
 categoria_habilidad_route.get(
   "/obtener-categorias-habilidad",
   Categorias_Habilidad_Controller.Obtener_Categorias_Habilidad,
-);/*
+); /*
 categoria_habilidad_route.delete(
   "/eliminar-categoria-habilidad/:categoria_id",
   Categorias_Habilidad_Controller.Eliminar_Categoria_Habilidad,

@@ -98,7 +98,7 @@ function InformacionPersonal({
     if (!bloques) return;
 
     const fotoUsuario = imagen ? (
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center" }} key={"Foto"}>
         <img
           src={URL.createObjectURL(imagen)} // Usar el objeto de la imagen seleccionada
           alt="Usuario"
@@ -444,16 +444,16 @@ function InformacionPersonal({
                     onChange={(e) => setDireccion(e.target.value)}
                   />
                   <TextField
-                  style={row}
-                  fullWidth
-                  id="sobre_mi"
-                  type="text"
-                  label="Sobre Mí"
-                  placeholder="Acerca de mí"
-                  name="sobre_mi"
-                  required
-                  value={sobre_mi}
-                  onChange={(e) => setSobreMi(e.target.value)}
+                    style={row}
+                    fullWidth
+                    id="sobre_mi"
+                    type="text"
+                    label="Sobre Mí"
+                    placeholder="Acerca de mí"
+                    name="sobre_mi"
+                    required
+                    value={sobre_mi}
+                    onChange={(e) => setSobreMi(e.target.value)}
                   />
                   <br />
                   <Button

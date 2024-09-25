@@ -274,12 +274,10 @@ const Crear_Curriculum = async (req, res) => {
   try {
     const usuario = await Usuarios.findById(new ObjectId(usuario_id));
     if (!usuario) {
-      return res
-        .status(409)
-        .json({
-          success: false,
-          error: "Usuario no encontrado al crear curriculum",
-        });
+      return res.status(409).json({
+        success: false,
+        error: "Usuario no encontrado al crear curriculum",
+      });
     }
 
     const curriculum = new Curriculums({
@@ -302,13 +300,11 @@ const Crear_Curriculum = async (req, res) => {
 
     if (!res) return true;
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        msg: "Se ha creado el curriculum exitosamente",
-        curriculum_id: curriculum._id,
-      });
+    return res.status(200).json({
+      success: true,
+      msg: "Se ha creado el curriculum exitosamente",
+      curriculum_id: curriculum._id,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -350,24 +346,20 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
       new ObjectId(categoria_curriculum_id),
     );
     if (!cat_curr) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          error: "No se encontró el curriculum al actualizar",
-        });
+      return res.status(404).json({
+        success: false,
+        error: "No se encontró el curriculum al actualizar",
+      });
     }
 
     const cat_puesto = await Categorias_Pueto.findById(
       new ObjectId(categoria_puesto_id),
     );
     if (!cat_puesto) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          error: "No se encontró el curriculum al actualizar",
-        });
+      return res.status(404).json({
+        success: false,
+        error: "No se encontró el curriculum al actualizar",
+      });
     }
 
     curriculum.Documento = documento;

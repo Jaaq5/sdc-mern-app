@@ -149,7 +149,7 @@ function CurriculosMenu({
             manejarDatos(plan_id, nuevo);
           }}
         >
-          <ListItemText primary={user_data.bloques.Informacion_Personal[curriculos[plan_id].Documento.datos.Informacion_Personal]?.Telefono} secondary={""} />
+          <ListItemText primary={user_data.bloques.Informacion_Personal[curriculos[plan_id].Documento.datos.Secciones.Informacion_Personal]?.Telefono} secondary={""} />
         </ListItemButton>
 		</div>
 		)),

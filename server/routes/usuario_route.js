@@ -22,6 +22,7 @@ const router = express.Router();
 router.post("/crear-usuario", Crear_Usuario);
 router.post("/subir-imagen", upload.single("userImage"), Subir_Imagen_Usuario);
 router.patch("/actualizar-imagen/:usuario_id", Actualizar_Imagen_Usuario);
+router.delete("/eliminar-imagen/:usuario_id", Eliminar_Imagen_Usuario);
 router.post("/log-in-usuario", Log_In);
 router.post("/log-out-usuario", Log_Out);
 router.get("/obtener-usuario/:usuario_id", Obtener_Datos_Usuario);
