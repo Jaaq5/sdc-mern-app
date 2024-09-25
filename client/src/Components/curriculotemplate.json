@@ -3,8 +3,8 @@
   "ID_Categoria_Puesto": "Software",
   "Documento": {
     "datos": {
-      "Informacion_Personal": "id",
       "Secciones": {
+		"Informacion_Personal": "id",
         "Experiencia_Laboral": {
           "Cantidad": 3,
           "IDs": []
@@ -40,9 +40,7 @@
       }
     },
     "diseno": {
-      "Informacion_Personal": {
-        "Foto": { "Style": { "top": "5px", "left": "5px" } }
-      },
+      
       "Secciones": {
         "Orden": [
           "Experiencia_Laboral",
@@ -54,20 +52,48 @@
           "Publicaciones",
           "Referencias"
         ],
+		"Informacion_Personal": {
+			"Mostrar": true,
+			"Titulo" : "Nombre",
+			"style" : {},
+			
+			"Foto": { 
+				"Mostrar": true, 
+				"style": { "top": "5px", "left": "5px" } 
+			},
+			
+			"Estructura": [
+				{
+					"Tipo" : "p",
+					"Texto" : ["Titulo"],
+					"style" : {"fontWeight" : 900, "fontSize" : "1.2em"}
+				},
+				{
+					"Tipo" : "p",
+					"Texto" : ["Para el puesto:", "Puesto"],
+					"style" : {}
+				},
+				{
+					"Tipo" : "p",
+					"Texto" : ["Contactos:", "Correo", "Telefono"],
+					"style" : {}
+				}
+			]
+		},
         "Experiencia_Laboral": {
-          "Mostrar": true,
-          "Titulo": "Experiencia Laboral",
-          "Campos": {
-            "Fecha_Inicial": {
-              "Style": { "fontWeight": "800" },
-              "Celdas": [15, 10],
-              "Mostrar": true
-            },
-            "Fecha_Final": {
-              "Style": { "fontWeight": "800" },
-              "Mostrar": true
-            }
-          }
+		  "Mostrar": true,
+		  "Titulo" : "Experiencia Laboral",
+		  "Campos": {
+			"Fecha_Inicial": {
+			  "Style": { "fontWeight": "800" },
+			  "Celdas" : [15, 10],
+			  "Mostrar" : true
+			},
+			"Fecha_Final": {
+			  "Style": { "fontWeight": "800" },
+			  "Mostrar" : true
+			}
+		  }
         },
         "Educacion_Formal": {
           "Mostrar": true,
