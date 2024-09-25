@@ -154,14 +154,18 @@ function App() {
         });
       return categorias;
     },
-	IdANombreCurriculo: (cat_id) => {
-		const cat = listas_categorias.categorias_curriculum.find((cat) => cat._id === cat_id);
-		return (cat && cat.Nombre)? cat.Nombre : "-";
-	},
-	IdANombrePuesto: (cat_id) => {
-		const cat = listas_categorias.categorias_puesto.find((cat) => cat._id === cat_id);
-		return (cat && cat.Nombre)? cat.Nombre : "-";
-	}
+    IdANombreCurriculo: (cat_id) => {
+      const cat = listas_categorias.categorias_curriculum.find(
+        (cat) => cat._id === cat_id,
+      );
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
+    IdANombrePuesto: (cat_id) => {
+      const cat = listas_categorias.categorias_puesto.find(
+        (cat) => cat._id === cat_id,
+      );
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
   };
 
   const curriculum_manager = {
@@ -267,9 +271,7 @@ function App() {
       return plant;
     },
 
-    CopiarPlantilla: (
-      plantilla_id
-    ) => {
+    CopiarPlantilla: (plantilla_id) => {
       if (plantilla_id !== "simple" && !plantillas[plantilla_id]) return null;
 
       let plantilla = null;
@@ -281,12 +283,14 @@ function App() {
         plantilla.Documento.datos.Informacion_Personal = Object.keys(
           user_data.bloques.Informacion_Personal,
         )[0]; //TODO, Filtrar por categorias
-        plantilla.ID_Categoria_Curriculum = listas_categorias.categorias_curriculum.find(
-          (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
-        )._id;
-        plantilla.ID_Categoria_Puesto = listas_categorias.categorias_puesto.find(
-          (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
-        )._id;
+        plantilla.ID_Categoria_Curriculum =
+          listas_categorias.categorias_curriculum.find(
+            (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
+          )._id;
+        plantilla.ID_Categoria_Puesto =
+          listas_categorias.categorias_puesto.find(
+            (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
+          )._id;
       }
       return plantilla;
     },

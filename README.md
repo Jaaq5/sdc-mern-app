@@ -28,6 +28,9 @@
     <li>
       <a href="#documentación-oficial">Documentación oficial</a>
     </li>
+    <li>
+      <a href="#cómo-hacer-un-pull-request">Cómo hacer un Pull Request</a>
+    </li>
   </ol>
 </details>
 
@@ -256,6 +259,39 @@ npm run lint
 [Proyecto Scrum](https://jaaq5.atlassian.net/jira/software/projects/SDC/boards/2)
 
 [Referenciar historias/tareas en los commits](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/)
+
+<p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+
+## Cómo hacer un Pull Request
+
+Para realizar un Pull Request desde otra rama (por ejemplo, `my-branch`) a la rama `master`, sigue estos pasos:
+
+### Comandos
+
+Todos los comandos se ejecutan desde la carpeta del proyecto, en una terminal:
+
+| Comando                                                     | Acción                                                              |
+| :---------------------------------------------------------- | :------------------------------------------------------------------ |
+| `git stash`                                                 | Guarda cambios no confirmados.                                      |
+| `git pull`                                                  | Actualiza la rama `master` con los últimos cambios.                 |
+| `git stash list`                                            | Lista los cambios guardados con `stash`.                            |
+| `git stash apply`                                           | Aplica los cambios guardados con `stash`.                           |
+| `git checkout my-branch`                                    | Cambia a la rama `my-branch`.                                       |
+| `git stash`                                                 | Guarda cambios no confirmados.                                      |
+| `git pull https://github.com/Jaaq5/sdc-mern-app.git master` | Asegúrate de que tu rama `my-branch` esté actualizada.              |
+| `git stash list`                                            | Lista los cambios guardados con `stash`.                            |
+| `git stash apply`                                           | Aplica los cambios guardados con `stash`.                           |
+| `git add .`                                                 | Añade los cambios a la rama `my-branch`.                            |
+| `git commit -m "Commit message"`                            | Confirma los cambios en la rama `my-branch`.                        |
+| `git push origin my-branch`                                 | Sube tus cambios a la rama remota `my-branch`.                      |
+| `git stash clear`                                           | Borra los cambios guardados con `stash` cuando no se necesiten más. |
+
+### GitHub
+
+1. Selecciona la rama `my-branch`.
+2. La rama debe indicar que esta actualizada con `master` y que tiene commits nuevos.
+3. Haz clic en el botón `Create pull request`.
+   .
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
