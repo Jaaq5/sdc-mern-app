@@ -17,6 +17,7 @@ import Lenguajes from "./pages/Lenguajes";
 import CurriculosMenu from "./pages/CurriculosMenu";
 import EditorCurriculo from "./pages/EditorCurriculo";
 import plantilla_simple from "./Components/curriculotemplate";
+import plantilla_laboral from "./Components/curriculotemplate";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
@@ -271,13 +272,19 @@ function App() {
       return plant;
     },
 
-    CopiarPlantilla: (plantilla_id) => {
-      if (plantilla_id !== "simple" && !plantillas[plantilla_id]) return null;
+    CopiarPlantilla: (
+      plantilla_id
+    ) => {
+      if (plantilla_id !== "simple" && plantilla_id !== "laboral" && !plantillas[plantilla_id]) return null;
 
       let plantilla = null;
-      if (plantilla_id === "simple")
+      if (plantilla_id === "simple"){
         plantilla = JSON.parse(JSON.stringify(plantilla_simple));
-      else plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
+      }else if(plantilla_id === "laboral"){
+        plantilla = JSON.parse(JSON.stringify(plantilla_laboral));
+      }else{
+        plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
+      }
 
       if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
         plantilla.Documento.datos.Secciones.Informacion_Personal = Object.keys(
