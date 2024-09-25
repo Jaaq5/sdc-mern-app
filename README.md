@@ -270,28 +270,29 @@ Para realizar un Pull Request desde otra rama (por ejemplo, `my-branch`) a la ra
 
 Todos los comandos se ejecutan desde la carpeta del proyecto, en una terminal:
 
-| Comando                                                     | Acción                                                              |
-| :---------------------------------------------------------- | :------------------------------------------------------------------ |
-| `git stash`                                                 | Guarda cambios no confirmados.                                      |
-| `git pull`                                                  | Actualiza la rama `master` con los últimos cambios.                 |
-| `git stash list`                                            | Lista los cambios guardados con `stash`.                            |
-| `git stash apply`                                           | Aplica los cambios guardados con `stash`.                           |
-| `git checkout my-branch`                                    | Cambia a la rama `my-branch`.                                       |
-| `git stash`                                                 | Guarda cambios no confirmados.                                      |
-| `git pull https://github.com/Jaaq5/sdc-mern-app.git master` | Asegúrate de que tu rama `my-branch` esté actualizada.              |
-| `git stash list`                                            | Lista los cambios guardados con `stash`.                            |
-| `git stash apply`                                           | Aplica los cambios guardados con `stash`.                           |
-| `git add .`                                                 | Añade los cambios a la rama `my-branch`.                            |
-| `git commit -m "Commit message"`                            | Confirma los cambios en la rama `my-branch`.                        |
-| `git push origin my-branch`                                 | Sube tus cambios a la rama remota `my-branch`.                      |
-| `git stash clear`                                           | Borra los cambios guardados con `stash` cuando no se necesiten más. |
+| Comando                          | Acción                                                              |
+| :------------------------------- | :------------------------------------------------------------------ |
+| `git checkout master`            | Cambia a la rama `master`.                                          |
+| `git stash`                      | Guarda cambios no confirmados.                                      |
+| `git pull`                       | Actualiza la rama `master` con los últimos cambios.                 |
+| `git stash list`                 | Lista los cambios guardados con `stash`.                            |
+| `git stash apply`                | Aplica los cambios guardados con `stash`.                           |
+| `git checkout -b my-branch`      | Cambia a la rama `my-branch`.                                       |
+| `git stash`                      | Guarda cambios no confirmados.                                      |
+| `git pull origin master`         | Asegúrate de que tu rama `my-branch` esté actualizada.              |
+| `git stash list`                 | Lista los cambios guardados con `stash`.                            |
+| `git stash apply`                | Aplica los cambios guardados con `stash`.                           |
+| `git add .`                      | Añade los cambios a la rama `my-branch`.                            |
+| `git commit -m "Commit message"` | Confirma los cambios en la rama `my-branch`.                        |
+| `git push origin my-branch`      | Sube tus cambios a la rama remota `my-branch`.                      |
+| `git stash clear`                | Borra los cambios guardados con `stash` cuando no se necesiten más. |
 
 ### GitHub
 
 1. Selecciona la rama `my-branch`.
-2. La rama debe indicar que esta actualizada con `master` y que tiene commits nuevos.
-3. Haz clic en el botón `Create pull request`.
-   .
+2. Selecciona la opcion `Compare and pull request`.
+3. Selecciona la rama `my-branch` y la rama `master`.
+4. Haz clic en el botón `Create pull request`.
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
