@@ -15,6 +15,7 @@ const jobRoutes = require("./routes/categoria_puesto_route");
 const languageRoutes = require("./routes/idioma_route");
 const templateRoutes = require("./routes/curriculum_template_route");
 const path = require("path");
+const populateData = require("./populateDB");
 
 // Create an instance of an express application
 const app = express();
@@ -69,17 +70,28 @@ if (process.env.NODE_ENV === "production") {
 // Connect to MongoDB #########################################################
 const mongoUri = process.env.MONGO_URI;
 
-mongoose
-  .connect(mongoUri)
-  .then(() => {
-    // The server listens on the port #############################################
-    app.listen(port, () => {
-      console.log("");
-      console.log(`Connected to MongoDB and listening on port:${port}`);
-      //console.log(`Local: http://localhost:${port}`);
-      console.log("");
-    });
-  })
-  .catch((error) => {
-    console.log(error);
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.once("open", async () => {
+  console.log("Connected to MongoDB");
+
+  // Call the population function after connection is open
+  try {
+    await populateData();
+    console.log("Database populated with default values.");
+  } catch (err) {
+    console.error("Error populating default values:", err);
+  }
+
+  // Start the server only after populating the database
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
   });
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
