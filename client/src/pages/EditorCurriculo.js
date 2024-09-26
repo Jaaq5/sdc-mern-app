@@ -2,8 +2,10 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Lenguajes from "./Lenguajes";
-
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+
+import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
+import {TextoEditor} from "../Components/Editor/TextoEditor";
 
 import {
   Input,
@@ -24,61 +26,25 @@ import {
 import { DeleteForever, PostAdd } from "@mui/icons-material";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 
-const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando}) => {
-	  if(!documento)
-		  return (<></>);
-	  setTimeout(function(){document.getElementById("Editor_Texto_Input").focus()},200);
-	  return (<div style={{position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", marginTop: "-10px"}}>
-			<TextField
-				id="Editor_Texto_Input"
-				style={{display: "flex", backgroundColor: "#EFEFEF", zIndex: 100}}
-				InputProps = {{style: {}}}
-				variant="standard"
-				size="small"
-				sx={{ label: { fontWeight: "700", fontSize: "1.0rem" } }}
-				type="text"
-				label={Editando.label}
-				placeholder={Editando.placeholder}
-				required
-				value={TextoEditar}
-				onChange={(e) => {
-				  setTextoEditar(e.target.value);
-				  documento.diseno.Secciones[Editando.Seccion][Editando.Campo] = e.target.value;
-				  setDocumento(documento);
-				}}
-				onKeyDown={(e) => {if(e.keyCode === 13) setEditando(null)}}
-			  ></TextField>
-		  </div>
-	  
-	  );
-  };
-  
-const IdEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando, Items}) => {
-	  if(!documento)
-		  return (<></>);
-	  return (<>
-			<TextField
-				style={{display: "flex", position: "absolute", left: "400px",top: "400px", backgroundColor: "#EFEFEF"}}
-				sx={{ label: { fontWeight: "700", fontSize: "1.0rem" } }}
-				id="Informacion_Personal_Editor_Titulo"
-				type="text"
-				label="Titulo"
-				placeholder="Titulo"
-				required
-				value={TextoEditar}
-				onChange={(e) => {
-				  setTextoEditar(e.target.value);
-				  documento.diseno.Secciones[Editando.Seccion][Editando.Campo] = e.target.value;
-				  setDocumento(documento);
-				}}
-			  ></TextField>
-			  <Button onClick={(e) => {setEditando(null);}} >Listo</Button>
-		  </>
-	  
-	  );
-  };
+const ToolBoxSwitcher = ({TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando}) => {
+	console.log("Ed: "+Editando)
+	switch(Editando.Tipo){
+		case "Texto":
+			return (<>
+				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+			</>)
+		case "Orden":
+			return (<>
+				<SeccionOrderEditor ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+			</>)
+	}
+};
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
@@ -171,7 +137,7 @@ function EditorCurriculo({
 	  padding: "10px",
 	  position: "sticky"
   };
-
+  
   //PDF
   const stilos_paleta = StyleSheet.create({
 	pagina: {
@@ -211,6 +177,7 @@ function EditorCurriculo({
   const [SeccionesHTML, setHTMLInfo] = useState({});
   const [Editando, setEditando] = useState(null);
   const [TextoEditar, setTextoEditar] = useState("");
+  const [ListaEditar, setListaEditar] = useState([]);
   
   const posicionEnOverlay = (id) => {
 	let doc = document.getElementById("contenedor_documento");
@@ -255,12 +222,11 @@ function EditorCurriculo({
 				<Button  
 					title="Seleccionar la Informacion Personal"
 					style={editButton}
-					onClick={(e) => {setEditando({
-						tipo: "Dropdown", 
-						pos: posicionEnOverlay("Informacion_Personal"),
-						Seccion: "Informacion_Personal",
-						Campo: "Titulo"
+					onClick={(e) => {
+					setEditando({
+						Tipo: "Orden"
 					});
+					mapListaToHTML(ListaEditar, setListaEditar, documento, setDocumento);
 					}} >
 						<SwapHorizontalCircleIcon style={editButtonIcon}/>
 				</Button>
@@ -273,7 +239,7 @@ function EditorCurriculo({
 							onClick={(e) => {
 								setTextoEditar(documento.diseno.Secciones.Informacion_Personal.Titulo);
 								setEditando({
-									tipo: "Texto", 
+									Tipo: "Texto", 
 									pos: posicionEnOverlay("Informacion_Personal_Titulo_Texto"),
 									Seccion: "Informacion_Personal",
 									Campo: "Titulo",
@@ -310,7 +276,7 @@ function EditorCurriculo({
 							onClick={(e) => {
 								setTextoEditar(documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo);
 								setEditando({
-									tipo: "Texto", 
+									Tipo: "Texto", 
 									pos: posicionEnOverlay(documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"),
 									Seccion: documento.diseno.Secciones.Orden[seccion],
 									Campo: "Titulo",
@@ -567,11 +533,29 @@ function EditorCurriculo({
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
 				  <span style={{color: "white"}}>Por ahora, la plantilla simple es la utilizada</span>
+				  <Button onClick={(e) => {
+					  setEditando({
+						Tipo: "Orden"
+					});
+					mapListaToHTML(ListaEditar, setListaEditar, documento, setDocumento);
+				  }}
+				  >
+					Secciones
+				  </Button>
 			  </div>
 			  {Editando? (
-				  <div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
-					<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando}/>
-				  </div>
+				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
+					<ToolBoxSwitcher
+						TextoEditar={TextoEditar} 
+						setTextoEditar={setTextoEditar} 
+						ListaEditar={ListaEditar} 
+						setListaEditar={setListaEditar} 
+						documento={documento} 
+						setDocumento={setDocumento} 
+						Editando={Editando} 
+						setEditando={setEditando}
+					/>
+				</div>
 			  ) : (
 				<>
 				
