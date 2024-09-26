@@ -98,7 +98,7 @@ function InformacionPersonal({
     if (!bloques) return;
 
     const fotoUsuario = imagen ? (
-      <div style={{ display: "flex", alignItems: "center" }} key={"Foto"}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <img
           src={URL.createObjectURL(imagen)} // Usar el objeto de la imagen seleccionada
           alt="Usuario"

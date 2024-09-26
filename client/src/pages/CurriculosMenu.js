@@ -20,7 +20,7 @@ import {
 
 import { DeleteForever, PostAdd } from "@mui/icons-material";
 import HarvardExampleTemplate from "../Components/HarvardExampleTemplate";
-import LaboralExampleTemplate from "../Components/LaboralExampleTemplate";
+import AcademicExampleTemplate from "../Components/AcademicExampleTemplate";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
@@ -107,52 +107,86 @@ function CurriculosMenu({
   //Form
   const [curriculo_id, setCurriculoId] = useState(true);
 
-  const [plantilla_id, setPlantilla] = useState([]); 
+  const [plantilla_id, setPlantilla] = useState([]);
   const [categoria_curriculum, setCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
   const [documento, setDocumento] = useState(null);
   //
   const mapToHTML = (curriculos, callback, id_callback, nuevo) => {
-    if (!curriculos) 
-		return;
-	
+    if (!curriculos) return;
+
     callback(
-      Object.keys(curriculos).map((plan_id, index) =>  (
-		<div 
-			style={{backgroundColor: "#FFFFFF", border: "solid 1px #999a", margin: "5px 5px"}} 
-			key={plan_id}
-		>
-		<div style={{paddingTop: "2px"}}>
-			<span style={{backgroundColor: "#4139d4", borderRadius:"10px", fontWeight: "900", padding: "5px", color: "white", marginRight: "5px"}}>
-				{category_manager.IdANombreCurriculo(curriculos[plan_id].ID_Categoria_Curriculum)}
-			</span>
-			<span style={{backgroundColor: "#d47a39", borderRadius:"10px", fontWeight: "900", padding: "5px", color: "white", marginRight: "5px"}}>
-				{category_manager.IdANombrePuesto(curriculos[plan_id].ID_Categoria_Puesto)}
-			</span>
-		
-		{!nuevo ? (
-            <Button
-              style={deleteButton}
-              onClick={(e) => eliminarCurriculo(curriculos[plan_id]._id, index)}
-            >
-              <DeleteForever />
-            </Button>
-          ) : (
-            <></>
-          )}
-		</div>
-        <ListItemButton
-          key={plan_id}
-          style={listStyle}
-          onClick={(e) => {
-            id_callback(curriculos[plan_id]._id);
-            manejarDatos(plan_id, nuevo);
+      Object.keys(curriculos).map((plan_id, index) => (
+        <div
+          style={{
+            backgroundColor: "#FFFFFF",
+            border: "solid 1px #999a",
+            margin: "5px 5px",
           }}
+          key={plan_id}
         >
-          <ListItemText primary={user_data.bloques.Informacion_Personal[curriculos[plan_id].Documento.datos.Secciones.Informacion_Personal]?.Telefono} secondary={""} />
-        </ListItemButton>
-		</div>
-		)),
+          <div style={{ paddingTop: "2px" }}>
+            <span
+              style={{
+                backgroundColor: "#4139d4",
+                borderRadius: "10px",
+                fontWeight: "900",
+                padding: "5px",
+                color: "white",
+                marginRight: "5px",
+              }}
+            >
+              {category_manager.IdANombreCurriculo(
+                curriculos[plan_id].ID_Categoria_Curriculum,
+              )}
+            </span>
+            <span
+              style={{
+                backgroundColor: "#d47a39",
+                borderRadius: "10px",
+                fontWeight: "900",
+                padding: "5px",
+                color: "white",
+                marginRight: "5px",
+              }}
+            >
+              {category_manager.IdANombrePuesto(
+                curriculos[plan_id].ID_Categoria_Puesto,
+              )}
+            </span>
+
+            {!nuevo ? (
+              <Button
+                style={deleteButton}
+                onClick={(e) =>
+                  eliminarCurriculo(curriculos[plan_id]._id, index)
+                }
+              >
+                <DeleteForever />
+              </Button>
+            ) : (
+              <></>
+            )}
+          </div>
+          <ListItemButton
+            key={plan_id}
+            style={listStyle}
+            onClick={(e) => {
+              id_callback(curriculos[plan_id]._id);
+              manejarDatos(plan_id, nuevo);
+            }}
+          >
+            <ListItemText
+              primary={
+                user_data.bloques.Informacion_Personal[
+                  curriculos[plan_id].Documento.datos.Informacion_Personal
+                ]?.Telefono
+              }
+              secondary={""}
+            />
+          </ListItemButton>
+        </div>
+      )),
     );
   };
 
@@ -229,17 +263,10 @@ function CurriculosMenu({
   }
 
   const handleCurriculumChange = (value) => {
-    console.log(value);
     setCurriculum(value);
     if (value === "harvard") {
       setPlantillaTexto("Una plantilla que utiliza el formato Harvard.");
       setTituloPlantilla("Plantilla Harvard");
-
-    //value of categoria laboral en BD
-    }else if(value === "66f3500d9f9e95c4e9d9bd45"){
-      setPlantillaTexto("Una plantilla que utiliza el formato Laboral.");
-      setTituloPlantilla("Plantilla Laboral");
-
     } else {
       setPlantillaTexto(
         "Una plantilla que no tiene elementos ni estructura especial.",
@@ -273,9 +300,7 @@ function CurriculosMenu({
     } else {
       //Crear Curriculo
       const plantilla_id = curriculo_id;
-      const plantilla = curriculum_manager.CopiarPlantilla(
-        plantilla_id
-      );
+      const plantilla = curriculum_manager.CopiarPlantilla(plantilla_id);
       curriculum_manager
         .CrearCurriculo(user_data, setUserData, plantilla)
         .then((response) => {})
@@ -297,10 +322,10 @@ function CurriculosMenu({
 
     delete user_data.curriculums[index];
     setUserData(user_data);
-	
+
     mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
-	
-	curriculum_manager.EliminarCurriculo(
+
+    curriculum_manager.EliminarCurriculo(
       user_data,
       setUserData,
       index,
@@ -313,6 +338,7 @@ function CurriculosMenu({
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Tus Currículos</h1>
       </div>
+
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" className="wrapper">
           <div>
@@ -371,6 +397,7 @@ function CurriculosMenu({
                     onChange={(e) => handleCurriculumChange(e.target.value)} // Usar la función para manejar el cambio
                   >
                     <MenuItem value="harvard">Harvard</MenuItem>
+                    <MenuItem value="academic">Académico</MenuItem>
                     {cats_curr}
                   </Select>
                 </FormControl>
@@ -426,14 +453,9 @@ function CurriculosMenu({
                     key={true}
                     style={listStyle}
                     onClick={(e) => {
-                      //de nuevo valor de laboral en bd tengo que buscar como darle otro valor
-                      if (categoria_curriculum === "66f3500d9f9e95c4e9d9bd45"){
-                        setPlantilla("laboral");
-                      }else{
-                        setPlantilla("vacia");
-                      }
+                      setPlantilla("vacia");
                       setCurriculoId(true);
-                      manejarDatos("laboral", true);
+                      manejarDatos();
                     }}
                   >
                     <PostAdd />
@@ -447,18 +469,18 @@ function CurriculosMenu({
                   {categoria_curriculum === "harvard" && (
                     <div style={{ marginLeft: "20px" }}>
                       {" "}
-                      {/* Añade margen a la izquierda */}
                       <HarvardExampleTemplate />
                     </div>
                   )}
-                  {/*de nuevo valor de laboral en bd tengo que buscar como darle otro valor*/}
-                  {categoria_curriculum === "66f3500d9f9e95c4e9d9bd45" && (
+                  {/* Fin Ejemplo de Currículum Harvard */}
+                  {/* Ejemplo de Currículum Académico */}
+                  {categoria_curriculum === "academic" && (
                     <div style={{ marginLeft: "20px" }}>
                       {" "}
-                      {/* Añade margen a la izquierda */}
-                      <LaboralExampleTemplate />
+                      <AcademicExampleTemplate />
                     </div>
                   )}
+                  {/* Fin Ejemplo de Currículum Académico */}
                 </div>
                 {plantillas}
               </List>
