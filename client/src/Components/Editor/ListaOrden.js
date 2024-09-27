@@ -164,7 +164,7 @@ const mapListaToHTML = (ListaEditar, setListaEditar, documento, setDocumento) =>
 					<></>
 				)}
 			</div>
-			<div id={"divisor_"+index} style={{width: "100%", borderBottom:"solid 2px rgba(230, 150, 0,0.1)"}}></div>
+			<div id={"divisor_"+index} style={{width: "100%", borderBottom:"solid 2px rgba(230, 150, 0,0.2)"}}></div>
 		</div>);
 	});
 	setListaEditar(list);

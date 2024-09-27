@@ -6,6 +6,7 @@ import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } fr
 
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
+import {SelectorID} from "../Components/Editor/SelectorID";
 
 import {
   Input,
@@ -28,16 +29,16 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-
-const ToolBoxSwitcher = ({TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando}) => {
-	console.log("Ed: "+Editando)
+const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando}) => {
 	switch(Editando.Tipo){
 		case "Texto":
 			return (<>
 				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+			</>)
+		case "IDs":
+			return (<>
+				<SelectorID user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
 			</>)
 		case "Orden":
 			return (<>
@@ -109,8 +110,10 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	maxWidth: "30px",
-	maxHeight: "30px",
+	maxWidth: "20px",
+	maxHeight: "20px",
+	minWidth: "20px",
+	minHeight: "20px",
     cursor: "pointer",
     color: "#000",
 	margin: "0px",
@@ -118,11 +121,29 @@ function EditorCurriculo({
 	display: "inline",
 	fontSize: "inherit",
 	position: "absolute",
-	right: "2px"
+	right: "30px"
+  };
+  const seccionEditButton = {
+    backgroundColor: "#fff0",
+    border: "0px",
+    borderRadius: "5px",
+	maxWidth: "20px",
+	maxHeight: "20px",
+	minWidth: "20px",
+	minHeight: "20px",
+    cursor: "pointer",
+    color: "#000",
+	margin: "0px",
+	padding: "0px",
+	display: "inline",
+	fontSize: "inherit",
+	position: "absolute",
+	right: "2px",
+	top: "2px"
   };
   const editButtonIcon ={
-	  width: "0.8rem", 
-	  height: "0.8rem"
+	  width: "20px", 
+	  height: "20px"
   };
   const pdfCaja = {
 	  backgroundColor: "#303030",
@@ -221,12 +242,14 @@ function EditorCurriculo({
 			<div style={stilos_paleta.seccion} id={"Seccion_Informacion_Personal"}>
 				<Button  
 					title="Seleccionar la Informacion Personal"
-					style={editButton}
+					style={seccionEditButton}
 					onClick={(e) => {
 					setEditando({
-						Tipo: "Orden"
+						Tipo: "IDs",
+						pos: posicionEnOverlay("Seccion_Informacion_Personal"),
+						Seccion: "Informacion_Personal"
 					});
-					mapListaToHTML(ListaEditar, setListaEditar, documento, setDocumento);
+					
 					}} >
 						<SwapHorizontalCircleIcon style={editButtonIcon}/>
 				</Button>
@@ -259,7 +282,7 @@ function EditorCurriculo({
 					  : ""}
 				</p>
 				<p style={stilos_paleta.item}>
-					Correo: {user_data.email}
+					Correo: {user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Correo}
 				</p>
 				<p style={stilos_paleta.item}>
 					Teléfono: {user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Telefono}
@@ -268,7 +291,22 @@ function EditorCurriculo({
 			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => 
 				documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Mostrar? (
 					<div id={"Seccion_"+documento.diseno.Secciones.Orden[seccion]} style={stilos_paleta.seccion}>
-					  <p id={documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"} style={stilos_paleta.titulo}>
+					  <Button  
+							title="Modifcar contenido"
+							style={seccionEditButton}
+							onClick={(e) => {
+							setEditando({
+								Tipo: "IDs",
+								pos: posicionEnOverlay("Seccion_"+documento.diseno.Secciones.Orden[seccion]),
+								Seccion: documento.diseno.Secciones.Orden[seccion],
+								Campo: "IDs",
+								Arreglo: true
+							});
+							
+							}} >
+								<SwapHorizontalCircleIcon style={editButtonIcon}/>
+						</Button>
+						<p id={documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"} style={stilos_paleta.titulo}>
 						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo}
 						{!Editando? (<Button 
 							title="Editar título de sección"
@@ -546,6 +584,7 @@ function EditorCurriculo({
 			  {Editando? (
 				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
 					<ToolBoxSwitcher
+						user_data={user_data}
 						TextoEditar={TextoEditar} 
 						setTextoEditar={setTextoEditar} 
 						ListaEditar={ListaEditar} 

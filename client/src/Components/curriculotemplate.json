@@ -5,7 +5,7 @@
     "datos": {
       "Secciones": {
 		"Informacion_Personal": "id",
-        "Experiencia_Laboral": {
+        "Experiencias_Laborales": {
           "Cantidad": 3,
           "IDs": []
         },
@@ -42,7 +42,7 @@
     "diseno": {
       "Secciones": {
         "Orden": [
-          "Experiencia_Laboral",
+          "Experiencias_Laborales",
           "Educacion_Formal",
           "Educacion_Informal",
           "Idiomas",
@@ -74,12 +74,12 @@
 				},
 				{
 					"Tipo" : "p",
-					"Texto" : ["Contactos:", "Correo", "Telefono"],
+					"Texto" : ["Contactos:", "Telefono", "Correo"],
 					"style" : {}
 				}
 			]
 		},
-        "Experiencia_Laboral": {
+        "Experiencias_Laborales": {
 		  "Mostrar": true,
 		  "Titulo" : "Experiencia Laboral",
 		  "Campos": {
