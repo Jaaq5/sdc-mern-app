@@ -16,15 +16,12 @@ import {
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 
-function Lenguajes({ user_data, setUserData, manager_bloques }) {
+function Lenguajes({ user_data, setUserData, manager_bloques, category_manager}) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [lenguajes, setLenguajes] = useState([]);
-  const lenguajes_temp = [
-    { id: 1, nombre: "Español" },
-    { id: 2, nombre: "Inglés" },
-    { id: 3, nombre: "Francés" },
-  ];
+  const [cat_lenguajes, setLenguajesCat] = useState([]);
+ 
   const niveles = [
     { id: 1, nombre: "Bajo" },
     { id: 2, nombre: "Medio" },
@@ -75,6 +72,11 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     cursor: "pointer",
     color: "#000",
   };
+  const listButtonStyle = {
+    border: "solid 1px #999999aa",
+    height: "3rem",
+    overflow: "hidden",
+  };
 
   // Formulario
   const [bloque_id, setBloqueId] = useState(true);
@@ -82,6 +84,12 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
   const [nivel, setNivel] = useState("");
   const [certificacion, setCertificacion] = useState("");
   //
+
+  const getNameById =
+        (id) => {
+          const matchedMenuItem = cat_lenguajes.find((menuItem) => menuItem.props.value === id);
+          return matchedMenuItem ? matchedMenuItem.props.children : null;
+        };
 
   // Cargar habilidades y mapeo a HTML
   const mapToHTML = (bloques) => {
@@ -92,6 +100,8 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
         const bloque = bloques[lenguaje_id];
         const bnivel = bloque.Nivel;
 
+        const tipoLenguaje = getNameById(bloque.Id);
+
         return (
           <ListItemButton
             key={lenguaje_id}
@@ -99,7 +109,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
             onClick={() => editarDatos(lenguaje_id)}
           >
             <ListItemText
-              primary={`Nombre: ${lenguajes_temp.find((obj) => obj.id == bloque.Id).nombre} | Certificación: ${bloque.Certificacion}`}
+              primary={`Nombre: ${tipoLenguaje} | Certificación: ${bloque.Certificacion}`}
               secondary={`Nivel ${niveles.find((obj) => obj.id == bloque.Nivel).nombre}`}
             />
             <Button
@@ -114,6 +124,16 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
     );
   };
 
+  const mapDBListToHTML = (setter, lista) => {
+    setter(
+      Object.keys(lista).map((l_id) => (
+        <MenuItem value={lista[l_id]._id} key={l_id} style={listButtonStyle}>
+          {lista[l_id].Nombre}
+        </MenuItem>
+      )),
+    );
+  };
+
   useEffect(() => {
     if (!user_data) {
       navigate("/login");
@@ -123,6 +143,13 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
         ? user_data.bloques.Idiomas
         : {};
       setUserData(user_data);
+
+      category_manager
+        .ObtenerIdiomas()
+        .then((response) => {
+          mapDBListToHTML(setLenguajesCat, response);
+        })
+        .catch((e) => {});
 
       // Mapear la lista de habilidades a HTML
       mapToHTML(user_data.bloques.Idiomas);
@@ -267,13 +294,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques }) {
                       setLenguaje(e.target.value);
                     }}
                   >
-                    {lenguajes_temp.map((option) => {
-                      return (
-                        <MenuItem key={option.id} value={option.id}>
-                          {option.nombre}
-                        </MenuItem>
-                      );
-                    })}
+                    {cat_lenguajes}
                   </Select>
                   <div>
                     <InputLabel id="nivelesSelect">Nivel</InputLabel>

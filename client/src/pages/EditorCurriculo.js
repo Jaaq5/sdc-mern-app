@@ -61,6 +61,8 @@ function EditorCurriculo({
   const [curriculos, setCurriculos] = useState([]);
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
+  const [idiomas, setIdiomas] = useState([]);
+  const [cats_habilidades, setCatHabilidades] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
   const [curriculo_id, setCurriculoId] = useState(null);
 
@@ -178,16 +180,28 @@ function EditorCurriculo({
   const [Editando, setEditando] = useState(null);
   const [TextoEditar, setTextoEditar] = useState("");
   const [ListaEditar, setListaEditar] = useState([]);
-  const [bloques, setBloques] = useState([]);
+  const [laborallist, setBloquesLaboral] = useState([]);
+  const [formallist, setBloquesFormal] = useState([]);
+  const [informallist, setBloquesInformal] = useState([]);
+  const [habilidadeslist, setBloquesHabilidades] = useState([]);
+  const [proyectoslist, setBloquesProyectos] = useState([]);
+  const [publicacioneslist, setBloquesPublicaciones] = useState([]);
+  const [referenciaslist, setBloquesReferencias] = useState([]);
+  const [idiomaslist, setBloquesIdiomas] = useState([]);
+
+  const getNameById =
+        (id) => {
+          const matchedMenuItem = idiomas.find((menuItem) => menuItem.props.value === id);
+          return matchedMenuItem ? matchedMenuItem.props.children : null;
+        };
 
   const mapToHTML = (bloques, seccion) => {
     if (!bloques) return;
-
 	if(seccion == "Educacion_Formal"){
 		const sortedBloques = Object.entries(bloques).sort(
 			([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
 		);
-		setBloques(
+		setBloquesFormal(
 			sortedBloques.map(([plan_id, bloque], index) => (
 	
 				<ListItemText
@@ -203,6 +217,148 @@ function EditorCurriculo({
 
 			)),
 			);
+	}else if(seccion == "Educacion_Tecnica"){
+		const sortedBloques = Object.entries(bloques).sort(
+			([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
+		);
+		setBloquesInformal(
+			sortedBloques.map(([plan_id, bloque], index) => (
+	
+				<ListItemText
+					primary={bloque.Programa + " en " + bloque.Institucion + ""}
+					secondary={
+					bloque.Fecha_Inicio +
+					"-" +
+					bloque.Fecha_Final +
+					": " +
+					bloque.Descripcion.substring(0, 30)
+					}
+				/>
+
+			)),
+			);
+
+	}else if(seccion == "Experiencias_Laborales"){
+		const sortedBloques = Object.entries(bloques).sort(
+			([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
+		  );
+		setBloquesLaboral(
+			sortedBloques.map(([plan_id, bloque], index) => (
+				<ListItemText
+				  primary={bloque.Puesto + " en " + bloque.Organizacion + ""}
+				  secondary={
+					bloque.Fecha_Inicio +
+					"-" +
+					bloque.Fecha_Final +
+					": " +
+					bloque.Descripcion.substring(0, 30)
+				  }
+				/>
+			)),
+		  );
+	}else if(seccion == "Idiomas"){
+		const niveles = [
+			{ id: 1, nombre: "Bajo" },
+			{ id: 2, nombre: "Medio" },
+			{ id: 3, nombre: "Alto" },
+		  ];
+		setBloquesIdiomas(
+			Object.keys(bloques).map((lenguaje_id, index) => {
+			  const bloque = bloques[lenguaje_id];
+			  const bnivel = bloque.Nivel;
+			  const tipoLenguaje = getNameById(bloque.Id);
+			  return (
+				  <ListItemText
+					primary={`Nombre: ${tipoLenguaje} | Certificación: ${bloque.Certificacion}`}
+					secondary={`Nivel ${niveles.find((obj) => obj.id == bloque.Nivel).nombre}`}
+				  />
+			  );
+			}),
+		  );
+	}else if(seccion == "Habilidades"){
+		const catHabilidadesList = cats_habilidades;
+		setBloquesHabilidades(
+			Object.keys(bloques).map((habilidad_id) => {
+			  const bloque = bloques[habilidad_id];
+			  const descripcionCorta =
+				bloque.Descripcion.length > 10
+				  ? `${bloque.Descripcion.substring(0, 10)}...`
+				  : bloque.Descripcion;
+	  
+			  const tipoHabilidad =
+			  catHabilidadesList.find(
+				  (categoria) => categoria._id === bloque.ID_Categoria_Habilidad,
+				)?.Nombre || "Desconocido";
+	  
+			  return (
+				  <ListItemText
+					primary={`Nombre: ${bloque.Nombre}`}
+					secondary={`Descripción: ${descripcionCorta} - Tipo: ${tipoHabilidad}`}
+				  />
+			  );
+			}),
+		  );
+	}else if(seccion == "Proyectos"){
+		const sortedBloques = Object.entries(bloques).sort(
+			([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
+		  );
+	  
+		setBloquesProyectos(
+			sortedBloques.map(([plan_id, bloque], index) => (
+				<ListItemText
+				  primary={bloque.Proyecto + " en " + bloque.Intitucion + ""}
+				  secondary={
+					bloque.Fecha_Inicio +
+					"-" +
+					bloque.Fecha_Final +
+					": " +
+					bloque.Descripcion.substring(0, 30)
+				  }
+				/>
+			)),
+		  );
+	}else if(seccion == "Publicaciones"){
+		const sortedBloques = Object.entries(bloques).sort(
+			([, a], [, b]) =>
+			  new Date(b.Fecha_Publicacion) - new Date(a.Fecha_Publicacion),
+		  );
+		setBloquesPublicaciones(
+			sortedBloques.map(([publicacion_id, bloque], index) => {
+			  const publicacion = bloque;
+			  return (
+				  <ListItemText
+					primary={`Título: ${publicacion.Titulo} | Publicadora: ${publicacion.Publicadora}`}
+					secondary={
+					  <>
+						<div>Fecha: {publicacion.Fecha_Publicacion}</div>
+						<div
+						  style={{
+							whiteSpace: "nowrap",
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							maxWidth: "300px", // Ajusta el ancho máximo según sea necesario
+						  }}
+						>
+						  {publicacion.Abstract}
+						</div>
+					  </>
+					}
+				  />
+			  );
+			}),
+		  );
+	}else if(seccion == "Referencias"){
+		setBloquesReferencias(
+			Object.keys(bloques).map((referencia_id, index) => {
+			  const referencia = bloques[referencia_id];
+			  return (
+				  <ListItemText
+					primary={`Nombre: ${referencia.Nombre} - ${referencia.Puesto} en ${referencia.Organizacion}`}
+					secondary={`Contacto: ${referencia.Direccion}, ${referencia.Email}, ${referencia.Telefono}`}
+				  />
+			  );
+			}),
+		  );
 	}
 
   };
@@ -298,8 +454,35 @@ function EditorCurriculo({
 
 				if (currentSeccion.Mostrar) {
 					// Process bloques before returning JSX for the current section
-					mapToHTML(user_data.bloques[documento.diseno.Secciones.Orden[seccion]], documento.diseno.Secciones.Orden[seccion]);
-
+					let bloqueslist;
+					switch (documento.diseno.Secciones.Orden[seccion]) {
+						case "Experiencia_Laboral":
+							bloqueslist = laborallist;
+							break;
+						case "Educacion_Formal":
+							bloqueslist = formallist;
+							break;
+						case "Educacion_Informal":
+							bloqueslist = informallist;
+							break;
+						case "Idiomas":
+							bloqueslist = idiomaslist;
+							break;
+						case "Habilidades":
+							bloqueslist = habilidadeslist;
+							break;
+						case "Proyectos":
+							bloqueslist = proyectoslist;
+							break;
+						case "Publicaciones":
+							bloqueslist = publicacioneslist;
+							break;
+						case "Referencias":
+							bloqueslist = referenciaslist;
+							break;
+						default:
+							bloqueslist = [];
+					}
 					return (
 					<div id={"Seccion_" + documento.diseno.Secciones.Orden[seccion]} style={stilos_paleta.seccion}>
 						<p id={documento.diseno.Secciones.Orden[seccion] + "_Titulo_Texto"} style={stilos_paleta.titulo}>
@@ -325,15 +508,12 @@ function EditorCurriculo({
 						) : (
 							<></>
 						)}
+						<List dense={dense} style={{ padding: "5px", maxHeight: "95%", overflow: "auto", backgroundColor: "#ccd5" }}>
+						{bloqueslist}
+						</List>
 						</p>
 						{SeccionesHTML[seccion]}
 
-						<p style={{ marginTop: "10px", fontSize: "14px", color: "#666" }}>
-						This is a label or description text under the bloques.
-						</p>
-						<List dense={dense} style={{ padding: "5px", maxHeight: "95%", overflow: "auto", backgroundColor: "#ccd5" }}>
-						{bloques}
-						</List>
 					</div>
 					);
 				} else {
@@ -521,6 +701,21 @@ function EditorCurriculo({
         })
         .catch((e) => {});
 
+		category_manager
+        .ObtenerCategoriasHabilidad()
+        .then((response) => {
+          mapDBListToHTML(setCatHabilidades, response);
+        })
+        .catch((e) => {});
+
+		category_manager
+        .ObtenerIdiomas()
+        .then((response) => {
+          mapDBListToHTML(setIdiomas, response);
+        })
+        .catch((e) => {});
+
+
       setCurriculoId(user_data.editando_curriculo);
 	  
 	  //DEBUG
@@ -534,6 +729,16 @@ function EditorCurriculo({
       setCatPuesto(
         user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto,
       );
+
+	  mapToHTML(user_data.bloques["Experiencias_Laborales"], "Experiencias_Laborales");
+	  mapToHTML(user_data.bloques["Educacion_Formal"], "Educacion_Formal");
+	  mapToHTML(user_data.bloques["Educacion_Tecnica"], "Educacion_Tecnica");
+	  mapToHTML(user_data.bloques["Idiomas"], "Idiomas");
+	  mapToHTML(user_data.bloques["Habilidades"], "Habilidades");
+	  mapToHTML(user_data.bloques["Proyectos"], "Proyectos");
+	  mapToHTML(user_data.bloques["Publicaciones"], "Publicaciones");
+	  mapToHTML(user_data.bloques["Referencias"], "Referencias");
+
       setLoading(false);
     }
   }, [
