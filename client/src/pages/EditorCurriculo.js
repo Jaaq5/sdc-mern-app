@@ -169,7 +169,7 @@ function EditorCurriculo({
 		fontFamily: 'Times-Roman'
 	},
   });
-  
+  const dense = true;
   //Editor
   const [categoria_curriculum, setCatCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
@@ -178,6 +178,34 @@ function EditorCurriculo({
   const [Editando, setEditando] = useState(null);
   const [TextoEditar, setTextoEditar] = useState("");
   const [ListaEditar, setListaEditar] = useState([]);
+  const [bloques, setBloques] = useState([]);
+
+  const mapToHTML = (bloques, seccion) => {
+    if (!bloques) return;
+
+	if(seccion == "Educacion_Formal"){
+		const sortedBloques = Object.entries(bloques).sort(
+			([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
+		);
+		setBloques(
+			sortedBloques.map(([plan_id, bloque], index) => (
+	
+				<ListItemText
+					primary={bloque.Programa + " en " + bloque.Institucion + ""}
+					secondary={
+					bloque.Fecha_Inicio +
+					"-" +
+					bloque.Fecha_Final +
+					": " +
+					bloque.Descripcion.substring(0, 30)
+					}
+				/>
+
+			)),
+			);
+	}
+
+  };
   
   const posicionEnOverlay = (id) => {
 	let doc = document.getElementById("contenedor_documento");
@@ -265,37 +293,53 @@ function EditorCurriculo({
 					Teléfono: {user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Telefono}
 				</p>
 			</div>
-			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => 
-				documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Mostrar? (
-					<div id={"Seccion_"+documento.diseno.Secciones.Orden[seccion]} style={stilos_paleta.seccion}>
-					  <p id={documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"} style={stilos_paleta.titulo}>
-						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo}
-						{!Editando? (<Button 
+			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => {
+				const currentSeccion = documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]];
+
+				if (currentSeccion.Mostrar) {
+					// Process bloques before returning JSX for the current section
+					mapToHTML(user_data.bloques[documento.diseno.Secciones.Orden[seccion]], documento.diseno.Secciones.Orden[seccion]);
+
+					return (
+					<div id={"Seccion_" + documento.diseno.Secciones.Orden[seccion]} style={stilos_paleta.seccion}>
+						<p id={documento.diseno.Secciones.Orden[seccion] + "_Titulo_Texto"} style={stilos_paleta.titulo}>
+						{currentSeccion.Titulo}
+						{!Editando ? (
+							<Button
 							title="Editar título de sección"
 							style={editButton}
 							onClick={(e) => {
-								setTextoEditar(documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo);
+								setTextoEditar(currentSeccion.Titulo);
 								setEditando({
-									Tipo: "Texto", 
-									pos: posicionEnOverlay(documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"),
-									Seccion: documento.diseno.Secciones.Orden[seccion],
-									Campo: "Titulo",
-									label: "Titulo de sección "+documento.diseno.Secciones.Orden[seccion],
-									placeholder: documento.diseno.Secciones.Orden[seccion]
+								Tipo: "Texto",
+								pos: posicionEnOverlay(documento.diseno.Secciones.Orden[seccion] + "_Titulo_Texto"),
+								Seccion: documento.diseno.Secciones.Orden[seccion],
+								Campo: "Titulo",
+								label: "Titulo de sección " + documento.diseno.Secciones.Orden[seccion],
+								placeholder: documento.diseno.Secciones.Orden[seccion],
 								});
-						}} >
-							<BorderColorIcon style={editButtonIcon}/>
-						</Button>
+							}}
+							>
+							<BorderColorIcon style={editButtonIcon} />
+							</Button>
 						) : (
 							<></>
 						)}
-					  </p>
-					  {SeccionesHTML[seccion]}
+						</p>
+						{SeccionesHTML[seccion]}
+
+						<p style={{ marginTop: "10px", fontSize: "14px", color: "#666" }}>
+						This is a label or description text under the bloques.
+						</p>
+						<List dense={dense} style={{ padding: "5px", maxHeight: "95%", overflow: "auto", backgroundColor: "#ccd5" }}>
+						{bloques}
+						</List>
 					</div>
-				) : (
-					<></>
-				)
-			 )}
+					);
+				} else {
+					return <></>;
+				}
+				})}
 			 <p style={stilos_paleta.titulo}>
 				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
 				lo cual se desesperaba, porque quisiera topar luego luego con quien
