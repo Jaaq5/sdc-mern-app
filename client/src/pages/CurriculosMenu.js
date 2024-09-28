@@ -262,16 +262,38 @@ function CurriculosMenu({
     );
   }
 
+  // Update the handleCurriculumChange function
   const handleCurriculumChange = (value) => {
     setCurriculum(value);
-    if (value === "harvard") {
-      setPlantillaTexto("Una plantilla que utiliza el formato Harvard.");
-      setTituloPlantilla("Plantilla Harvard");
-    } else {
-      setPlantillaTexto(
-        "Una plantilla que no tiene elementos ni estructura especial.",
-      );
-      setTituloPlantilla("Plantilla Simple");
+    // Check the value and set the appropriate template text and title
+    const selectedCurriculum = lista_categorias_curriculum.find(
+      (cat) => cat._id === value,
+    );
+
+    if (selectedCurriculum) {
+      switch (selectedCurriculum.Nombre) {
+        case "Harvard":
+          setPlantillaTexto("Una plantilla que utiliza el formato Harvard.");
+          setTituloPlantilla("Plantilla Harvard");
+          break;
+        case "Academico":
+          setPlantillaTexto("Una plantilla diseñada para entornos académicos.");
+          setTituloPlantilla("Plantilla Académica");
+          break;
+        case "Laboral":
+          setPlantillaTexto("Una plantilla que enfatiza experiencia laboral.");
+          setTituloPlantilla("Plantilla Laboral");
+          break;
+        case "Simple":
+        default:
+          setPlantillaTexto(
+            "Una plantilla que no tiene elementos ni estructura especial.",
+          );
+          setTituloPlantilla("Plantilla Simple");
+          break;
+      }
+      console.log("Titulo Plantilla:", tituloPlantilla);
+      console.log("Plantilla Texto:", plantillaTexto);
     }
   };
 
@@ -378,6 +400,8 @@ function CurriculosMenu({
               </List>
             </Paper>
           </div>
+
+          {/* Plantillas */}
           <div id="plantilla-selector">
             <Paper style={paperStyle} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
@@ -394,10 +418,8 @@ function CurriculosMenu({
                     defaultValue={""}
                     value={categoria_curriculum}
                     label="Tipo de CV"
-                    onChange={(e) => handleCurriculumChange(e.target.value)} // Usar la función para manejar el cambio
+                    onChange={(e) => handleCurriculumChange(e.target.value)} // Use the updated function
                   >
-                    <MenuItem value="harvard">Harvard</MenuItem>
-                    <MenuItem value="academic">Académico</MenuItem>
                     {cats_curr}
                   </Select>
                 </FormControl>
@@ -440,15 +462,14 @@ function CurriculosMenu({
                   <PostAdd />
                   <div style={{ width: "20px" }}></div>
                   <ListItemText
-                    primary={"Plantilla Simple"}
-                    secondary={
-                      "Una plantilla que no tiene elementos ni estructura especial."
-                    }
+                    primary={tituloPlantilla}
+                    secondary={plantillaTexto}
                   />
                 </ListItemButton>
 
                 <div style={{ display: "flex", alignItems: "flex-start" }}>
                   {" "}
+                  {/*
                   <ListItemButton
                     key={true}
                     style={listStyle}
@@ -465,23 +486,21 @@ function CurriculosMenu({
                       secondary={plantillaTexto}
                     />
                   </ListItemButton>
-                  {/* Ejemplo de Currículum Harvard */}
                   {categoria_curriculum === "harvard" && (
                     <div style={{ marginLeft: "20px" }}>
                       {" "}
                       <HarvardExampleTemplate />
                     </div>
                   )}
-                  {/* Fin Ejemplo de Currículum Harvard */}
-                  {/* Ejemplo de Currículum Académico */}
                   {categoria_curriculum === "academic" && (
                     <div style={{ marginLeft: "20px" }}>
                       {" "}
                       <AcademicExampleTemplate />
                     </div>
                   )}
-                  {/* Fin Ejemplo de Currículum Académico */}
+                    */}
                 </div>
+
                 {plantillas}
               </List>
               {/* Fin Lista de plantillas */}
