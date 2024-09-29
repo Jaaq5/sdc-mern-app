@@ -149,7 +149,6 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
         .ObtenerIdiomas()
         .then((response) => {
           mapDBListToHTML(setLenguajesCat, response);
-          //mapToHTML(user_data.bloques.Idiomas);
         })
         .catch((e) => {});
 
@@ -162,7 +161,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
 
   useEffect(() => {
     if (cat_lenguajes.length > 0) {
-      mapToHTML(user_data.bloques.Idiomas); // Run mapToHTML only when cat_lenguajes is populated
+      mapToHTML(user_data.bloques.Idiomas);
     }
   }, [cat_lenguajes, user_data]);
 
