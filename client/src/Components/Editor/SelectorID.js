@@ -49,13 +49,22 @@ const crearBloquesToHTML = (user_data, TextoEditar, setTextoEditar, ListaEditar,
 		backgroundColor: "#fff0",
 		color: "#fff"
 	  };
-	const activeListStyle = {
+	const pinnedListStyle = {
 	  	borderBottom: "solid 2px rgba(230, 150, 0, 0.2)",
 		borderRadius: "0px",
 		marginBottom: "5px",
 		height: "5rem",
 		overflow: "hidden",
 		backgroundColor: "#afa6",
+		color: "#fff"
+	  };
+	const activeListStyle = {
+	  	borderBottom: "solid 2px rgba(230, 150, 0, 0.2)",
+		borderRadius: "0px",
+		marginBottom: "5px",
+		height: "5rem",
+		overflow: "hidden",
+		backgroundColor: "#ffa3",
 		color: "#fff"
 	  };
 	
@@ -84,19 +93,20 @@ const crearBloquesToHTML = (user_data, TextoEditar, setTextoEditar, ListaEditar,
 		sortedBloques = Object.entries(bloques).sort(
 		  ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
 		);
-	let active = Editando.Arreglo? documento.datos.Secciones[Editando.Seccion][Editando.Campo] : [documento.datos.Secciones[Editando.Seccion]];
+	let pinned = Editando.Arreglo? documento.datos.Secciones[Editando.Seccion][Editando.Campo] : [documento.datos.Secciones[Editando.Seccion]];
+	let active = Editando.Lista? Editando.Lista : [];
 	
 	setListaEditar(
       sortedBloques.map(([plan_id, bloque], index) => (<>
         <ListItemButton
           key={plan_id}
-          style={active.includes(plan_id+"")? activeListStyle : listStyle}
+          style={pinned.includes(plan_id+"")? pinnedListStyle : (active.includes(plan_id+"")? activeListStyle : listStyle)}
           onClick={(e) => {
 			  if(Editando.Campo){
 				  if(Editando.Arreglo){
-					  if(active.includes(plan_id+"")){
-						  documento.datos.Secciones[Editando.Seccion][Editando.Campo] = active.filter((id) => id !== plan_id);
-					  }else if(active.length < documento.datos.Secciones[Editando.Seccion].Cantidad){
+					  if(pinned.includes(plan_id+"")){
+						  documento.datos.Secciones[Editando.Seccion][Editando.Campo] = pinned.filter((id) => id !== plan_id);
+					  }else if(pinned.length < documento.datos.Secciones[Editando.Seccion].Cantidad){
 						  documento.datos.Secciones[Editando.Seccion][Editando.Campo].push(plan_id);
 					  }
 				  }else{
@@ -110,7 +120,7 @@ const crearBloquesToHTML = (user_data, TextoEditar, setTextoEditar, ListaEditar,
 			  //setEditando(null);
 			}}
         >
-		{active.includes(plan_id+"")? 
+		{pinned.includes(plan_id+"")? 
 			(<>
 			<PushPinIcon style={{position: "absolute", right: "5px", top:"5px"}} />
 			</>) 
