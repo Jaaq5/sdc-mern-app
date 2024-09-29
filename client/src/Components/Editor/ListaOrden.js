@@ -120,7 +120,7 @@ const mapListaToHTML = (ListaEditar, setListaEditar, documento, setDocumento) =>
 	const diff = 54;
 	documento.diseno.Secciones.Orden.forEach((seccion, index) => {
 	list.push(
-		<div id={"orden_"+index} style={{position: "relative", top: "0px", transition: "all 0.35s"}}>
+	<div key={index} id={"orden_"+index} style={{position: "relative", top: "0px", transition: "all 0.35s"}}>
 			<div style={seccionOrden} >
 				<span style={seccionIndex}>{(index+1)+""}</span>
 				<span style={{margin: "4px", maxWidth: "140px", flexWrap: "none", overflow: "hidden"}}>{documento.diseno.Secciones[seccion].Titulo}</span>
