@@ -83,6 +83,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
   const [lenguaje, setLenguaje] = useState("");
   const [nivel, setNivel] = useState("");
   const [certificacion, setCertificacion] = useState("");
+  const [lista, setL] = useState("");
   //
 
   const getNameById =
@@ -152,10 +153,17 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
         .catch((e) => {});
 
       // Mapear la lista de habilidades a HTML
-      mapToHTML(user_data.bloques.Idiomas);
+      
       setLoading(false);
     }
   }, [user_data, setUserData, navigate]);
+
+
+  useEffect(() => {
+    if (cat_lenguajes.length > 0) {
+      mapToHTML(user_data.bloques.Idiomas);
+    }
+  }, [cat_lenguajes, user_data]);
 
   if (loading) {
     return (

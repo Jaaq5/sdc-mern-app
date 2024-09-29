@@ -730,15 +730,6 @@ function EditorCurriculo({
         user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto,
       );
 
-	  mapToHTML(user_data.bloques["Experiencias_Laborales"], "Experiencias_Laborales");
-	  mapToHTML(user_data.bloques["Educacion_Formal"], "Educacion_Formal");
-	  mapToHTML(user_data.bloques["Educacion_Tecnica"], "Educacion_Tecnica");
-	  mapToHTML(user_data.bloques["Idiomas"], "Idiomas");
-	  mapToHTML(user_data.bloques["Habilidades"], "Habilidades");
-	  mapToHTML(user_data.bloques["Proyectos"], "Proyectos");
-	  mapToHTML(user_data.bloques["Publicaciones"], "Publicaciones");
-	  mapToHTML(user_data.bloques["Referencias"], "Referencias");
-
       setLoading(false);
     }
   }, [
@@ -750,6 +741,19 @@ function EditorCurriculo({
     setCatPuesto,
     cargando,
   ]); //Espera a que estos existan?
+
+  useEffect(() => {
+	if (idiomas.length > 0) {
+		mapToHTML(user_data.bloques["Experiencias_Laborales"], "Experiencias_Laborales");
+		mapToHTML(user_data.bloques["Educacion_Formal"], "Educacion_Formal");
+		mapToHTML(user_data.bloques["Educacion_Tecnica"], "Educacion_Tecnica");
+		mapToHTML(user_data.bloques["Idiomas"], "Idiomas");
+		mapToHTML(user_data.bloques["Habilidades"], "Habilidades");
+		mapToHTML(user_data.bloques["Proyectos"], "Proyectos");
+		mapToHTML(user_data.bloques["Publicaciones"], "Publicaciones");
+		mapToHTML(user_data.bloques["Referencias"], "Referencias");
+	}
+  }, [idiomas, user_data]);
 
   if (cargando) {
     return (
