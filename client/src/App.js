@@ -123,14 +123,14 @@ function App() {
     },
 
     ObtenerCategoriasHabilidad: async () => {
-      if (listas_categorias.hailidades) return listas_categorias.hailidades;
+      if (listas_categorias.categorias_habilidad) return listas_categorias.categorias_habilidad;
       var categorias = [];
       axios
         .get(apiUrl + "/api/cat-skill/obtener-categorias-habilidad")
         .then((response) => {
-          if (response.data.categorias_hailidad) {
-            categorias = response.data.hailidades;
-            listas_categorias.categorias_hailidad = categorias;
+          if (response.data.categorias_habilidad) {
+            categorias = response.data.categorias_habilidad;
+            listas_categorias.categorias_habilidad = categorias;
             setListas(listas_categorias);
           }
         })

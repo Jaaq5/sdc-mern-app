@@ -6,6 +6,7 @@ import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } fr
 
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
+import {SelectorID} from "../Components/Editor/SelectorID";
 
 import {
   Input,
@@ -23,21 +24,18 @@ import {
   FormControl,
 } from "@mui/material";
 
-import { DeleteForever, PostAdd } from "@mui/icons-material";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-
-const ToolBoxSwitcher = ({TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando}) => {
-	console.log("Ed: "+Editando)
+const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
 	switch(Editando.Tipo){
 		case "Texto":
 			return (<>
 				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+			</>)
+		case "IDs":
+			return (<>
+				<SelectorID user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} SeleccionarIDs={SeleccionarIDs}/>
 			</>)
 		case "Orden":
 			return (<>
@@ -61,8 +59,10 @@ function EditorCurriculo({
   const [curriculos, setCurriculos] = useState([]);
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
+  const [cats_habilidades, setCatHabilidades] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
   const [curriculo_id, setCurriculoId] = useState(null);
+  const [idiomas, setIdiomas] = useState(null);
 
   //Style
   const paperStyle = {
@@ -109,8 +109,10 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	maxWidth: "30px",
-	maxHeight: "30px",
+	maxWidth: "20px",
+	maxHeight: "20px",
+	minWidth: "20px",
+	minHeight: "20px",
     cursor: "pointer",
     color: "#000",
 	margin: "0px",
@@ -118,11 +120,29 @@ function EditorCurriculo({
 	display: "inline",
 	fontSize: "inherit",
 	position: "absolute",
-	right: "2px"
+	right: "30px"
+  };
+  const seccionEditButton = {
+    backgroundColor: "#fff0",
+    border: "0px",
+    borderRadius: "5px",
+	maxWidth: "20px",
+	maxHeight: "20px",
+	minWidth: "20px",
+	minHeight: "20px",
+    cursor: "pointer",
+    color: "#000",
+	margin: "0px",
+	padding: "0px",
+	display: "inline",
+	fontSize: "inherit",
+	position: "absolute",
+	right: "2px",
+	top: "2px"
   };
   const editButtonIcon ={
-	  width: "0.8rem", 
-	  height: "0.8rem"
+	  width: "20px", 
+	  height: "20px"
   };
   const pdfCaja = {
 	  backgroundColor: "#303030",
@@ -178,6 +198,191 @@ function EditorCurriculo({
   const [Editando, setEditando] = useState(null);
   const [TextoEditar, setTextoEditar] = useState("");
   const [ListaEditar, setListaEditar] = useState([]);
+  const [tempIds, setTempIds] = useState({}); //Ids calculadas automaticamente y son las que se dibujan
+
+  const getNameById =
+        (id) => {
+          const matchedMenuItem = idiomas.find((item) => item._id === id);
+          return matchedMenuItem ? matchedMenuItem.Nombre : null;
+        };
+		
+    const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
+	let texto = "";
+	estructura.Texto.forEach((campo) => {
+		if(seccion[campo]){ //Titulo y otros de plantilla
+			texto += seccion[campo];
+		}else if(id && user_data.bloques[nombreSeccion][id][campo]){ //Bloques de datos
+			if(nombreSeccion === "Idiomas" && campo === "Id")
+				texto += getNameById(user_data.bloques[nombreSeccion][id][campo])
+			else
+				texto += user_data.bloques[nombreSeccion][id][campo]
+		}else{ //Texto generico
+			texto += campo;
+		}
+	});
+	return texto;
+  };
+  
+  const ElementoTextoEditable_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  return (
+		<Button
+			title={estructura.Editable.Titulo}
+			style={editButton}
+			onClick={(e) => {
+				setTextoEditar(seccion.TituloSeccion);
+				setEditando({
+					Tipo: "Texto",
+					pos: posicionEnOverlay("Texto_"+nombreSeccion+"_"+index),
+					Seccion: nombreSeccion,
+					Campo: "TituloSeccion",
+					label: estructura.Editable.Label,
+					placeholder: estructura.Editable.Placeholder,
+				});
+			}}
+			>
+			<BorderColorIcon style={editButtonIcon} />
+		</Button>
+	  );
+  };
+  
+  const ElementoEditable_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  if((!estructura) || !estructura.Editable)
+		  return (<></>);
+	  switch(estructura.Editable.Tipo){
+		  case "Texto":
+			return (<><ElementoTextoEditable_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} /></>)
+	  };
+	  return (<></>);
+  };
+
+  const ElementoTextoEstructurado_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  
+	  return (<>
+	  <p id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style}>
+			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
+			<ElementoEditable_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
+	  </p></>);
+  };
+	
+  const ElementoEstructurado_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  //console.log("Texto: "+nombreSeccion+", "+id+", "+index+", "+estructura.Tipo)
+	  if(!estructura)
+		  return (<></>);
+	  
+	  switch(estructura.Tipo){
+		  case "Texto":
+			return (<ElementoTextoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+		  case "IDs":
+		    let list = [];
+			
+			//documento.datos.Secciones[nombreSeccion].IDs
+			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
+				list.push(
+					<>{Object.keys(estructura.Plantilla).map((index) => {
+						return (<>
+							<ElementoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} />
+						</>)
+					})}</>
+				);
+			});
+			return (<>{list}</>);
+	  };
+  };
+	
+  const SeccionHTMLEstructurada = ({user_data, seccion, documento, id}) => {
+	  if(!documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
+		  return (<></>);
+	  
+	  //La posicion necesita ser relativa para que funcione correctamente
+	  if(Object.isFrozen(documento.diseno.Secciones[seccion].style)) //Ocurre la primera vez que se renderiza
+		documento.diseno.Secciones[seccion].style = documento.diseno.Secciones[seccion].style? documento.diseno.Secciones[seccion].style : {};
+		documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
+		documento.diseno.Secciones[seccion].style.position = "relative";
+		
+	  return (
+		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style}>
+			{documento.diseno.Secciones[seccion].Editable? (
+				<Button  
+					title={documento.diseno.Secciones[seccion].Editable.Titulo}
+					style={seccionEditButton}
+					onClick={(e) => {
+					setEditando({
+						Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
+						pos: posicionEnOverlay("Seccion_"+seccion),
+						Seccion: seccion,
+						Campo: documento.diseno.Secciones[seccion].Editable.Campo,
+						Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
+						Lista: tempIds[seccion]
+					});
+					
+					}} >
+						<SwapHorizontalCircleIcon style={editButtonIcon}/>
+				</Button>
+			) : (
+				<></>
+			)}
+			{Object.keys(documento.diseno.Secciones[seccion].Estructura).map((index) => {
+				return (<>
+					<ElementoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} />
+				</>)
+			})}
+		</div>
+	  );
+  };
+  
+  const OrdenarBloques = (bloques, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
+	let sortedBloques = [];
+	if(!bloques)
+		return [];
+	
+	
+	//Ordenar por fecha
+	if(bloques[Object.keys(bloques)[0]].Fecha_Final)
+		sortedBloques = Object.entries(bloques).sort(
+		  ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
+		);
+	else if(bloques[Object.keys(bloques)[0]].Fecha_Publicacion)
+		sortedBloques = Object.entries(bloques).sort(
+		  ([, a], [, b]) => new Date(b.Fecha_Publicacion) - new Date(a.Fecha_Publicacion),
+		);
+	else
+		sortedBloques = Object.entries(bloques).sort();
+	
+	//Ordenar por categorias
+	sortedBloques = sortedBloques.sort(
+		  ([, a], [, b]) => (b.ID_Categoria_Curriculo? (b.ID_Categoria_Curriculo === ID_Categoria_Curriculo? 1 : 0) : 0) - (a.ID_Categoria_Curriculo? (a.ID_Categoria_Curriculo === ID_Categoria_Curriculo? 1 : 0) : 0),
+		);
+	sortedBloques = sortedBloques.sort(
+		  ([, a], [, b]) => (b.ID_Categoria_Puesto? (b.ID_Categoria_Puesto === ID_Categoria_Puesto? 1 : 0) : 0) - (a.ID_Categoria_Puesto? (a.ID_Categoria_Puesto === ID_Categoria_Puesto? 1 : 0) : 0),
+		);
+	return sortedBloques;
+  }; 
+
+  const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
+    if (!user_data) return;
+	Object.keys(documento.datos.Secciones).map((seccion) => {
+		let cantidad = documento.diseno.Secciones[seccion].Editable.Arreglo? documento.datos.Secciones[seccion].Cantidad : 1;
+		let lista = OrdenarBloques(user_data.bloques[seccion]);
+		cantidad = Math.min(lista.length, cantidad);
+		tempIds[seccion] = [];
+		
+		for(let i=cantidad; i>=0; i-=1){
+			if(documento.diseno.Secciones[seccion].Editable.Arreglo)
+				if(documento.datos.Secciones[seccion].IDs[i]){
+					tempIds[seccion].push(documento.datos.Secciones[seccion].IDs[i]);
+				}else{
+					documento.datos.Secciones[seccion].IDs.splice(i,1);
+				}
+		}
+		for(let i=0; tempIds[seccion].length < cantidad && i < lista.length; i+=1){
+			if(documento.diseno.Secciones[seccion].Editable.Arreglo)
+				if(!documento.datos.Secciones[seccion].IDs.includes(lista[i][0]))
+					tempIds[seccion].push(lista[i][0]);
+		}
+	});
+	setDocumento(documento);
+	setTempIds(tempIds);
+  };
   
   const posicionEnOverlay = (id) => {
 	let doc = document.getElementById("contenedor_documento");
@@ -218,84 +423,10 @@ function EditorCurriculo({
 		  
         >
           <div style={stilos_paleta.pagina} id={"pagina_"+numeroDePaginas}>
-			<div style={stilos_paleta.seccion} id={"Seccion_Informacion_Personal"}>
-				<Button  
-					title="Seleccionar la Informacion Personal"
-					style={editButton}
-					onClick={(e) => {
-					setEditando({
-						Tipo: "Orden"
-					});
-					mapListaToHTML(ListaEditar, setListaEditar, documento, setDocumento);
-					}} >
-						<SwapHorizontalCircleIcon style={editButtonIcon}/>
-				</Button>
-				
-				<p style={stilos_paleta.titulo} id={"Informacion_Personal_Titulo_Texto"}>
-					{documento.diseno.Secciones.Informacion_Personal.Titulo} 
-					{!Editando? (<Button 
-							title="Cambiar nombre"
-							style={editButton}
-							onClick={(e) => {
-								setTextoEditar(documento.diseno.Secciones.Informacion_Personal.Titulo);
-								setEditando({
-									Tipo: "Texto", 
-									pos: posicionEnOverlay("Informacion_Personal_Titulo_Texto"),
-									Seccion: "Informacion_Personal",
-									Campo: "Titulo",
-									label: "Nombre",
-									placeholder: "Escribe tu nombre"
-								});
-						}} >
-							<BorderColorIcon style={editButtonIcon}/>
-						</Button>
-						) : (
-							<></>
-						)}
-				</p>
-				<p style={stilos_paleta.item}>
-					{user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Mostrar_Puesto
-					  ? "Para el puesto: "+(user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Puesto)
-					  : ""}
-				</p>
-				<p style={stilos_paleta.item}>
-					Correo: {user_data.email}
-				</p>
-				<p style={stilos_paleta.item}>
-					Teléfono: {user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Telefono}
-				</p>
-			</div>
-			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => 
-				documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Mostrar? (
-					<div id={"Seccion_"+documento.diseno.Secciones.Orden[seccion]} style={stilos_paleta.seccion}>
-					  <p id={documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"} style={stilos_paleta.titulo}>
-						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo}
-						{!Editando? (<Button 
-							title="Editar título de sección"
-							style={editButton}
-							onClick={(e) => {
-								setTextoEditar(documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo);
-								setEditando({
-									Tipo: "Texto", 
-									pos: posicionEnOverlay(documento.diseno.Secciones.Orden[seccion]+"_Titulo_Texto"),
-									Seccion: documento.diseno.Secciones.Orden[seccion],
-									Campo: "Titulo",
-									label: "Titulo de sección "+documento.diseno.Secciones.Orden[seccion],
-									placeholder: documento.diseno.Secciones.Orden[seccion]
-								});
-						}} >
-							<BorderColorIcon style={editButtonIcon}/>
-						</Button>
-						) : (
-							<></>
-						)}
-					  </p>
-					  {SeccionesHTML[seccion]}
-					</div>
-				) : (
-					<></>
-				)
-			 )}
+			<SeccionHTMLEstructurada user_data={user_data} seccion={"Informacion_Personal"} documento={documento} id={documento.datos.Secciones.Informacion_Personal} />
+			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => {
+				return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[seccion]} documento={documento} />)
+			})}
 			 <p style={stilos_paleta.titulo}>
 				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
 				lo cual se desesperaba, porque quisiera topar luego luego con quien
@@ -416,7 +547,7 @@ function EditorCurriculo({
 				documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Mostrar? (
 					<View style={stilos_paleta.seccion}>
 					  <Text style={stilos_paleta.titulo}>
-						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo}
+						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].TituloSeccion}
 					  </Text>
 						{SeccionesHTML[seccion]}
 					</View>
@@ -476,11 +607,26 @@ function EditorCurriculo({
           mapDBListToHTML(setCatsPuesto, response);
         })
         .catch((e) => {});
+		
+	  category_manager
+        .ObtenerIdiomas()
+        .then((response) => {
+		  setIdiomas(response);
+        })
+        .catch((e) => {});
+
+	  category_manager
+        .ObtenerCategoriasHabilidad()
+        .then((response) => {
+          mapDBListToHTML(setCatHabilidades, response);
+        })
+        .catch((e) => {});
+		
 
       setCurriculoId(user_data.editando_curriculo);
 	  
 	  //DEBUG
-	  const doc = curriculum_manager.CopiarPlantilla("simple").Documento;
+	  const doc = curriculum_manager.CopiarPlantilla("simple").Documento;//user_data.curriculums[user_data.editando_curriculo].Documento;
       setDocumento(
 		doc
       );
@@ -490,6 +636,9 @@ function EditorCurriculo({
       setCatPuesto(
         user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto,
       );
+	  
+	  SeleccionarIDs(user_data, doc, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto);
+
       setLoading(false);
     }
   }, [
@@ -546,6 +695,7 @@ function EditorCurriculo({
 			  {Editando? (
 				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
 					<ToolBoxSwitcher
+					    user_data={user_data}
 						TextoEditar={TextoEditar} 
 						setTextoEditar={setTextoEditar} 
 						ListaEditar={ListaEditar} 
@@ -554,11 +704,11 @@ function EditorCurriculo({
 						setDocumento={setDocumento} 
 						Editando={Editando} 
 						setEditando={setEditando}
+						SeleccionarIDs={SeleccionarIDs}
 					/>
 				</div>
 			  ) : (
 				<>
-				
 				</>
 			  )}
 			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)"}}>
