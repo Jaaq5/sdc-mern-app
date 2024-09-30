@@ -25,6 +25,7 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 				  setDocumento(documento);
 				}}
 				onKeyDown={(e) => {if(e.keyCode === 13) setEditando(null)}}
+				onBlur={(e) => {setEditando(null)}}
 			  ></TextField>
 		  </div>
 	  
