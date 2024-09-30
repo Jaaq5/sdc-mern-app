@@ -195,6 +195,26 @@ function EditorCurriculo({
           return matchedMenuItem ? matchedMenuItem.props.children : null;
         };
 
+	const createList = (listData, renderItem) => {
+		return listData.map((item, index) => (
+			<View key={index} style={stilos_paleta.seccion}>
+			<Text style={stilos_paleta.titulo}>
+				{renderItem(item)}
+			</Text>
+			</View>
+		));
+		};
+
+	const convertListItemTextToPlainObject = (listItemTextArray) => {
+		return listItemTextArray.map((listItemTextComponent) => {
+			const { primary, secondary } = listItemTextComponent.props;
+			return {
+			prim: primary,
+			sec: secondary,
+			};
+		});
+		};
+
   const mapToHTML = (bloques, seccion) => {
     if (!bloques) return;
 	if(seccion == "Educacion_Formal"){
@@ -636,18 +656,54 @@ function EditorCurriculo({
 					Teléfono: {user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Telefono}
 				</Text>
 			</View>
-			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => 
-				documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Mostrar? (
+			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => {
+			const currentSeccion = documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]];
+
+			if (currentSeccion.Mostrar) {
+				let bloqueslistpdf;
+					switch (documento.diseno.Secciones.Orden[seccion]) {
+						case "Experiencia_Laboral":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(laborallist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Educacion_Formal":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(formallist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Educacion_Informal":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(informallist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Idiomas":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(idiomaslist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Habilidades":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(habilidadeslist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Proyectos":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(proyectoslist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Publicaciones":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(publicacioneslist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						case "Referencias":
+							bloqueslistpdf = createList(convertListItemTextToPlainObject(referenciaslist), (item) => `${item.prim}: ${item.sec}`);
+							break;
+						default:
+							bloqueslistpdf = [];
+					}
+				return (
+				<View key={seccion} style={stilos_paleta.seccion}>
+					<Text style={stilos_paleta.titulo}>
+					{currentSeccion.Titulo}
+					</Text>
 					<View style={stilos_paleta.seccion}>
-					  <Text style={stilos_paleta.titulo}>
-						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Titulo}
-					  </Text>
-						{SeccionesHTML[seccion]}
+					{bloqueslistpdf} {/* Render the idiomas list */}
 					</View>
-				) : (
-					<></>
-				)
-			 )}
+					{SeccionesHTML[seccion]} {/* Render other section content */}
+				</View>
+				);
+			} else {
+				return null;
+			}
+			})}
 			 <Text style={stilos_paleta.titulo}>
 				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
 				lo cual se desesperaba, porque quisiera topar luego luego con quien
