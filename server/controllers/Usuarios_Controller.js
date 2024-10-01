@@ -329,7 +329,7 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         .json({ success: false, error: "No se encontró al usuario" });
     }
 
-    if (!user.curriculums_ids.contains(new ObjectID(curriculum_id)))
+    if (!user.curriculums_ids.includes(new ObjectId(curriculum_id)))
       return res
         .status(403)
         .json({ success: false, error: "Curriculo sin acceso." });
@@ -392,7 +392,7 @@ const Eliminar_Usuario_Curriculum = async (req, res) => {
         .json({ success: false, error: "No se encontró al usuario" });
     }
 
-    if (!usuario.Curriculums_IDs.contains(new ObjectID(curriculum_id)))
+    if (!usuario.Curriculums_IDs.includes(new ObjectId(curriculum_id)))
       return res
         .status(403)
         .json({ success: false, error: "Curriculo sin acceso." });

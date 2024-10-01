@@ -322,7 +322,7 @@ Para realizar un Pull Request desde otra rama (por ejemplo, `my-branch`) a la ra
 
 ### 6. **Limpiar Stash (Opcional)**
 
-- Si no necesitas los cambios guardados en `stash`, límpialos:
+- Si no necesitas los cambios guardados en `stash`, límpialos con:
 
   ```bash
   git stash clear
@@ -331,41 +331,48 @@ Para realizar un Pull Request desde otra rama (por ejemplo, `my-branch`) a la ra
 ### 7 **Crear un Pull Request**
 
 1. Selecciona la rama `my-branch`.
-2. Selecciona la opcion `Compare and pull request`.
+2. Selecciona la opción `Compare and pull request`.
 3. Selecciona la rama `my-branch` y la rama `master`.
 4. Haz clic en el botón `Create pull request`.
 
-### 8. **Fusionar Cambios de Master en tu Rama**
+### 8 **Borrar la Rama**
 
-- Cambia a `master` para asegurarte de que esté actualizado:
+- Después de que el Pull Request sea aceptado, puedes borrar la rama remota `my-branch` con:
 
   ```bash
-  git checkout master
-  git pull origin master
+  git push origin --delete my-branch
   ```
 
-- Luego, cambia a `my-branch` y fusiona `master`:
+- Si quieres borrar la rama `my-branch` localmente, puedes hacerlo con:
 
   ```bash
-  git checkout my-branch
-  git merge master
+  git branch -D my-branch
+  ```
+
+- Para actualizar las ramas remotas, puedes ejecutar:
+
+  ```bash
+  git fetch --prune
   ```
 
 ### Resumen de Comandos
 
-| Comando                          | Acción                                              |
-| :------------------------------- | :-------------------------------------------------- |
-| `git checkout master`            | Cambia a la rama `master`.                          |
-| `git pull origin master`         | Actualiza la rama `master` con los últimos cambios. |
-| `git checkout -b my-branch`      | Crea y cambia a la rama `my-branch`.                |
-| `git stash`                      | Guarda cambios no confirmados.                      |
-| `git stash list`                 | Lista los cambios guardados con `stash`.            |
-| `git stash apply`                | Aplica los cambios guardados con `stash`.           |
-| `git add .`                      | Añade los cambios a la rama `my-branch`.            |
-| `git commit -m "Commit message"` | Confirma los cambios en la rama `my-branch`.        |
-| `git push origin my-branch`      | Sube tus cambios a la rama remota `my-branch`.      |
-| `git stash clear`                | Borra los cambios guardados con `stash`.            |
-| `git merge master`               | Fusiona la rama `master` con la rama `my-branch`.   |
+| Comando                              | Acción                                              |
+| :----------------------------------- | :-------------------------------------------------- |
+| `git checkout master`                | Cambia a la rama `master`.                          |
+| `git pull origin master`             | Actualiza la rama `master` con los últimos cambios. |
+| `git checkout -b my-branch`          | Crea y cambia a la rama `my-branch`.                |
+| `git stash`                          | Guarda cambios no confirmados.                      |
+| `git stash list`                     | Lista los cambios guardados con `stash`.            |
+| `git stash apply`                    | Aplica los cambios guardados con `stash`.           |
+| `git add .`                          | Añade los cambios a la rama `my-branch`.            |
+| `git commit -m "Commit message"`     | Confirma los cambios en la rama `my-branch`.        |
+| `git push origin my-branch`          | Sube tus cambios a la rama remota `my-branch`.      |
+| `git stash clear`                    | Borra los cambios guardados con `stash`.            |
+| `git merge master`                   | Fusiona la rama `master` con la rama `my-branch`.   |
+| `git push origin --delete my-branch` | Borra la rama `my-branch` remota.                   |
+| `git branch -D my-branch`            | Borra la rama `my-branch` localmente.               |
+| `git fetch --prune`                  | Actualiza las ramas remotas.                        |
 
 ### Notas
 

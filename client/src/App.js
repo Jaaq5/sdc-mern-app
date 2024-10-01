@@ -18,6 +18,8 @@ import CurriculosMenu from "./pages/CurriculosMenu";
 import EditorCurriculo from "./pages/EditorCurriculo";
 import plantilla_simple from "./Components/curriculotemplate";
 import plantilla_laboral from "./Components/curriculotemplate";
+import plantilla_academico from "./Components/curriculoAcademicoTemplate";
+import plantilla_harvard from "./Components/curriculoHarvardTemplate";
 
 import { Navbar } from "./Components/Navbar";
 // import ProtectedRoute from "./Components/ProtectedRoute";
@@ -121,14 +123,14 @@ function App() {
     },
 
     ObtenerCategoriasHabilidad: async () => {
-      if (listas_categorias.hailidades) return listas_categorias.hailidades;
+      if (listas_categorias.categorias_habilidad) return listas_categorias.categorias_habilidad;
       var categorias = [];
       axios
         .get(apiUrl + "/api/cat-skill/obtener-categorias-habilidad")
         .then((response) => {
-          if (response.data.categorias_hailidad) {
-            categorias = response.data.hailidades;
-            listas_categorias.categorias_hailidad = categorias;
+          if (response.data.categorias_habilidad) {
+            categorias = response.data.categorias_habilidad;
+            listas_categorias.categorias_habilidad = categorias;
             setListas(listas_categorias);
           }
         })
@@ -272,17 +274,26 @@ function App() {
       return plant;
     },
 
-    CopiarPlantilla: (
-      plantilla_id
-    ) => {
-      if (plantilla_id !== "simple" && plantilla_id !== "laboral" && !plantillas[plantilla_id]) return null;
+    CopiarPlantilla: (plantilla_id) => {
+      if (
+        plantilla_id !== "simple" &&
+        plantilla_id !== "laboral" &&
+        plantilla_id !== "academico" &&
+        plantilla_id !== "harvard" &&
+        !plantillas[plantilla_id]
+      )
+        return null;
 
       let plantilla = null;
-      if (plantilla_id === "simple"){
+      if (plantilla_id === "simple") {
         plantilla = JSON.parse(JSON.stringify(plantilla_simple));
-      }else if(plantilla_id === "laboral"){
+      } else if (plantilla_id === "laboral") {
         plantilla = JSON.parse(JSON.stringify(plantilla_laboral));
-      }else{
+      } else if (plantilla_id === "academico") {
+        plantilla = JSON.parse(JSON.stringify(plantilla_academico));
+      } else if (plantilla_id === "harvard") {
+        plantilla = JSON.parse(JSON.stringify(plantilla_harvard));
+      } else {
         plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
       }
 
@@ -298,7 +309,8 @@ function App() {
           listas_categorias.categorias_puesto.find(
             (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
           )._id;
-		plantilla.Documento.diseno.Secciones.Informacion_Personal.Titulo = user_data.name;
+        plantilla.Documento.diseno.Secciones.Informacion_Personal.TituloSeccion =
+          user_data.name;
       }
       return plantilla;
     },
