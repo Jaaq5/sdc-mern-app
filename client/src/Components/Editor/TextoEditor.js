@@ -7,10 +7,10 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 		  return (<></>);
 	  setTimeout(function(){document.getElementById("Editor_Texto_Input")?.focus()},200);
 	  return (<div style={{position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", marginTop: "-10px"}}>
-			<TextField
+			<form><TextField
 				id="Editor_Texto_Input"
-				style={{display: "flex", backgroundColor: "#EFFFFF", zIndex: 100}}
-				InputProps = {{style: {}}}
+				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100}}
+				InputProps = {{style: {color: "#000"}}}
 				variant="standard"
 				size="small"
 				sx={{ label: { fontWeight: "700", fontSize: "1.0rem" } }}
@@ -20,13 +20,32 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 				required
 				value={TextoEditar}
 				onChange={(e) => {
-				  setTextoEditar(e.target.value);
-				  documento.diseno.Secciones[Editando.Seccion][Editando.Campo] = e.target.value;
+				  let val = e.target.value? e.target.value : "";
+				  if(val === "")
+					  e.target.setCustomValidity(
+                        "No puede quedar vacío",
+                      )
+				  else
+					  e.target.setCustomValidity(
+                        "",
+                      )
+				  setTextoEditar(val);
+				  documento.diseno.Secciones[Editando.Seccion][Editando.Campo] = val;
 				  setDocumento(documento);
 				}}
-				onKeyDown={(e) => {if(e.keyCode === 13) setEditando(null)}}
-				onBlur={(e) => {setEditando(null)}}
-			  ></TextField>
+				
+				onKeyDown={(e) => {if(e.keyCode === 13 && e.target.value !== "") setEditando(null)}}
+				onBlur={(e) => {
+					if(e.target.value !== "") 
+						setEditando(null) 
+					else{
+						setTimeout(function(){
+							e.target.focus()
+							e.target.setCustomValidity("No puede quedar vacío")
+						},0);
+					}
+					 }}
+			  ></TextField></form>
 		  </div>
 	  
 	  );
