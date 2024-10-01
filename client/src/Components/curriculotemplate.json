@@ -62,7 +62,7 @@
 					"Tipo" : "Texto",
 					"Texto" : ["TituloSeccion"],
 					"Editable" : {"Tipo": "Texto", "Titulo" : "Editar Nombre", "Label": "Nombre", "Placeholder" : "Tu nombre"},
-					"style" : {"fontWeight" : 900, "fontSize" : "1.2em"}
+					"style" : {"fontWeight" : 900, "fontSize" : "1.2em", "margin" : "0px"}
 				},
 				{
 					"Tipo" : "Texto",
@@ -80,7 +80,7 @@
         "Experiencias_Laborales": {
 		  "Mostrar": true,
 		  "TituloSeccion" : "Experiencia Laboral",
-		  "style" : {},
+		  "style" : {"border":"solid 2px #0005", "textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Trabajos", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -92,6 +92,8 @@
 				},
 				{
 					"Tipo" : "IDs",
+					"style" : {"backgroundColor" : "#0001"},
+					"plantillaStyle": {"backgroundColor": "#0ff1"},
 					"Plantilla" : [
 						{
 							"Tipo" : "Texto",
@@ -101,15 +103,14 @@
 							"Tipo" : "Texto",
 							"Texto" : ["Puesto", " en ", "Organizacion"]
 						}
-					],
-					"style" : {}
+					]
 				}
 			]
         },
         "Educacion_Formal": {
           "Mostrar": true,
           "TituloSeccion": "Títulos",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Títulos", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -138,7 +139,7 @@
         "Educacion_Informal": {
           "Mostrar": true,
           "TituloSeccion": "Certificados",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Certificaciones", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -167,7 +168,7 @@
         "Habilidades": {
           "Mostrar": true,
           "TituloSeccion": "Habilidades",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Habilidades", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -196,7 +197,7 @@
         "Idiomas": {
           "Mostrar": true,
           "TituloSeccion": "Idiomas",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Idiomas", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -225,7 +226,7 @@
         "Proyectos": {
           "Mostrar": true,
           "TituloSeccion": "Proyectos",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Proyectos", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -254,7 +255,7 @@
         "Publicaciones": {
           "Mostrar": true,
           "TituloSeccion": "Publicaciones",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Publicaciones", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
@@ -287,7 +288,7 @@
         "Referencias": {
           "Mostrar": true,
           "TituloSeccion": "Referencias",
-		  "style": {},
+		  "style": {"textAlign" : "left"},
 		  "Editable" : {"Titulo" : "Cambiar Lista de Referencias", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true},
 		  
 		  "Estructura": [
