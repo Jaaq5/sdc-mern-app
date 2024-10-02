@@ -21,7 +21,7 @@ import { DeleteForever, PostAdd } from "@mui/icons-material";
 
 //style
 import {
-  paperStyle, 
+  paperStylexb, 
   paperSX, 
   heading, row, 
   btnStyle, 
@@ -272,7 +272,7 @@ function ExperienciaLaboral({
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStylexb} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Trabajos:
               </Typography>
@@ -304,7 +304,7 @@ function ExperienciaLaboral({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStylexb} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Trabajo
                 </Typography>

@@ -204,17 +204,6 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
     <>
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Idiomas</h1>
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
-            color="success"
-            component={Link}
-            to="/home"
-          >
-            Volver a Inicio
-          </Button>
-        </div>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
