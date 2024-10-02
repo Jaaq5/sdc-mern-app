@@ -109,18 +109,19 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	maxWidth: "20px",
-	maxHeight: "20px",
-	minWidth: "20px",
-	minHeight: "20px",
+	width: "100%",
+	maxHeight: "2rem",
+	minWidth: "1rem",
+	minHeight: "1rem",
     cursor: "pointer",
-    color: "#000",
-	margin: "0px",
+    color: "#0000",
+	margin: "inherit",
 	padding: "0px",
 	display: "inline",
 	fontSize: "inherit",
 	position: "absolute",
-	right: "30px"
+	left: "-10px",
+	top: "0.0rem"
   };
   const seccionEditButton = {
     backgroundColor: "#fff0",
@@ -194,7 +195,6 @@ function EditorCurriculo({
   const [categoria_curriculum, setCatCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
   const [documento, setDocumento] = useState(null);
-  const [SeccionesHTML, setHTMLInfo] = useState({});
   const [Editando, setEditando] = useState(null);
   const [TextoEditar, setTextoEditar] = useState("");
   const [ListaEditar, setListaEditar] = useState([]);
@@ -209,8 +209,8 @@ function EditorCurriculo({
     const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
 	estructura.Texto.forEach((campo) => {
-		if(seccion[campo]){ //Titulo y otros de plantilla
-			texto += seccion[campo];
+		if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
+			texto += seccion[campo] === ""? estructura.Editable.Placeholder : seccion[campo];
 		}else if(id && user_data.bloques[nombreSeccion][id][campo]){ //Bloques de datos
 			if(nombreSeccion === "Idiomas" && campo === "Id")
 				texto += getNameById(user_data.bloques[nombreSeccion][id][campo])
@@ -224,10 +224,13 @@ function EditorCurriculo({
   };
   
   const ElementoTextoEditable_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  return (
-		<Button
+	  return (Editando? 
+		(<></>)
+		:
+		(<Button
 			title={estructura.Editable.Titulo}
 			style={editButton}
+			id={"Edit_Button_Texto_"+nombreSeccion+"_"+index}
 			onClick={(e) => {
 				setTextoEditar(seccion.TituloSeccion);
 				setEditando({
@@ -241,7 +244,7 @@ function EditorCurriculo({
 			}}
 			>
 			<BorderColorIcon style={editButtonIcon} />
-		</Button>
+		</Button>)
 	  );
   };
   
@@ -258,7 +261,7 @@ function EditorCurriculo({
   const ElementoTextoEstructurado_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
 	  
 	  return (<>
-	  <p id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style}>
+	  <p id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
 			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
 			<ElementoEditable_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
 	  </p></>);
@@ -278,14 +281,14 @@ function EditorCurriculo({
 			//documento.datos.Secciones[nombreSeccion].IDs
 			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
 				list.push(
-					<>{Object.keys(estructura.Plantilla).map((index) => {
+					<div style={estructura.plantillaStyle}>{Object.keys(estructura.Plantilla).map((index) => {
 						return (<>
 							<ElementoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} />
 						</>)
-					})}</>
+					})}</div>
 				);
 			});
-			return (<>{list}</>);
+			return (<div style={estructura.style}>{list}</div>);
 	  };
   };
 	
@@ -300,11 +303,12 @@ function EditorCurriculo({
 		documento.diseno.Secciones[seccion].style.position = "relative";
 		
 	  return (
-		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style}>
+		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
 			{documento.diseno.Secciones[seccion].Editable? (
 				<Button  
 					title={documento.diseno.Secciones[seccion].Editable.Titulo}
 					style={seccionEditButton}
+					id={"Edit_Button_Seccion_"+seccion}
 					onClick={(e) => {
 					setEditando({
 						Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
@@ -330,6 +334,7 @@ function EditorCurriculo({
 	  );
   };
   
+  //Ordena bloques del usuario por Fecha (si tiene), y por categorias del curriculo y puesto
   const OrdenarBloques = (bloques, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
 	let sortedBloques = [];
 	if(!bloques)
@@ -358,6 +363,8 @@ function EditorCurriculo({
 	return sortedBloques;
   }; 
 
+  //Actualiza las IDs de bloques seleccionadas
+  //Ocurre al inicio y cuando se cambia algun dato de cantidad o ID fija
   const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
     if (!user_data) return;
 	Object.keys(documento.datos.Secciones).map((seccion) => {
@@ -399,6 +406,7 @@ function EditorCurriculo({
 			break;
 		parent = parent.parentElement;
 	}
+	pos = [Math.max(0, pos[0]), Math.max(0, pos[1])];
 	return pos;
 	  
   };
@@ -425,7 +433,7 @@ function EditorCurriculo({
           <div style={stilos_paleta.pagina} id={"pagina_"+numeroDePaginas}>
 			<SeccionHTMLEstructurada user_data={user_data} seccion={"Informacion_Personal"} documento={documento} id={documento.datos.Secciones.Informacion_Personal} />
 			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => {
-				return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[seccion]} documento={documento} />)
+				return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[seccion]} documento={documento} key={"123"+seccion+documento.diseno.Secciones.Orden[seccion]}/>)
 			})}
 			 <p style={stilos_paleta.titulo}>
 				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
@@ -549,7 +557,6 @@ function EditorCurriculo({
 					  <Text style={stilos_paleta.titulo}>
 						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].TituloSeccion}
 					  </Text>
-						{SeccionesHTML[seccion]}
 					</View>
 				) : (
 					<></>

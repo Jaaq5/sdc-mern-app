@@ -309,7 +309,7 @@ function App() {
           listas_categorias.categorias_puesto.find(
             (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
           )._id;
-        plantilla.Documento.diseno.Secciones.Informacion_Personal.Titulo =
+        plantilla.Documento.diseno.Secciones.Informacion_Personal.TituloSeccion =
           user_data.name;
       }
       return plantilla;
