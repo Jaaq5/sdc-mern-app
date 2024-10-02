@@ -16,7 +16,7 @@ const BloquesListTexto = {
 	Informacion_Personal: [["Puesto", " - ", "Sobre_Mi"], ["Correo", ", ", "Telefono"]],
 	Experiencias_Laborales: [["Organizacion"], ["Puesto"]],
 	Educacion_Formal: [["Programa", " en ", "Institucion"], ["Descripcion"]],
-	Educacion_Informal: [["Programa", " en ", "Institucion"], ["Descripcion"]],
+	Educacion_Tecnica: [["Programa", " en ", "Institucion"], ["Descripcion"]],
 	Idiomas: [["Idioma"], ["Nivel"]],
 	Habilidades: [["Nombre"], ["Descripcion"]],
 	Proyectos: [["Proyecto"], ["Institucion"]],
@@ -59,7 +59,7 @@ const crearBloquesToHTML = (user_data, TextoEditar, setTextoEditar, ListaEditar,
 		overflow: "hidden",
 		backgroundColor: "#afa6",
 		color: "#fff",
-		padding: "2px !important"
+		padding: "2px"
 	  };
 	const activeListStyle = {
 	  	borderBottom: "solid 2px rgba(230, 150, 0, 0.2)",
@@ -217,7 +217,7 @@ const SelectorID = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setLis
 		crearBloquesToHTML(user_data,TextoEditar,setTextoEditar,ListaSeleccionableIDs,setListaSeleccionable,documento,setDocumento,Editando,setEditando);
 	
 	return (
-	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", marginTop: "-10px"}}>
+	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Editando.pos[0]-300)+"px",top: (Editando.pos[1])+"px", marginTop: "-10px"}}>
 			<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)", padding: "3px", textAlign: "center"}}>
 				{documento.diseno.Secciones[Editando.Seccion].Editable?.Titulo}
 				{Editando.Arreglo? (<div>
