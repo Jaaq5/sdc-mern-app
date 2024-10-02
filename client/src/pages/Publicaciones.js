@@ -17,7 +17,7 @@ import { PostAdd, DeleteForever } from "@mui/icons-material";
 
 //style
 import {
-  paperStyle, 
+  paperStylem, 
   paperSX, 
   heading, row, 
   btnStyle, 
@@ -203,7 +203,7 @@ function Publicaciones({
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           <Button
             variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
+            style={{ ...btnStyle}}
             color="success"
             component={Link}
             to="/home"
@@ -215,7 +215,7 @@ function Publicaciones({
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStylem} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Publicaciones
               </Typography>
@@ -247,7 +247,7 @@ function Publicaciones({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStylem} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {publicacion_id === true ? "Añadir" : "Modificar"} Publicación
                 </Typography>

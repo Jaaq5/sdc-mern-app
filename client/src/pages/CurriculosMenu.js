@@ -24,9 +24,7 @@ import AcademicExampleTemplate from "../Components/AcademicExampleTemplate";
 
 import {
   paperStyle, 
-  paperSX, 
-  heading, row, 
-  listStyle, 
+  heading,
   listButtonStyle, 
   deleteButton, 
   dense
@@ -64,7 +62,34 @@ function CurriculosMenu({
   const [categoria_curriculum, setCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
   const [documento, setDocumento] = useState(null);
-  //
+
+  //specific styles
+  const paperSX = {
+    width: {
+      xs: "80vw", // 0
+      sm: "80vw", // 600
+      md: "80vw", // 900
+      lg: "80vw", // 1200
+      xl: "80vw", // 1536
+    },
+    height: {
+      lg: "60vh", // 1200px and up
+    },
+  };
+
+  const listStyle = {
+    border: "solid 3px #999999aa",
+    borderRadius: "5px",
+    margin: "5px",
+    height: "420px",
+    minWidth: "300px",
+    maxWidth: "300px",
+    overflow: "hidden",
+    backgroundColor: "#fff",
+    display: "block",
+    verticalAlign: "top",
+  };
+  
   const mapToHTML = (curriculos, callback, id_callback, nuevo) => {
     if (!curriculos) return;
 

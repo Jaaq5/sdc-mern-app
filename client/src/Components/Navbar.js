@@ -5,6 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Logout from "./Logout";
+import { theme } from "../theme";
 
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Slide from "@mui/material/Slide";
@@ -53,7 +54,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
     <HideOnScroll>
-      <AppBar sx={{ bgcolor: "#333" }}>
+      <AppBar sx={{ bgcolor: theme.palette.lightred.main }}>
         <Toolbar>
           <Typography
             variant="h4"
@@ -168,17 +169,6 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 onClick={(e) => setPath("/educaciontecnica")}
               >
                 Educacion Técnica
-              </Button>
-
-              <Button
-                variant="contained"
-                style={navbutton}
-                color="success"
-                component={Link}
-                to="/habilidades"
-                onClick={(e) => setPath("/habilidades")}
-              >
-                Habilidades y Herramientas
               </Button>
 
               <Button

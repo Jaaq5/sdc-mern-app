@@ -1,9 +1,43 @@
+import { theme } from "./theme";
+
 export const paperStyle = {
+  padding: "2rem",
+  margin: "10px auto",
+  borderRadius: "1rem",
+  boxShadow: "10px 10px 10px",
+  minHeight: "800px",
+};
+
+export const paperStyles = {
+    padding: "2rem",
+    margin: "10px auto",
+    borderRadius: "1rem",
+    boxShadow: "10px 10px 10px",
+    minHeight: "auto",
+  };
+
+  export const paperStyleb = {
     padding: "2rem",
     margin: "10px auto",
     borderRadius: "1rem",
     boxShadow: "10px 10px 10px",
     minHeight: "800px",
+  };
+
+  export const paperStylem = {
+    padding: "2rem",
+    margin: "10px auto",
+    borderRadius: "1rem",
+    boxShadow: "10px 10px 10px",
+    minHeight: "600px",
+  };
+
+  export const paperStylexb = {
+    padding: "2rem",
+    margin: "10px auto",
+    borderRadius: "1rem",
+    boxShadow: "10px 10px 10px",
+    minHeight: "1000px",
   };
 
   export const paperSX = {
@@ -18,13 +52,15 @@ export const paperStyle = {
       lg: "60vh", // 1200px and up
     },
   };
+
+
   export const heading = { fontSize: "2.5rem", fontWeight: "600" };
   export const row = { display: "flex", marginTop: "2rem" };
   export const btnStyle = {
     marginTop: "1rem",
     fontSize: "1.2rem",
     fontWeight: "700",
-    backgroundColor: "blue",
+    backgroundColor: theme.palette.yellow.main,
     borderRadius: "0.5rem",
   };
   export const fieldTitleStyle = { float: "left" };
@@ -32,7 +68,7 @@ export const paperStyle = {
     border: "solid 3px #999999aa",
     borderRadius: "5px",
     marginBottom: "5px",
-    height: "5rem",
+    height: "auto",
     overflow: "hidden",
     backgroundColor: "#fff",
   };
@@ -87,20 +123,21 @@ export const paperStyle = {
   };
 
   export const navbutton = {
-    margin: "5px",
-    marginRight: "10px",
+    margin: "2px",
+    marginRight: "2px",
     fontSize: "0.8rem",
     fontWeight: "700",
     padding: "0.1rem 0.4rem",
     width: "110px",
     minWidth: "100px",
     height: "50px",
-    backgroundColor: "#05c9",
+    backgroundColor: theme.palette.red.main,
+    borderRadius: "0",
   };
 
   export const burger_button = {
     margin: "5px",
-    marginRight: "10px",
+    marginRight: "170px",
     fontSize: "0.9rem",
     fontWeight: "700",
     padding: "0.1rem 0.4rem",

@@ -24,7 +24,7 @@ import { AddCard, DeleteForever, PostAdd } from "@mui/icons-material";
 
 //style
 import {
-  paperStyle, 
+  paperStyleb, 
   paperSX, 
   heading, row, 
   btnStyle, 
@@ -258,7 +258,7 @@ function EducacionFormal({
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStyleb} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Tus títulos
               </Typography>
@@ -290,7 +290,7 @@ function EducacionFormal({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStyleb} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Título
                 </Typography>

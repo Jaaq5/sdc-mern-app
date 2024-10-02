@@ -62,7 +62,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
 
   return (
     <div>
-      <Grid align="center" className="wrapper">
+      <Grid align="center" className="wrapper" sx={{ marginTop: "150px" }}>
         <Paper
           style={paperStyle}
           sx={{
