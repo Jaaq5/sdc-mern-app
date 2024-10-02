@@ -5,6 +5,11 @@ import { apiUrl } from "../consts";
 import axios from "axios";
 import { Button } from "@mui/material";
 
+//style
+import {
+  logoutbutton
+} from "../style";
+
 function Logout({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,17 +29,12 @@ function Logout({ setIsLoggedIn }) {
         console.error("Error logging out:", error);
       });
   };
-  const button = {
-    marginRight: "20px",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    padding: "0.3rem 1.4rem",
-  };
+  
   return (
     <Button
       variant="contained"
       color="error"
-      style={button}
+      style={logoutbutton}
       onClick={(e) => handleLogout(e)}
     >
       Logout

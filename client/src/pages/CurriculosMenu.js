@@ -22,6 +22,16 @@ import { DeleteForever, PostAdd } from "@mui/icons-material";
 import HarvardExampleTemplate from "../Components/HarvardExampleTemplate";
 import AcademicExampleTemplate from "../Components/AcademicExampleTemplate";
 
+import {
+  paperStyle, 
+  paperSX, 
+  heading, row, 
+  listStyle, 
+  listButtonStyle, 
+  deleteButton, 
+  dense
+} from "../style";
+
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
 function CurriculosMenu({
@@ -46,63 +56,6 @@ function CurriculosMenu({
   const [plantillaTexto, setPlantillaTexto] = useState(
     "Una plantilla que no tiene elementos ni estructura especial.",
   );
-
-  //Style
-  const paperStyle = {
-    padding: "2rem",
-    margin: "10px auto",
-    borderRadius: "1rem",
-    boxShadow: "10px 10px 10px",
-    minHeight: "800px",
-  };
-  const paperSX = {
-    width: {
-      xs: "80vw", // 0
-      sm: "80vw", // 600
-      md: "80vw", // 900
-      lg: "80vw", // 1200
-      xl: "80vw", // 1536
-    },
-    height: {
-      lg: "60vh", // 1200px and up
-    },
-  };
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex", marginTop: "2rem" };
-  const btnStyle = {
-    marginTop: "1rem",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    backgroundColor: "blue",
-    borderRadius: "0.5rem",
-  };
-  const fieldTitleStyle = {};
-  const listStyle = {
-    border: "solid 3px #999999aa",
-    borderRadius: "5px",
-    margin: "5px",
-    height: "420px",
-    minWidth: "300px",
-    maxWidth: "300px",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-    display: "block",
-    verticalAlign: "top",
-  };
-  const listButtonStyle = {
-    border: "solid 1px #999999aa",
-    height: "3rem",
-    overflow: "hidden",
-  };
-  const deleteButton = {
-    backgroundColor: "#f55",
-    border: "0px",
-    borderRadius: "5px",
-    //float: "right",
-    cursor: "pointer",
-    color: "#000",
-  };
-  const dense = true;
 
   //Form
   const [curriculo_id, setCurriculoId] = useState(true);

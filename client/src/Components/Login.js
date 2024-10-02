@@ -12,6 +12,14 @@ import {
 
 import { apiUrl } from "../consts";
 
+//style
+import {
+  paperStyle, 
+  heading, row, 
+  btnStyle, 
+  label
+} from "../style";
+
 function Login({ setIsLoggedIn, user_data, setUserData }) {
   const [email, setEmail] = useState("");
   const [contrasena, setPassword] = useState("");
@@ -51,23 +59,6 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
         console.log(err);
       });
   };
-
-  const paperStyle = {
-    padding: "2rem",
-    margin: "100px auto",
-    borderRadius: "1rem",
-    boxShadow: "10px 10px 10px",
-  };
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex", marginTop: "2rem" };
-  const btnStyle = {
-    marginTop: "2rem",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    backgroundColor: "blue",
-    borderRadius: "0.5rem",
-  };
-  const label = { fontWeight: "700" };
 
   return (
     <div>

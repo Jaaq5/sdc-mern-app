@@ -16,6 +16,18 @@ import {
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 
+//style
+import {
+  paperStyle, 
+  paperSX, 
+  heading, row, 
+  btnStyle, 
+  listStyle, 
+  listButtonStyle, 
+  deleteButton, 
+  dense
+} from "../style";
+
 function Lenguajes({ user_data, setUserData, manager_bloques, category_manager}) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -27,56 +39,6 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
     { id: 2, nombre: "Medio" },
     { id: 3, nombre: "Alto" },
   ];
-  // Estilos
-  const paperStyle = {
-    padding: "2rem",
-    margin: "10px auto",
-    borderRadius: "1rem",
-    boxShadow: "10px 10px 10px",
-    minHeight: "800px",
-  };
-  const paperSX = {
-    width: {
-      xs: "80vw", // 0
-      sm: "50vw", // 600
-      md: "40vw", // 900
-      lg: "30vw", // 1200
-      xl: "20vw", // 1536
-    },
-    height: {
-      lg: "60vh", // 1200px and up
-    },
-  };
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex", marginTop: "2rem" };
-  const btnStyle = {
-    marginTop: "1rem",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    backgroundColor: "blue",
-    borderRadius: "0.5rem",
-  };
-  const listStyle = {
-    border: "solid 3px #999999aa",
-    borderRadius: "5px",
-    marginBottom: "5px",
-    height: "5rem",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-  };
-  const deleteButton = {
-    backgroundColor: "#f55",
-    border: "0px",
-    borderRadius: "5px",
-    float: "right",
-    cursor: "pointer",
-    color: "#000",
-  };
-  const listButtonStyle = {
-    border: "solid 1px #999999aa",
-    height: "3rem",
-    overflow: "hidden",
-  };
 
   // Formulario
   const [bloque_id, setBloqueId] = useState(true);
