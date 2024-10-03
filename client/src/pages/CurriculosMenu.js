@@ -385,25 +385,26 @@ function CurriculosMenu({
               <Typography component="h3" variant="h3" style={heading}>
                 Plantillas:
               </Typography>
-              <form style={{ margin: "10px" }}>
-                <FormControl style={{ width: "40%", marginRight: "20px" }}>
-                  <InputLabel id="id-curriculum-select-label">
-                    Tipo de CV
-                  </InputLabel>
+              <form style={{ margin: "5px", display: "flex", justifyContent: "flex-start", gap: "10px" }}>
+                <FormControl style={{ width: "300px" }}>
+                  <InputLabel id="id-curriculum-select-label">Tipo de CV</InputLabel>
                   <Select
+                    variant="outlined"
                     labelId="id-curriculum-select-label"
                     id="id-curriculum-simple-select"
                     defaultValue={""}
                     value={categoria_curriculum}
                     label="Tipo de CV"
-                    onChange={(e) => handleCurriculumChange(e.target.value)} // Use the updated function
+                    onChange={(e) => handleCurriculumChange(e.target.value)}
                   >
                     {cats_curr}
                   </Select>
                 </FormControl>
-                <FormControl style={{ width: "40%", marginRight: "20px" }}>
+
+                <FormControl style={{ width: "300px" }}>
                   <InputLabel id="id-puesto-select-label">Puesto</InputLabel>
                   <Select
+                    variant="outlined"
                     labelId="id-puesto-select-label"
                     id="id-puesto-simple-select"
                     defaultValue={""}

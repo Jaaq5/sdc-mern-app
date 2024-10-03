@@ -131,17 +131,26 @@ export const paperStyles = {
     width: "110px",
     minWidth: "100px",
     height: "50px",
-    backgroundColor: theme.palette.red.main,
+    background: 'linear-gradient(to bottom, #C42847, #7a1436)',
     borderRadius: "0",
   };
 
+  export const disabledNavButton = {
+    ...navbutton,
+    background: null,
+    backgroundColor: theme.palette.darkerred.main,
+    pointerEvents: 'none',  // Disable hover and clicks
+    cursor: 'default'  // Change cursor to default
+
+  };
+
   export const burger_button = {
-    margin: "5px",
-    marginRight: "170px",
+    margin: "1px",
+    marginRight: "1px",
     fontSize: "0.9rem",
     fontWeight: "700",
     padding: "0.1rem 0.4rem",
     width: "50px",
     height: "50px",
-    backgroundColor: "#c0c9",
+    background: 'linear-gradient(to bottom, #C42847, #7a1436)',
   };

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 //style
-import { paperStyle, heading, row, btnStyle } from "../style";
+import { paperStyles, heading, row, btnStyle } from "../style";
 
 function SignUp() {
   const [nombre, setName] = useState("");
@@ -40,7 +40,7 @@ function SignUp() {
     <div>
       <Grid align="center" className="wrapper" sx={{ marginTop: "150px" }}>
         <Paper
-          style={paperStyle}
+          style={paperStyles}
           sx={{
             width: {
               xs: "80vw", // 0

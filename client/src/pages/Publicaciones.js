@@ -200,17 +200,6 @@ function Publicaciones({
     <>
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Publicaciones</h1>
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{ ...btnStyle}}
-            color="success"
-            component={Link}
-            to="/home"
-          >
-            Volver a Inicio
-          </Button>
-        </div>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
@@ -230,7 +219,7 @@ function Publicaciones({
               >
                 <ListItemButton
                   key={true}
-                  style={{ ...listStyle, backgroundColor: "#4f96" }}
+                  style={(listStyle, { backgroundColor: "#4f96" })}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />
