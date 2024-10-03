@@ -355,7 +355,7 @@
         },
         "Referencias": {
           "Mostrar": true,
-          "TituloSeccion": "Pancake",
+          "TituloSeccion": "Referencias",
 		  "style": {"textAlign" : "left"},
 		  "Celdas" : [40,13],
 		  "Editable" : {"Titulo" : "Cambiar Lista de Referencias", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true, "Celdas" : true},

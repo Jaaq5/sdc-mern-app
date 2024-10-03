@@ -1,6 +1,8 @@
 const Usuarios = require("../models/Usuario_Model");
 const Curriculums = require("../models/Curriculums_Model");
 const Bloques = require("../models/Bloques_Model");
+const Categorias_Curriculum = require("../models/Categorias_Curriculum_Model");
+const Categorias_Puesto = require("../models/Categorias_Puesto_Model");
 const { ObjectId } = require("mongodb");
 // Dependiencia para manejar archivos
 const multer = require("multer");
@@ -329,7 +331,7 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         .json({ success: false, error: "No se encontró al usuario" });
     }
 
-    if (!user.curriculums_ids.includes(new ObjectId(curriculum_id)))
+    if (!user.Curriculums_IDs.includes(new ObjectId(curriculum_id)))
       return res
         .status(403)
         .json({ success: false, error: "Curriculo sin acceso." });
@@ -341,24 +343,24 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         error: "No se encontró el curriculum del usuario",
       });
     }
-
+	
     const cat_curr = await Categorias_Curriculum.findById(
       new ObjectId(categoria_curriculum_id),
     );
     if (!cat_curr) {
       return res.status(404).json({
         success: false,
-        error: "No se encontró el curriculum al actualizar",
+        error: "No se encontró la categoria curriculum al actualizar",
       });
     }
 
-    const cat_puesto = await Categorias_Pueto.findById(
+    const cat_puesto = await Categorias_Puesto.findById(
       new ObjectId(categoria_puesto_id),
     );
     if (!cat_puesto) {
       return res.status(404).json({
         success: false,
-        error: "No se encontró el curriculum al actualizar",
+        error: "No se encontró la categoria puesto al actualizar",
       });
     }
 
