@@ -92,6 +92,8 @@
           "Referencias"
         ],
         "Informacion_Personal": {
+		  "Bloque" : "Informacion_Personal",
+		  
           "Mostrar": true,
           "TituloSeccion": "prueba_4",
           "style": {

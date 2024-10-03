@@ -19,6 +19,12 @@ const ElementoDivEstructuradoHTML = ({user_data, documento, nombreSeccion, secci
   </p></>);
 };
 
+const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  return (<>
+		<img id={"Imagen_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
+	  </>);
+  };
+
 const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
   //console.log("Texto: "+nombreSeccion+", "+id+", "+index+", "+estructura.Tipo)
   if(!estructura)
@@ -29,6 +35,8 @@ const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion,
 		return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "Div":
 		return (<ElementoDivEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
+	  case "Imagen":
+		return (<ElementoImgEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "IDs":
 		let list = [];
 		if(!documento.datos.tempIds){

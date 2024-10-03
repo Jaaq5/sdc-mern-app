@@ -1,4 +1,4 @@
-import { Font, Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { Font, Page, Text, Image, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 
 import ComicSans from "../../fonts/Comic Sans MS.ttf"
 import RobotoBold from "../../fonts/Roboto-Bold.ttf"
@@ -14,6 +14,13 @@ const ElementoTextoEstructuradoPDF = ({user_data, documento, nombreSeccion, secc
   </Text></>);
 };
 
+const ElementoImagenEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
+  return (
+  <>
+	<Image id={"PDF_Imagen_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} cache={true} src={`data:image/png;base64,${user_data.userImage}`} />
+  </>);
+};
+
 const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, tempIds, obtenerTextoEstructura}) => {
   //console.log("Texto: "+nombreSeccion+", "+id+", "+index+", "+estructura.Tipo)
   if(!estructura)
@@ -24,6 +31,9 @@ const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, 
 		return (<ElementoTextoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "Div":
 		return (<ElementoTextoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
+	  case "Imagen":
+		return (<ElementoImagenEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
+	  
 	  case "IDs":
 		let list = [];
 		

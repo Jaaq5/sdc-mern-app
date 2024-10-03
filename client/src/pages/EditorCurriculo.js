@@ -250,7 +250,6 @@ function EditorCurriculo({
   };
   
   const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  
 	  return (<>
 		<img id={"Imagen_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
 	  </>);
