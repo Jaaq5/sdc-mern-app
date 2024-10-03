@@ -264,7 +264,7 @@ function Referencias({
               >
                 <ListItemButton
                   key={true}
-                  style={{ ...listStyle, backgroundColor: "#4f96" }}
+                  style={(listStyle, { backgroundColor: "#4f96" })}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />

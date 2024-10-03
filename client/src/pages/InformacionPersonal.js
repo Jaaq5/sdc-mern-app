@@ -13,6 +13,7 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
+import { theme } from "../theme";
 
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 import { apiUrl } from "../consts";
@@ -314,7 +315,7 @@ function InformacionPersonal({
               >
                 <ListItemButton
                   key={true}
-                  style={{ ...listStyle, backgroundColor: "#4f96" }}
+                  style={( listStyle, { backgroundColor: "#4f96"})}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />
@@ -411,7 +412,7 @@ function InformacionPersonal({
                   <Button
                     variant="contained"
                     component="label"
-                    style={{ marginRight: "10px" }}
+                    style={{ marginRight: "10px" , backgroundColor: theme.palette.yellow.main}}
                   >
                     Subir Imagen
                     <input
