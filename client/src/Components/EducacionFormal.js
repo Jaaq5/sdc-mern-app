@@ -22,6 +22,19 @@ import {
 
 import { AddCard, DeleteForever, PostAdd } from "@mui/icons-material";
 
+//style
+import {
+  paperStyleb, 
+  paperSX, 
+  heading, row, 
+  btnStyle, 
+  fieldTitleStyle, 
+  listStyle, 
+  listButtonStyle, 
+  deleteButton, 
+  dense
+} from "../style";
+
 //Para cargar los datos de usuario, ponerlos como parametros aqui
 //Tambien agregarlos en "App.js" (se pueden agregar otras variables ahi)
 function EducacionFormal({
@@ -37,59 +50,7 @@ function EducacionFormal({
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatPuesto] = useState([]);
 
-  //Style
-  const paperStyle = {
-    padding: "2rem",
-    margin: "10px auto",
-    borderRadius: "1rem",
-    boxShadow: "10px 10px 10px",
-    minHeight: "800px",
-  };
-  const paperSX = {
-    width: {
-      xs: "80vw", // 0
-      sm: "50vw", // 600
-      md: "40vw", // 900
-      lg: "30vw", // 1200
-      xl: "20vw", // 1536
-    },
-    height: {
-      lg: "60vh", // 1200px and up
-    },
-  };
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex", marginTop: "2rem" };
-  const btnStyle = {
-    marginTop: "1rem",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    backgroundColor: "blue",
-    borderRadius: "0.5rem",
-  };
-  const fieldTitleStyle = { float: "left" };
-  const listStyle = {
-    border: "solid 3px #999999aa",
-    borderRadius: "5px",
-    marginBottom: "5px",
-    height: "5rem",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-  };
-  const listButtonStyle = {
-    border: "solid 1px #999999aa",
-    height: "3rem",
-    overflow: "hidden",
-  };
-  const deleteButton = {
-    backgroundColor: "#f55",
-    border: "0px",
-    borderRadius: "5px",
-    float: "right",
-    cursor: "pointer",
-    color: "#000",
-  };
-  const dense = true;
-
+  
   //Form
   const [bloque_id, setBloqueId] = useState(true);
 
@@ -297,7 +258,7 @@ function EducacionFormal({
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStyleb} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Tus títulos
               </Typography>
@@ -329,7 +290,7 @@ function EducacionFormal({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStyleb} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Título
                 </Typography>

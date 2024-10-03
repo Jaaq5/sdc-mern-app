@@ -15,6 +15,17 @@ import {
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 
+//style
+import {
+  paperStylem, 
+  paperSX, 
+  heading, row, 
+  btnStyle, 
+  listStyle, 
+  deleteButton, 
+  dense
+} from "../style";
+
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
 // También agregarlos en "App.js" (se pueden agregar otras variables ahí)
 function Publicaciones({
@@ -27,52 +38,7 @@ function Publicaciones({
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [publicaciones, setPublicaciones] = useState([]);
 
-  // Estilos
-  const paperStyle = {
-    padding: "2rem",
-    margin: "10px auto",
-    borderRadius: "1rem",
-    boxShadow: "10px 10px 10px",
-    minHeight: "800px",
-  };
-  const paperSX = {
-    width: {
-      xs: "80vw", // 0
-      sm: "50vw", // 600
-      md: "40vw", // 900
-      lg: "30vw", // 1200
-      xl: "20vw", // 1536
-    },
-    height: {
-      lg: "60vh", // 1200px and up
-    },
-  };
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex", marginTop: "2rem" };
-  const btnStyle = {
-    marginTop: "1rem",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    backgroundColor: "blue",
-    borderRadius: "0.5rem",
-  };
-  const listStyle = {
-    border: "solid 3px #999999aa",
-    borderRadius: "5px",
-    marginBottom: "5px",
-    height: "5rem",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-  };
-  const deleteButton = {
-    backgroundColor: "#f55",
-    border: "0px",
-    borderRadius: "5px",
-    float: "right",
-    cursor: "pointer",
-    color: "#000",
-  };
-  const dense = true;
+
 
   // Form
   const [publicacion_id, setPublicacionId] = useState(true);
@@ -237,7 +203,7 @@ function Publicaciones({
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           <Button
             variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
+            style={{ ...btnStyle}}
             color="success"
             component={Link}
             to="/home"
@@ -249,7 +215,7 @@ function Publicaciones({
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStylem} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Publicaciones
               </Typography>
@@ -281,7 +247,7 @@ function Publicaciones({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStylem} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {publicacion_id === true ? "Añadir" : "Modificar"} Publicación
                 </Typography>

@@ -2,13 +2,7 @@ import React from "react";
 import { Paper, Typography } from "@mui/material";
 import curriculumData from "./curriculotemplate";
 
-const paperStyle = {
-  padding: "2rem",
-  margin: "10px auto",
-  borderRadius: "1rem",
-  boxShadow: "10px 10px 10px",
-  minHeight: "800px",
-};
+import { paperStyle } from "../style";
 
 const AcademicExampleTemplate = () => {
   const {

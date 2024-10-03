@@ -1,38 +1,13 @@
 import React from "react";
 import { Paper, Typography } from "@mui/material";
 
-const paperStyle = {
-  padding: "2rem",
-  margin: "10px auto",
-  boxShadow: "10px 10px 10px",
-  minHeight: "800px",
-};
-
-const twoColumnStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "20px", // Gap between the columns
-};
-
-const columnStyle = {
-  flex: 1, // Each column takes equal space
-  padding: "10px",
-};
-
-const leftColumnStyle = {
-  ...columnStyle,
-  backgroundColor: "#007BFF", // Light blue background for the left column
-  color: "white", // White text
-  padding: "20px",
-  borderRadius: "0", // Makes the borders sharp
-};
-
-const rightColumnStyle = {
-  ...columnStyle,
-  backgroundColor: "#f5f5f5", // Light background for the right column
-  padding: "20px",
-  borderRadius: "0", // Makes the borders sharp
-};
+//style
+import { 
+  paperStyle, 
+  twoColumnStyle,
+  leftColumnStyle,
+  rightColumnStyle
+} from "../style";
 
 const LaboralExampleTemplate = () => {
   return (

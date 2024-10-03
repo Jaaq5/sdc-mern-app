@@ -5,32 +5,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Logout from "./Logout";
+import { theme } from "../theme";
 
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Slide from "@mui/material/Slide";
+import { navbutton, burger_button } from "../style";
 
 export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
-  const button = {
-    margin: "5px",
-    marginRight: "10px",
-    fontSize: "0.8rem",
-    fontWeight: "700",
-    padding: "0.1rem 0.4rem",
-    width: "110px",
-    minWidth: "100px",
-    height: "50px",
-    backgroundColor: "#05c9",
-  };
-  const burger_button = {
-    margin: "5px",
-    marginRight: "10px",
-    fontSize: "0.9rem",
-    fontWeight: "700",
-    padding: "0.1rem 0.4rem",
-    width: "50px",
-    height: "50px",
-    backgroundColor: "#c0c9",
-  };
+  
   const color_gray = { color: "#ccf" };
   const [path, setPath] = useState("/");
   const pathToDisplay = {
@@ -72,7 +54,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
     <HideOnScroll>
-      <AppBar sx={{ bgcolor: "#333" }}>
+      <AppBar sx={{ bgcolor: theme.palette.lightred.main }}>
         <Toolbar>
           <Typography
             variant="h4"
@@ -94,7 +76,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             <>
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="error"
                 component={Link}
                 to="/login"
@@ -104,7 +86,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/signup"
@@ -118,7 +100,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
               {!(path === "/home") ? (
                 <Button
                   variant="contained"
-                  style={button}
+                  style={navbutton}
                   color="success"
                   component={Link}
                   to="/home"
@@ -147,7 +129,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/curriculo-menu"
@@ -158,7 +140,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/informacionPersonal"
@@ -169,7 +151,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/educacionformal"
@@ -180,7 +162,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/educaciontecnica"
@@ -191,18 +173,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
-                color="success"
-                component={Link}
-                to="/habilidades"
-                onClick={(e) => setPath("/habilidades")}
-              >
-                Habilidades y Herramientas
-              </Button>
-
-              <Button
-                variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/experiencialaboral"
@@ -213,7 +184,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/proyectos"
@@ -224,7 +195,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/habilidades"
@@ -235,7 +206,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/publicaciones"
@@ -246,7 +217,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/lenguajes"
@@ -257,7 +228,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
               <Button
                 variant="contained"
-                style={button}
+                style={navbutton}
                 color="success"
                 component={Link}
                 to="/referencias"

@@ -32,6 +32,10 @@ import {
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 
+import {
+	listButtonStyle, 
+  } from "../style";
+
 const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
 	switch(Editando.Tipo){
 		case "Texto":
@@ -69,46 +73,6 @@ function EditorCurriculo({
   const [curriculo_id, setCurriculoId] = useState(null);
   const [idiomas, setIdiomas] = useState(null);
 
-  //Style
-  const paperStyle = {
-    padding: "2rem",
-    margin: "1%",
-    borderRadius: "0px",
-    boxShadow: "5px 5px 5px rgba(0, 0, 0, 0.4)",
-    minHeight: "29.7cm",
-    maxHeight: "29.7m",
-    minWidth: "20cm",
-    maxWidth: "20cm",
-  };
-  const paperSX = {};
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex" };
-  const btnStyle = {
-    marginTop: "1rem",
-    fontSize: "1.2rem",
-    fontWeight: "700",
-    backgroundColor: "blue",
-    borderRadius: "0.5rem",
-  };
-  const fieldTitleStyle = {};
-  const listStyle = {
-    border: "solid 3px #999999aa",
-    borderRadius: "5px",
-    margin: "5px",
-    height: "420px",
-    minWidth: "300px",
-    maxWidth: "300px",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-    display: "block",
-    verticalAlign: "top",
-  };
-  const listButtonStyle = {
-    border: "solid 1px #999999aa",
-    height: "3rem",
-    overflow: "hidden",
-  };
-  
   //Stilos barra de herramientas
   const editButton = {
     backgroundColor: "#fff0",
