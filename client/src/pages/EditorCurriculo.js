@@ -78,19 +78,19 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	width: "80%",
-	maxHeight: "2rem",
+	width: "10%",
+	maxHeight: "1rem",
 	minWidth: "1rem",
 	minHeight: "1rem",
     cursor: "pointer",
-    color: "#0000",
-	margin: "inherit",
+    color: "#000",
+	margin: "0px",
 	padding: "0px",
 	display: "inline",
 	fontSize: "inherit",
-	position: "absolute",
-	left: "-10px",
-	top: "0.0rem"
+	position: "relative",
+	left: "0%",
+	top: "-5px"
   };
   const seccionEditButton = {
     backgroundColor: "#fff0",
@@ -118,6 +118,7 @@ function EditorCurriculo({
 	  backgroundColor: "#303030",
 	  height: "1000px",
 	  width: "auto",
+	  minWidth: (celdasPagina[0]*40)+"px",
 	  overflow: "hidden",
   };
   const toolBar = {
@@ -239,13 +240,20 @@ function EditorCurriculo({
 	  </p></>);
   };
   
-  const ElementoSpanEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoDivEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
 	  
 	  return (<>
 	  <div id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
 			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
 			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
 	  </div></>);
+  };
+  
+  const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  
+	  return (<>
+		<img id={"Imagen_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
+	  </>);
   };
 	
   const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
@@ -256,7 +264,9 @@ function EditorCurriculo({
 		  case "Texto":
 			return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
 		  case "Div":
-			return (<ElementoSpanEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+			return (<ElementoDivEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+		  case "Imagen":
+			return (<ElementoImgEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
 		  case "IDs":
 		    let list = [];
 			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
@@ -285,9 +295,7 @@ function EditorCurriculo({
 	  const tamano = celdasAPx(documento.diseno.Secciones[seccion].Celdas);
 	  documento.diseno.Secciones[seccion].style.width = tamano.width+"px";
 	  documento.diseno.Secciones[seccion].style.height = tamano.height+"px";
-	  //documento.diseno.Secciones[seccion].style.gridRow: "3 / 5";
-	  //documento.diseno.Secciones[seccion].style.gridColumn: "3 / 5";
-	  documento.diseno.Secciones[seccion].style.overflow = "hidden";
+	  documento.diseno.Secciones[seccion].style.overflow = documento.diseno.Secciones[seccion].style.overflow? documento.diseno.Secciones[seccion].style.overflow : "hidden";
 	  return (
 		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
 			{documento.diseno.Secciones[seccion].Editable? (
@@ -328,12 +336,25 @@ function EditorCurriculo({
 		  return (<></>);
 
 	  return (<div style={paginaEstilo} id={"pagina_"+1}>
-				<div style={{position:"absolute"}}></div>
+				<div style={{position:"absolute"}}>
+					{documento.diseno.Paginas[0].Elementos? (Object.entries(documento.diseno.Paginas[0].Elementos).forEach(([key, val]) => {
+						if(documento.diseno.Elementos[val]){
+							
+						}
+					}))
+					:
+					(<></>)
+					}
+				</div>
 				{
 					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {
-						if(documento.diseno.Secciones[val])
-							return (<SeccionHTMLEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]}/>)
-						else if(typeof(val) !== "string"){
+						if(documento.diseno.Secciones[val]){
+							return (<SeccionHTMLEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]}/>);
+							
+						}else if(documento.diseno.Secciones.Orden[val]){
+							return (<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val]} documento={documento}/>);
+							
+						}else if(typeof(val) === "object"){
 							val.style = JSON.parse(JSON.stringify(val.style? val.style : {}));
 							const t = [val.Celdas[0] * celdasPagina[0], val.Celdas[1] * celdasPagina[1]]
 							val.style.width = t[0]+"px";
@@ -341,9 +362,9 @@ function EditorCurriculo({
 							return (<div style={val.style}>
 								{Object.keys(val.Secciones).map((seccion) => {
 									 if(typeof(val.Secciones[seccion]) === "string")
-										return(<SeccionHTMLEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento}/>)
+										return(<SeccionHTMLEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento}/>);
 									 else
-										 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento}/>)
+										 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento}/>);
 								})}
 							</div>)
 						}
@@ -405,12 +426,14 @@ function EditorCurriculo({
 					tempIds[seccion].push(lista[i][0]);
 		}
 	});
+	documento.datos.tempIds = tempIds;
 	setDocumento(documento);
 	setTempIds(tempIds);
   };
   
   const posicionEnOverlay = (id) => {
-	let doc = document.getElementById("contenedor_documento");
+	let doc = document.getElementById("documento_html");
+	let container = document.getElementById("contenedor_documento");
 	if(!doc)
 		return [0,0];
 	
@@ -426,7 +449,7 @@ function EditorCurriculo({
 		
 		parent = parent.parentElement;
 	}
-	pos = [pos[0] - doc.offsetLeft*0 - doc.scrollLeft, pos[1] - doc.offsetTop*0 - doc.scrollTop]
+	pos = [pos[0] + doc.offsetLeft*1 - container.scrollLeft, pos[1] - doc.offsetTop*0 - container.scrollTop]
 	pos = [Math.max(0, pos[0]), Math.max(0, pos[1])];
 	return pos;
   };
@@ -442,19 +465,25 @@ function EditorCurriculo({
 		fontFamily: "Roboto"
   };
   const paginaEstilo = {
-		maxHeight: "841.89px",
+		//maxHeight: "841.89px",
 		minHeight: "841.89px",
 		minWidth: "595.28px",
 		maxWidth: "595.28px",
-		height: "841.89px",
+		//height: "841.89px",
 		width: "595.28px",
 		display: "flex",
+		backgroundColor: "#FFFFFF",
 		//gridTemplateColumns: "repeat(40, 1fr)",
 		//gridTemplateRows: "repeat(60, 1fr)",
 		flexDirection: "row",
-		flexWrap: "wrap",
-		borderBottom: "solid 2px #aaa"
+		flexWrap: "wrap"
   };
+  const divisorPagina = {
+	  position: "absolute",
+	  border: "solid 1px #00f",
+	  width: paginaEstilo.width,
+	  height: "0px",
+	  }
   
   //Representacion HTMl del PDF, react-pdf no renderiza bien el documento en el DOM, pero esto da el un resultado mejor
   //Copiar la estructura usando elementos de react-pdf en "MyDocument" para descargarlo
@@ -484,6 +513,11 @@ function EditorCurriculo({
 					let newStyle = {};
 					Object.entries(estr.style? estr.style : {}).forEach(([key, val]) => newStyle[key] = val);
 					estr.style = newStyle;
+					if(estr.Celdas){
+						const t = celdasAPx(estr.Celdas);
+						estr.style.width = t.width+"px";
+						estr.style.height = t.height+"px";
+					}
 					if(estr.style.fontFamily)
 						fonts[estr.style.fontFamily] = estr.style.fontWeight? estr.style.fontWeight : 400;
 					else{
@@ -513,7 +547,20 @@ function EditorCurriculo({
 			});
 		});
 		
-		let numeroDePaginas = 1;
+		const calcDivisor = (numeroDePaginas) => {
+			let style = {};
+			Object.entries(divisorPagina).forEach(([key, value]) => {style[key] = value});
+			style.top = (numeroDePaginas * celdasPagina[1] * 60) + "px";
+			return style;
+		};
+		
+		const pagina = document.getElementById("pagina_1");
+		let numeroDePaginas = pagina? Math.ceil(pagina.scrollHeight/(celdasPagina[1]*60)) : 1;
+		
+		const divisores = [];
+		for(let i=1; i < numeroDePaginas; i+=1)
+			divisores.push(<div style={calcDivisor(i)} id={"divisor_pagina_"+(i+1)}></div>)
+		
 		return (
         <div
 		  id="documento_html"
@@ -523,11 +570,7 @@ function EditorCurriculo({
 		  
         >
 			  <PaginaHTMLEstructurada user_data={user_data} documento={documento} paginaEstilo={paginaEstilo}/>
-			  {document.getElementById("pagina_"+numeroDePaginas)?.scrollHeight > celdasPagina[1]? 
-			  (<div style={paginaEstilo} id={"pagina_"+(numeroDePaginas+1)}></div>) 
-			  :
-			  (<></>)
-			  }
+			  {divisores}
 		</div>
 	)}
   };
@@ -640,12 +683,12 @@ function EditorCurriculo({
 							<DocumentoPDF 
 								user_data={user_data}
 								documento={documento} 
-								documentoEstilo={documentoEstilo}
-								paginaEstilo={paginaEstilo}
 								tempIds={tempIds} 
 								obtenerTextoEstructura={obtenerTextoEstructura} 
 							/>
-							} fileName="curriculum.pdf">
+							} 
+							fileName="curriculum.pdf"
+					>
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
 				  <span style={{color: "white"}}>Por ahora, la plantilla simple es la utilizada</span>
@@ -664,7 +707,8 @@ function EditorCurriculo({
 				  >
 					Guardar
 				  </Button>
-				  <Button onClick={(e) => {
+				  {process.env.NODE_ENV === "development"? (
+				  <><Button onClick={(e) => {
 					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
 					  setEditMode(edit);
 					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
@@ -676,9 +720,40 @@ function EditorCurriculo({
 				  >
 					Modo:{" "+editMode}
 				  </Button>
+				  {editMode === "Plantilla"?
+					  (<Button onClick={(e) => {
+						    var a = document.createElement("a");
+							const id = documento.datos.Secciones.Informacion_Personal;
+							delete documento.datos.tempIds;
+							documento.datos.Secciones.Informacion_Personal = "id";
+						    var json = JSON.stringify({
+								ID_Categoria_Curriculum: category_manager.IdANombreCurriculo(categoria_curriculum),
+								ID_Categoria_Puesto: category_manager.IdANombrePuesto(categoria_puesto),
+							    Nombre : "Simple",
+								Documento: documento
+								}, null, 2),
+							blob = new Blob([json], {type: "octet/stream"}),
+							url = window.URL.createObjectURL(blob);
+							a.href = url;
+							a.download = "plantilla.json";
+							a.click();
+							window.URL.revokeObjectURL(url);
+							documento.datos.tempIds = tempIds;
+							documento.datos.Secciones.Informacion_Personal = id;
+					  }}
+					  >
+						Exportar
+					  </Button>)
+					  :
+					  (<></>)
+				  }
+				  </>)
+				  :
+				  (<></>)
+				  }
 			  </div>
 			  {Editando? (
-				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
+				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}} onClick={(e) => {setEditando(null)}}>
 					{(Editando.Seccion && Editando.Celdas)? (
 						<EditorTamano 
 							user_data={user_data}
@@ -713,7 +788,7 @@ function EditorCurriculo({
 				<>
 				</>
 			  )}
-			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)", position:"relative"}}>
+			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center"}}>
 				  <MyHTMLDocument />
 			  </div>
 		  </div>
@@ -721,8 +796,6 @@ function EditorCurriculo({
 				  <DocumentoPDF 
 						user_data={user_data}
 						documento={documento} 
-						documentoEstilo={documentoEstilo}
-						paginaEstilo={paginaEstilo}
 						tempIds={tempIds} 
 						obtenerTextoEstructura={obtenerTextoEstructura} 
 					/>

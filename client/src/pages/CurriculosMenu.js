@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { PDFViewer } from "@react-pdf/renderer";
+import PrevistaHTML  from "../Components/Editor/PrevistaHTML"
 
 import {
   Input,
@@ -88,7 +90,15 @@ function CurriculosMenu({
     backgroundColor: "#fff",
     display: "block",
     verticalAlign: "top",
+	position: "relative",
+	padding: "0px"
   };
+  const previstaStyle = {
+	position: "absolute",
+	backgroundColor: "#0000", 
+	width: "100%", 
+	height: "100%"
+  }
   
   const mapToHTML = (curriculos, callback, id_callback, nuevo) => {
     if (!curriculos) return;
@@ -100,6 +110,7 @@ function CurriculosMenu({
             backgroundColor: "#FFFFFF",
             border: "solid 1px #999a",
             margin: "5px 5px",
+			position: "relative"
           }}
           key={plan_id}
         >
@@ -146,6 +157,7 @@ function CurriculosMenu({
               <></>
             )}
           </div>
+		  
           <ListItemButton
             key={plan_id}
             style={listStyle}
@@ -154,14 +166,10 @@ function CurriculosMenu({
               manejarDatos(plan_id, nuevo);
             }}
           >
-            <ListItemText
-              primary={
-                user_data.bloques.Informacion_Personal[
-                  curriculos[plan_id].Documento.datos.Informacion_Personal
-                ]?.Telefono
-              }
-              secondary={""}
-            />
+		  
+		  <PrevistaHTML user_data={user_data} documento={curriculos[plan_id].Documento} />
+		  
+		  <div style={previstaStyle}> </div>
           </ListItemButton>
         </div>
       )),
@@ -270,8 +278,6 @@ function CurriculosMenu({
           setTituloPlantilla("Plantilla Simple");
           break;
       }
-      console.log("Titulo Plantilla:", tituloPlantilla);
-      console.log("Plantilla Texto:", plantillaTexto);
     }
   };
 
