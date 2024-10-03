@@ -351,6 +351,9 @@ function InformacionPersonal({
                     onChange={(e) => {
                       const regex = /^[0-9\b]+$/;
                       if (e.target.value === "" || regex.test(e.target.value)) {
+						e.target.setCustomValidity(
+                        "",
+                        )
                         setTelefono(e.target.value);
                       }
                     }}

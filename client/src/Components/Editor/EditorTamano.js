@@ -41,7 +41,7 @@ const calcularBotones = (tamano, setBotones, seccion, documento, setDocumento, s
 	const origenes = [];
 	for(let i=0; i<posiciones.length; i += 1){
 		visualPosiciones.push([posiciones[i][0] * tamano.width, posiciones[i][1] * tamano.height]);
-		movimiento.push(0);
+		movimiento.push([0,0]);
 		dragging.push(0);
 		origenes.push(0);
 	}
@@ -90,11 +90,12 @@ const calcularBotones = (tamano, setBotones, seccion, documento, setDocumento, s
 	
 	const end = (accion, index, seccion, documento, setDocumento) => {
 		//clearInterval(dragging[index]);
-		let t = [Math.min(Math.max(tamano.width + movimiento[index][0], 100),756), Math.min(Math.max(tamano.height + movimiento[index][1],100), 1123)]
+		let t = [Math.min(Math.max(tamano.width + movimiento[index][0], 100),756), Math.min(Math.max(tamano.height + movimiento[index][1],100), 1123)];
 		documento.diseno.Secciones[seccion].Celdas = [Math.floor(t[0]/celdasPagina[0]), Math.floor(t[1]/celdasPagina[1])];
 		t = tamanoObjeto(["diseno", "Secciones", seccion], documento, setDocumento);
 		setDocumento(documento);
 		setTamano(t);
+		
 		setTimeout(function(){
 			calcularBotones(t, setBotones, seccion, documento, setDocumento, setTamano, setErr);
 		},40);
