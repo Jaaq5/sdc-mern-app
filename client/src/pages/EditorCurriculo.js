@@ -1,12 +1,17 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import Lenguajes from "./Lenguajes";
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 
+import DocumentoPDF from "../Components/Editor/DocumentoPDF";
+
+import PanelSeccion from "../Components/Editor/PanelSeccion";
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
+import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina} from "../Components/Editor/EditorTamano";
+
+import "./editor.css";
 
 import {
   Input,
@@ -73,7 +78,7 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	width: "100%",
+	width: "80%",
 	maxHeight: "2rem",
 	minWidth: "1rem",
 	minHeight: "1rem",
@@ -163,14 +168,17 @@ function EditorCurriculo({
   const [TextoEditar, setTextoEditar] = useState("");
   const [ListaEditar, setListaEditar] = useState([]);
   const [tempIds, setTempIds] = useState({}); //Ids calculadas automaticamente y son las que se dibujan
+  const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
+  
+  //DEBUG
+  const [editMode, setEditMode] = useState("Usuario");
 
-  const getNameById =
-        (id) => {
+  const getNameById = (id) => {
           const matchedMenuItem = idiomas.find((item) => item._id === id);
           return matchedMenuItem ? matchedMenuItem.Nombre : null;
         };
 		
-    const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
+  const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
 	estructura.Texto.forEach((campo) => {
 		if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
@@ -187,7 +195,7 @@ function EditorCurriculo({
 	return texto;
   };
   
-  const ElementoTextoEditable_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoTextoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
 	  return (Editando? 
 		(<></>)
 		:
@@ -212,42 +220,50 @@ function EditorCurriculo({
 	  );
   };
   
-  const ElementoEditable_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
 	  if((!estructura) || !estructura.Editable)
 		  return (<></>);
 	  switch(estructura.Editable.Tipo){
 		  case "Texto":
-			return (<><ElementoTextoEditable_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} /></>)
+			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} /></>);
 	  };
 	  return (<></>);
   };
 
-  const ElementoTextoEstructurado_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoTextoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
 	  
 	  return (<>
 	  <p id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
 			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
-			<ElementoEditable_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
+			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
 	  </p></>);
   };
+  
+  const ElementoSpanEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  
+	  return (<>
+	  <div id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
+			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
+			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
+	  </div></>);
+  };
 	
-  const ElementoEstructurado_HTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  //console.log("Texto: "+nombreSeccion+", "+id+", "+index+", "+estructura.Tipo)
+  const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
 	  if(!estructura)
 		  return (<></>);
 	  
 	  switch(estructura.Tipo){
 		  case "Texto":
-			return (<ElementoTextoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+			return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+		  case "Div":
+			return (<ElementoSpanEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
 		  case "IDs":
 		    let list = [];
-			
-			//documento.datos.Secciones[nombreSeccion].IDs
 			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
 				list.push(
 					<div style={estructura.plantillaStyle}>{Object.keys(estructura.Plantilla).map((index) => {
 						return (<>
-							<ElementoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} />
+							<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} />
 						</>)
 					})}</div>
 				);
@@ -257,15 +273,21 @@ function EditorCurriculo({
   };
 	
   const SeccionHTMLEstructurada = ({user_data, seccion, documento, id}) => {
-	  if(!documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
+	  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
 		  return (<></>);
 	  
 	  //La posicion necesita ser relativa para que funcione correctamente
 	  if(Object.isFrozen(documento.diseno.Secciones[seccion].style)) //Ocurre la primera vez que se renderiza
 		documento.diseno.Secciones[seccion].style = documento.diseno.Secciones[seccion].style? documento.diseno.Secciones[seccion].style : {};
-		documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
-		documento.diseno.Secciones[seccion].style.position = "relative";
+	  documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
+	  documento.diseno.Secciones[seccion].style.position = documento.diseno.Secciones[seccion].style.position? documento.diseno.Secciones[seccion].style.position : "relative";
 		
+	  const tamano = celdasAPx(documento.diseno.Secciones[seccion].Celdas);
+	  documento.diseno.Secciones[seccion].style.width = tamano.width+"px";
+	  documento.diseno.Secciones[seccion].style.height = tamano.height+"px";
+	  //documento.diseno.Secciones[seccion].style.gridRow: "3 / 5";
+	  //documento.diseno.Secciones[seccion].style.gridColumn: "3 / 5";
+	  documento.diseno.Secciones[seccion].style.overflow = "hidden";
 	  return (
 		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
 			{documento.diseno.Secciones[seccion].Editable? (
@@ -280,9 +302,12 @@ function EditorCurriculo({
 						Seccion: seccion,
 						Campo: documento.diseno.Secciones[seccion].Editable.Campo,
 						Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
-						Lista: tempIds[seccion]
+						Lista: tempIds[seccion],
+						Celdas: documento.diseno.Secciones[seccion].Editable.Celdas
 					});
-					
+					setOpcionesPanel(
+						{Seccion: seccion}
+					);
 					}} >
 						<SwapHorizontalCircleIcon style={editButtonIcon}/>
 				</Button>
@@ -291,26 +316,55 @@ function EditorCurriculo({
 			)}
 			{Object.keys(documento.diseno.Secciones[seccion].Estructura).map((index) => {
 				return (<>
-					<ElementoEstructurado_HTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} />
+					<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} />
 				</>)
 			})}
 		</div>
 	  );
   };
   
+  const PaginaHTMLEstructurada = ({user_data, documento, paginaEstilo}) => {
+	  if(!documento)
+		  return (<></>);
+
+	  return (<div style={paginaEstilo} id={"pagina_"+1}>
+				<div style={{position:"absolute"}}></div>
+				{
+					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {
+						if(documento.diseno.Secciones[val])
+							return (<SeccionHTMLEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]}/>)
+						else if(typeof(val) !== "string"){
+							val.style = JSON.parse(JSON.stringify(val.style? val.style : {}));
+							const t = [val.Celdas[0] * celdasPagina[0], val.Celdas[1] * celdasPagina[1]]
+							val.style.width = t[0]+"px";
+							val.style.height = t[1]+"px";
+							return (<div style={val.style}>
+								{Object.keys(val.Secciones).map((seccion) => {
+									 if(typeof(val.Secciones[seccion]) === "string")
+										return(<SeccionHTMLEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento}/>)
+									 else
+										 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento}/>)
+								})}
+							</div>)
+						}
+					})
+				}
+			  </div>);
+  };
+  
   //Ordena bloques del usuario por Fecha (si tiene), y por categorias del curriculo y puesto
-  const OrdenarBloques = (bloques, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
+  const OrdenarBloques = (bloques, ID_Categoria_Curriculum, ID_Categoria_Puesto) => {
 	let sortedBloques = [];
 	if(!bloques)
 		return [];
 	
 	
 	//Ordenar por fecha
-	if(bloques[Object.keys(bloques)[0]].Fecha_Final)
+	if(bloques[Object.keys(bloques)[0]]?.Fecha_Final)
 		sortedBloques = Object.entries(bloques).sort(
 		  ([, a], [, b]) => new Date(b.Fecha_Final) - new Date(a.Fecha_Final),
 		);
-	else if(bloques[Object.keys(bloques)[0]].Fecha_Publicacion)
+	else if(bloques[Object.keys(bloques)[0]]?.Fecha_Publicacion)
 		sortedBloques = Object.entries(bloques).sort(
 		  ([, a], [, b]) => new Date(b.Fecha_Publicacion) - new Date(a.Fecha_Publicacion),
 		);
@@ -319,7 +373,7 @@ function EditorCurriculo({
 	
 	//Ordenar por categorias
 	sortedBloques = sortedBloques.sort(
-		  ([, a], [, b]) => (b.ID_Categoria_Curriculo? (b.ID_Categoria_Curriculo === ID_Categoria_Curriculo? 1 : 0) : 0) - (a.ID_Categoria_Curriculo? (a.ID_Categoria_Curriculo === ID_Categoria_Curriculo? 1 : 0) : 0),
+		  ([, a], [, b]) => (b.ID_Categoria_Curriculum? (b.ID_Categoria_Curriculum === ID_Categoria_Curriculum? 1 : 0) : 0) - (a.ID_Categoria_Curriculum? (a.ID_Categoria_Curriculum === ID_Categoria_Curriculum? 1 : 0) : 0),
 		);
 	sortedBloques = sortedBloques.sort(
 		  ([, a], [, b]) => (b.ID_Categoria_Puesto? (b.ID_Categoria_Puesto === ID_Categoria_Puesto? 1 : 0) : 0) - (a.ID_Categoria_Puesto? (a.ID_Categoria_Puesto === ID_Categoria_Puesto? 1 : 0) : 0),
@@ -329,7 +383,7 @@ function EditorCurriculo({
 
   //Actualiza las IDs de bloques seleccionadas
   //Ocurre al inicio y cuando se cambia algun dato de cantidad o ID fija
-  const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
+  const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculum, ID_Categoria_Puesto) => {
     if (!user_data) return;
 	Object.keys(documento.datos.Secciones).map((seccion) => {
 		let cantidad = documento.diseno.Secciones[seccion].Editable.Arreglo? documento.datos.Secciones[seccion].Cantidad : 1;
@@ -362,191 +416,121 @@ function EditorCurriculo({
 	
 	const elm = document.getElementById(id);
 	let parent = elm;
-	let pos = [- doc.offsetLeft - doc.scrollLeft, - doc.offsetTop - doc.scrollTop];
+	let pos = [0, 0];
 	while(true){
+		if(parent.id? parent.id.includes("pagina") : false){
+			break;
+		}
 		pos[0] += parent.offsetLeft;
 		pos[1] += parent.offsetTop;
-		if(parent.id? parent.id.includes("Seccion") : false)
-			break;
+		
 		parent = parent.parentElement;
 	}
+	pos = [pos[0] - doc.offsetLeft*0 - doc.scrollLeft, pos[1] - doc.offsetTop*0 - doc.scrollTop]
 	pos = [Math.max(0, pos[0]), Math.max(0, pos[1])];
 	return pos;
-	  
   };
+  
+  
   //HTML
+  //[595.28, 841.89]
+  const documentoEstilo = {
+		minHeight: "841.89px",
+		minWidth: "595.28px",
+		maxWidth: "595.28px",
+		backgroundColor: "#FFFFFF",
+		fontFamily: "Roboto"
+  };
+  const paginaEstilo = {
+		maxHeight: "841.89px",
+		minHeight: "841.89px",
+		minWidth: "595.28px",
+		maxWidth: "595.28px",
+		height: "841.89px",
+		width: "595.28px",
+		display: "flex",
+		//gridTemplateColumns: "repeat(40, 1fr)",
+		//gridTemplateRows: "repeat(60, 1fr)",
+		flexDirection: "row",
+		flexWrap: "wrap",
+		borderBottom: "solid 2px #aaa"
+  };
+  
   //Representacion HTMl del PDF, react-pdf no renderiza bien el documento en el DOM, pero esto da el un resultado mejor
   //Copiar la estructura usando elementos de react-pdf en "MyDocument" para descargarlo
   const MyHTMLDocument = () => {
+	
     if (!documento) 
 		return <></>;
     else{
+		Object.entries(documento.diseno.style).forEach(([key, value]) => {
+			documentoEstilo[key] = value;
+		});
+		documento.diseno.style = documentoEstilo;
+		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
+			paginaEstilo[key] = value;
+		});
+		documento.diseno.Paginas[0].style = paginaEstilo;
+		
+		//Registro de fuentes automatica
+		//Hacer estilos un objeto editable
+		const fonts = {};
+		Object.entries(documento.diseno.Secciones).forEach(([nombreseccion, seccion]) => {
+			if(seccion.style && seccion.style.fontFamily)
+				fonts[seccion.style.fontFamily] = seccion.style.fontWeight? seccion.style.fontWeight : 400;
+				
+			if(seccion.Estructura)
+				Object.entries(seccion.Estructura).forEach(([index, estr]) => {
+					let newStyle = {};
+					Object.entries(estr.style? estr.style : {}).forEach(([key, val]) => newStyle[key] = val);
+					estr.style = newStyle;
+					if(estr.style.fontFamily)
+						fonts[estr.style.fontFamily] = estr.style.fontWeight? estr.style.fontWeight : 400;
+					else{
+						fonts["Roboto"] = estr.style.fontWeight? estr.style.fontWeight : 400;
+						estr.style.fontFamily = "Roboto";
+						estr.style.fontWeight = fonts["Roboto"];
+					}
+					
+					if(estr.Plantilla)
+						Object.entries(estr.Plantilla).forEach(([index2, plnt]) => {
+							newStyle = {};
+							Object.entries(plnt.style? plnt.style : {}).forEach(([key, val]) => newStyle[key] = val);
+							plnt.style = newStyle;
+							if(plnt.Celdas){
+								const t = celdasAPx(plnt.Celdas);
+								plnt.style.width = t.width+"px";
+								plnt.style.height = t.height+"px";
+							}
+							if(plnt.style.fontFamily)
+								fonts[plnt.style.fontFamily] = plnt.style.fontWeight? plnt.style.fontWeight : 400;
+							else{
+								fonts["Roboto"] = plnt.style.fontWeight? plnt.style.fontWeight : 400;
+								plnt.style.fontFamily = "Roboto";
+								plnt.style.fontWeight = fonts["Roboto"];
+							}
+						});
+			});
+		});
 		
 		let numeroDePaginas = 1;
 		return (
         <div
 		  id="documento_html"
-          style={{
-            minHeight: "29.7cm",
-            minWidth: "20cm",
-			maxWidth: "20cm",
-            backgroundColor: "#FFFFFF"
-          }}
+          style={
+            documentoEstilo
+          }
 		  
         >
-          <div style={stilos_paleta.pagina} id={"pagina_"+numeroDePaginas}>
-			<SeccionHTMLEstructurada user_data={user_data} seccion={"Informacion_Personal"} documento={documento} id={documento.datos.Secciones.Informacion_Personal} />
-			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => {
-				return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[seccion]} documento={documento} key={"123"+seccion+documento.diseno.Secciones.Orden[seccion]}/>)
-			})}
-			 <p style={stilos_paleta.titulo}>
-				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
-				lo cual se desesperaba, porque quisiera topar luego luego con quien
-				hacer experiencia del valor de su fuerte brazo. Autores hay que dicen
-				que la primera aventura que le avino fue la del Puerto Lápice, otros
-				dicen que la de los molinos de viento; pero lo que yo he podido
-				averiguar en este caso, y lo que he hallado escrito en los anales de la
-				Mancha, es que él anduvo todo aquel día, y, al anochecer, su rocín y él
-				se hallaron cansados y muertos de hambre, y que, mirando a todas partes
-				por ver si descubriría algún castillo o alguna majada de pastores donde
-				recogerse y adonde pudiese remediar su mucha hambre y necesidad, vio, no
-				lejos del camino por donde iba, una venta,que fue como si viera una
-				estrella que, no a los portales, sino a los alcázares de su redención le
-				encaminaba. Diose priesa a caminar, y llegó a ella a tiempo que
-				anochecía.
-			  </p>
-			  <p style={stilos_paleta.titulo}>
-				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
-				lo cual se desesperaba, porque quisiera topar luego luego con quien
-				hacer experiencia del valor de su fuerte brazo. Autores hay que dicen
-				que la primera aventura que le avino fue la del Puerto Lápice, otros
-				dicen que la de los molinos de viento; pero lo que yo he podido
-				averiguar en este caso, y lo que he hallado escrito en los anales de la
-				Mancha, es que él anduvo todo aquel día, y, al anochecer, su rocín y él
-				se hallaron cansados y muertos de hambre, y que, mirando a todas partes
-				por ver si descubriría algún castillo o alguna majada de pastores donde
-				recogerse y adonde pudiese remediar su mucha hambre y necesidad, vio, no
-				lejos del camino por donde iba, una venta,que fue como si viera una
-				estrella que, no a los portales, sino a los alcázares de su redención le
-				encaminaba. Diose priesa a caminar, y llegó a ella a tiempo que
-				anochecía.
-			  </p>
-			  <p style={stilos_paleta.titulo}>
-				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
-				lo cual se desesperaba, porque quisiera topar luego luego con quien
-				hacer experiencia del valor de su fuerte brazo. Autores hay que dicen
-				que la primera aventura que le avino fue la del Puerto Lápice, otros
-				dicen que la de los molinos de viento; pero lo que yo he podido
-				averiguar en este caso, y lo que he hallado escrito en los anales de la
-				Mancha, es que él anduvo todo aquel día, y, al anochecer, su rocín y él
-				se hallaron cansados y muertos de hambre, y que, mirando a todas partes
-				por ver si descubriría algún castillo o alguna majada de pastores donde
-				recogerse y adonde pudiese remediar su mucha hambre y necesidad, vio, no
-				lejos del camino por donde iba, una venta,que fue como si viera una
-				estrella que, no a los portales, sino a los alcázares de su redención le
-				encaminaba. Diose priesa a caminar, y llegó a ella a tiempo que
-				anochecía.
-			  </p>
-			  <p style={stilos_paleta.titulo}>
-				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
-				lo cual se desesperaba, porque quisiera topar luego luego con quien
-				hacer experiencia del valor de su fuerte brazo. Autores hay que dicen
-				que la primera aventura que le avino fue la del Puerto Lápice, otros
-				dicen que la de los molinos de viento; pero lo que yo he podido
-				averiguar en este caso, y lo que he hallado escrito en los anales de la
-				Mancha, es que él anduvo todo aquel día, y, al anochecer, su rocín y él
-				se hallaron cansados y muertos de hambre, y que, mirando a todas partes
-				por ver si descubriría algún castillo o alguna majada de pastores donde
-				recogerse y adonde pudiese remediar su mucha hambre y necesidad, vio, no
-				lejos del camino por donde iba, una venta,que fue como si viera una
-				estrella que, no a los portales, sino a los alcázares de su redención le
-				encaminaba. Diose priesa a caminar, y llegó a ella a tiempo que
-				anochecía.
-			  </p>
-			  <p style={stilos_paleta.titulo}>
-				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
-				lo cual se desesperaba, porque quisiera topar luego luego con quien
-				hacer experiencia del valor de su fuerte brazo. Autores hay que dicen
-				que la primera aventura que le avino fue la del Puerto Lápice, otros
-				dicen que la de los molinos de viento; pero lo que yo he podido
-				averiguar en este caso, y lo que he hallado escrito en los anales de la
-				Mancha, es que él anduvo todo aquel día, y, al anochecer, su rocín y él
-				se hallaron cansados y muertos de hambre, y que, mirando a todas partes
-				por ver si descubriría algún castillo o alguna majada de pastores donde
-				recogerse y adonde pudiese remediar su mucha hambre y necesidad, vio, no
-				lejos del camino por donde iba, una venta,que fue como si viera una
-				estrella que, no a los portales, sino a los alcázares de su redención le
-				encaminaba. Diose priesa a caminar, y llegó a ella a tiempo que
-				anochecía.
-			  </p>
-          </div>
-        </div>
-	)};
+			  <PaginaHTMLEstructurada user_data={user_data} documento={documento} paginaEstilo={paginaEstilo}/>
+			  {document.getElementById("pagina_"+numeroDePaginas)?.scrollHeight > celdasPagina[1]? 
+			  (<div style={paginaEstilo} id={"pagina_"+(numeroDePaginas+1)}></div>) 
+			  :
+			  (<></>)
+			  }
+		</div>
+	)}
   };
-
-  //PDF
-  const MyDocument = () => {
-    if (!documento) return <></>;
-    else
-      return (
-        <Document
-          style={{
-            minHeight: "29.7cm",
-			maxHeight: "29.7cm",
-            minWidth: "20cm",
-			maxWidth: "20cm",
-            backgroundColor: "#EFEFEF",
-          }}
-        >
-          <Page size="A4" style={stilos_paleta.pagina}>
-			<View style={stilos_paleta.seccion}>
-				<Text style={stilos_paleta.titulo}>
-					Aplicante: {user_data.name}
-				</Text>
-				<Text style={stilos_paleta.item}>
-					{user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Mostrar_Puesto
-					  ? "Para el puesto: "+(user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Puesto)
-					  : ""}
-				</Text>
-				<Text style={stilos_paleta.item}>
-					Correo: {user_data.email}
-				</Text>
-				<Text style={stilos_paleta.item}>
-					Teléfono: {user_data.bloques.Informacion_Personal[documento.datos.Secciones.Informacion_Personal].Telefono}
-				</Text>
-			</View>
-			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => 
-				documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].Mostrar? (
-					<View style={stilos_paleta.seccion}>
-					  <Text style={stilos_paleta.titulo}>
-						{documento.diseno.Secciones[documento.diseno.Secciones.Orden[seccion]].TituloSeccion}
-					  </Text>
-					</View>
-				) : (
-					<></>
-				)
-			 )}
-			 <Text style={stilos_paleta.titulo}>
-				Casi todo aquel día caminó sin acontecerle cosa que de contar fuese, de
-				lo cual se desesperaba, porque quisiera topar luego luego con quien
-				hacer experiencia del valor de su fuerte brazo. Autores hay que dicen
-				que la primera aventura que le avino fue la del Puerto Lápice, otros
-				dicen que la de los molinos de viento; pero lo que yo he podido
-				averiguar en este caso, y lo que he hallado escrito en los anales de la
-				Mancha, es que él anduvo todo aquel día, y, al anochecer, su rocín y él
-				se hallaron cansados y muertos de hambre, y que, mirando a todas partes
-				por ver si descubriría algún castillo o alguna majada de pastores donde
-				recogerse y adonde pudiese remediar su mucha hambre y necesidad, vio, no
-				lejos del camino por donde iba, una venta,que fue como si viera una
-				estrella que, no a los portales, sino a los alcázares de su redención le
-				encaminaba. Diose priesa a caminar, y llegó a ella a tiempo que
-				anochecía.
-			  </Text>
-          </Page>
-        </Document>
-      );
-  };
-
   
   //Dropdowns
   const mapDBListToHTML = (setter, lista) => {
@@ -597,18 +581,19 @@ function EditorCurriculo({
       setCurriculoId(user_data.editando_curriculo);
 	  
 	  //DEBUG
-	  const doc = curriculum_manager.CopiarPlantilla("simple").Documento;//user_data.curriculums[user_data.editando_curriculo].Documento;
+	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+	  doc = editMode === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
       setDocumento(
 		doc
       );
       setCatCurriculum(
-        user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo,
+        user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculum,
       );
       setCatPuesto(
         user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto,
       );
 	  
-	  SeleccionarIDs(user_data, doc, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto);
+	  SeleccionarIDs(user_data, doc, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculum, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto);
 
       setLoading(false);
     }
@@ -640,16 +625,27 @@ function EditorCurriculo({
       <div style={{ padding: "10px", width: "100%" }}>
         <div style={{ display: "flex", minHeight: "100%" }}>
           <div style={{ width: "30%", maxHeight: "1000px", overflow: "auto" }}>
-            <Lenguajes
+            <PanelSeccion
               user_data={user_data}
               setUserData={setUserData}
               manager_bloques={manager_bloques}
               category_manager={category_manager}
+			  opciones={opcionesPanel}
             />
           </div>
 		  <div style={pdfCaja}>
 			  <div id="Herramientas" style={toolBar}>
-				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} document={<MyDocument />} fileName="curriculum.pdf">
+				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} 
+						document={
+							<DocumentoPDF 
+								user_data={user_data}
+								documento={documento} 
+								documentoEstilo={documentoEstilo}
+								paginaEstilo={paginaEstilo}
+								tempIds={tempIds} 
+								obtenerTextoEstructura={obtenerTextoEstructura} 
+							/>
+							} fileName="curriculum.pdf">
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
 				  <span style={{color: "white"}}>Por ahora, la plantilla simple es la utilizada</span>
@@ -662,9 +658,44 @@ function EditorCurriculo({
 				  >
 					Secciones
 				  </Button>
+				  <Button onClick={(e) => {
+					  curriculum_manager.ActualizarCurriculo(user_data, setUserData, user_data.curriculums[curriculo_id]._id, documento, categoria_curriculum, categoria_puesto)
+				  }}
+				  >
+					Guardar
+				  </Button>
+				  <Button onClick={(e) => {
+					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
+					  setEditMode(edit);
+					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  doc = edit === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  setDocumento(
+						doc
+					  );
+				  }}
+				  >
+					Modo:{" "+editMode}
+				  </Button>
 			  </div>
 			  {Editando? (
 				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
+					{(Editando.Seccion && Editando.Celdas)? (
+						<EditorTamano 
+							user_data={user_data}
+							TextoEditar={TextoEditar} 
+							setTextoEditar={setTextoEditar} 
+							ListaEditar={ListaEditar} 
+							setListaEditar={setListaEditar} 
+							documento={documento} 
+							setDocumento={setDocumento} 
+							Editando={Editando} 
+							setEditando={setEditando}
+							SeleccionarIDs={SeleccionarIDs}
+						/>
+					) 
+					: 
+					(<></>)
+					}
 					<ToolBoxSwitcher
 					    user_data={user_data}
 						TextoEditar={TextoEditar} 
@@ -682,10 +713,20 @@ function EditorCurriculo({
 				<>
 				</>
 			  )}
-			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)"}}>
-				<MyHTMLDocument />
+			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)", position:"relative"}}>
+				  <MyHTMLDocument />
 			  </div>
 		  </div>
+		  <PDFViewer>
+				  <DocumentoPDF 
+						user_data={user_data}
+						documento={documento} 
+						documentoEstilo={documentoEstilo}
+						paginaEstilo={paginaEstilo}
+						tempIds={tempIds} 
+						obtenerTextoEstructura={obtenerTextoEstructura} 
+					/>
+				</PDFViewer>
         </div>
       </div>
     </>

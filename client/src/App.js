@@ -301,6 +301,7 @@ function App() {
         plantilla.Documento.datos.Secciones.Informacion_Personal = Object.keys(
           user_data.bloques.Informacion_Personal,
         )[0]; //TODO, Filtrar por categorias
+		
         plantilla.ID_Categoria_Curriculum =
           listas_categorias.categorias_curriculum.find(
             (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
