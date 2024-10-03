@@ -2,15 +2,30 @@ import  { useState } from "react";
 import WarningIcon from '@mui/icons-material/Warning';
 
 const celdasPagina = [595/40, 841/60]//react-pdf    [756 / 40, 1123 / 60]; //En px
-const tamanoObjeto = (seccion, documento, setDocumento) => {
+const tamanoObjeto = (path, documento, setDocumento) => {
   if(!documento)
 	  return {width:0, height:0};
   
-  if(documento.diseno.Secciones[seccion].Celdas){
-	  return {width: documento.diseno.Secciones[seccion].Celdas[0] * celdasPagina[0], height: documento.diseno.Secciones[seccion].Celdas[1] * celdasPagina[1],};
+  let item = documento;
+  path.forEach((campo) => item = item[campo]);
+  
+  if(item.Celdas){
+	  return celdasAPx(item.Celdas);
   }else{
-	  documento.diseno.Secciones[seccion].Celdas = [10,10];
+	  item.Celdas = [10,10];
 	  setDocumento(documento);
+	  return celdasAPx([10,10]);
+  }
+};
+
+const celdasAPx = (Celdas) => {
+  if(!Celdas)
+	  return {width:0, height:0};
+
+  if(Celdas){
+	  return {width: Celdas[0] * celdasPagina[0], height: Celdas[1] * celdasPagina[1],};
+  }else{
+	  Celdas = [10,10];
 	  return {width: 10 * celdasPagina[0], height: 10 * celdasPagina[1],};
   }
 };
@@ -68,7 +83,6 @@ const calcularBotones = (tamano, setBotones, seccion, documento, setDocumento, s
 					const b = document.getElementById("botton_tamano_"+i);
 					b.style.left = (posiciones[i][0] * t[0])+"px"
 					b.style.top = (posiciones[i][1] * t[1])+"px"
-					
 				}
 			}
 		}
@@ -78,7 +92,7 @@ const calcularBotones = (tamano, setBotones, seccion, documento, setDocumento, s
 		//clearInterval(dragging[index]);
 		let t = [Math.min(Math.max(tamano.width + movimiento[index][0], 100),756), Math.min(Math.max(tamano.height + movimiento[index][1],100), 1123)]
 		documento.diseno.Secciones[seccion].Celdas = [Math.floor(t[0]/celdasPagina[0]), Math.floor(t[1]/celdasPagina[1])];
-		t = tamanoObjeto(seccion, documento, setDocumento);
+		t = tamanoObjeto(["diseno", "Secciones", seccion], documento, setDocumento);
 		setDocumento(documento);
 		setTamano(t);
 		setTimeout(function(){
@@ -123,7 +137,7 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 		setErr(caja?.clientHeight < caja?.scrollHeight || caja?.clientWidth < caja?.scrollWidth);
 	}
 	
-	const t = tamanoObjeto(Editando.Seccion, documento, setDocumento)
+	const t = tamanoObjeto(["diseno", "Secciones", Editando.Seccion], documento, setDocumento)
 	if(tamano[0] === 0)
 		setTamano(t);
 	
@@ -142,4 +156,4 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	</div>);
 };
 
-export {EditorTamano, tamanoObjeto};
+export {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina};

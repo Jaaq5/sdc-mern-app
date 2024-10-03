@@ -217,7 +217,7 @@ const SelectorID = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setLis
 		crearBloquesToHTML(user_data,TextoEditar,setTextoEditar,ListaSeleccionableIDs,setListaSeleccionable,documento,setDocumento,Editando,setEditando);
 	
 	return (
-	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Editando.pos[0]-300)+"px",top: (Editando.pos[1])+"px", marginTop: "-10px"}}>
+	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Editando.pos[0]-300)+"px",top: (Editando.pos[1])+"px", marginTop: "-10px", maxWidth: "300px"}}>
 			<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)", padding: "3px", textAlign: "center"}}>
 				{documento.diseno.Secciones[Editando.Seccion].Editable?.Titulo}
 				{Editando.Arreglo? (<div>

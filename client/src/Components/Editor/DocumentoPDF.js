@@ -22,6 +22,8 @@ const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, 
   switch(estructura.Tipo){
 	  case "Texto":
 		return (<ElementoTextoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
+	  case "Div":
+		return (<ElementoTextoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "IDs":
 		let list = [];
 		
@@ -37,10 +39,11 @@ const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, 
 		});
 		return (<View style={estructura.style}>{list}</View>);
   };
+  return (<></>);
 };
 
 const SeccionPDFEstructurada = ({user_data, seccion, documento, id, tempIds, obtenerTextoEstructura}) => {
-  if(!documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
+  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
 	  return (<></>);
 
   return (
@@ -53,6 +56,30 @@ const SeccionPDFEstructurada = ({user_data, seccion, documento, id, tempIds, obt
 	</View>
   );
 };
+
+const PaginaPDFEstructurada = ({user_data, documento, paginaEstilo, tempIds, obtenerTextoEstructura}) => {
+	  if(!documento)
+		  return (<></>);
+	  return (<Page style={paginaEstilo} id={"pagina_"+1}>
+				<View style={{position:"absolute"}}></View>
+				{
+					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {
+						if(documento.diseno.Secciones[val])
+							return (<SeccionPDFEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>)
+						else if(typeof(val) !== "string"){
+							return (<div style={val.style}>
+								{Object.keys(val.Secciones).map((seccion) => {
+									 if(typeof(val.Secciones[seccion]) === "string")
+										return(<SeccionPDFEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>)
+									 else
+										 return(<SeccionPDFEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>)
+								})}
+							</div>)
+						}
+					})
+				}
+			  </Page>);
+  };
 
 
 const DocumentoPDF = ({user_data, documento, documentoEstilo, paginaEstilo, tempIds, obtenerTextoEstructura}) => {
@@ -111,13 +138,7 @@ const DocumentoPDF = ({user_data, documento, documentoEstilo, paginaEstilo, temp
           }
 		  
         >
-          <Page size={[595.28, 841.89]} style={paginaEstilo} id={"pagina_"+numeroDePaginas}>
-			<View style={{position:"absolute"}}></View>
-			<SeccionPDFEstructurada user_data={user_data} seccion={"Informacion_Personal"} documento={documento} id={documento.datos.Secciones.Informacion_Personal} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura} />
-			{Object.keys(documento.diseno.Secciones.Orden).map((seccion) => {
-				return(<SeccionPDFEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[seccion]} documento={documento} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>)
-			})}
-          </Page>
+          <PaginaPDFEstructurada user_data={user_data} documento={documento} paginaEstilo={paginaEstilo} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>
         </Document>
 	)};
  };

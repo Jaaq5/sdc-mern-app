@@ -9,7 +9,7 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 	  return (<div style={{position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", marginTop: "-10px"}}>
 			<form><TextField
 				id="Editor_Texto_Input"
-				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100}}
+				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100, marginTop: documento.diseno.Secciones[Editando.Seccion].style.marginTop || documento.diseno.Secciones[Editando.Seccion].style.margin}}
 				InputProps = {{style: {color: "#000"}}}
 				variant="standard"
 				size="small"

@@ -315,6 +315,7 @@ function CurriculosMenu({
     if (Object.keys(user_data.bloques.Informacion_Personal).length == 0) {
       //TODO
       //Mostrar mensaje de error, no de enviar al editor
+	  return;
     }
 
     if (!nuevo) {

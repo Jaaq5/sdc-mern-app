@@ -9,7 +9,7 @@ import PanelSeccion from "../Components/Editor/PanelSeccion";
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
-import {EditorTamano, tamanoObjeto} from "../Components/Editor/EditorTamano";
+import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina} from "../Components/Editor/EditorTamano";
 
 import "./editor.css";
 
@@ -205,6 +205,9 @@ function EditorCurriculo({
   const [ListaEditar, setListaEditar] = useState([]);
   const [tempIds, setTempIds] = useState({}); //Ids calculadas automaticamente y son las que se dibujan
   const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
+  
+  //DEBUG
+  const [editMode, setEditMode] = useState("Usuario");
 
   const getNameById = (id) => {
           const matchedMenuItem = idiomas.find((item) => item._id === id);
@@ -258,7 +261,7 @@ function EditorCurriculo({
 		  return (<></>);
 	  switch(estructura.Editable.Tipo){
 		  case "Texto":
-			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} /></>)
+			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} /></>);
 	  };
 	  return (<></>);
   };
@@ -271,19 +274,27 @@ function EditorCurriculo({
 			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
 	  </p></>);
   };
+  
+  const ElementoSpanEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+	  
+	  return (<>
+	  <div id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
+			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
+			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
+	  </div></>);
+  };
 	
   const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  //console.log("Texto: "+nombreSeccion+", "+id+", "+index+", "+estructura.Tipo)
 	  if(!estructura)
 		  return (<></>);
 	  
 	  switch(estructura.Tipo){
 		  case "Texto":
 			return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+		  case "Div":
+			return (<ElementoSpanEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
 		  case "IDs":
 		    let list = [];
-			
-			//documento.datos.Secciones[nombreSeccion].IDs
 			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
 				list.push(
 					<div style={estructura.plantillaStyle}>{Object.keys(estructura.Plantilla).map((index) => {
@@ -298,16 +309,16 @@ function EditorCurriculo({
   };
 	
   const SeccionHTMLEstructurada = ({user_data, seccion, documento, id}) => {
-	  if(!documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
+	  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
 		  return (<></>);
 	  
 	  //La posicion necesita ser relativa para que funcione correctamente
 	  if(Object.isFrozen(documento.diseno.Secciones[seccion].style)) //Ocurre la primera vez que se renderiza
 		documento.diseno.Secciones[seccion].style = documento.diseno.Secciones[seccion].style? documento.diseno.Secciones[seccion].style : {};
 	  documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
-	  documento.diseno.Secciones[seccion].style.position = "relative";
+	  documento.diseno.Secciones[seccion].style.position = documento.diseno.Secciones[seccion].style.position? documento.diseno.Secciones[seccion].style.position : "relative";
 		
-	  const tamano = tamanoObjeto(seccion, documento, setDocumento);
+	  const tamano = celdasAPx(documento.diseno.Secciones[seccion].Celdas);
 	  documento.diseno.Secciones[seccion].style.width = tamano.width+"px";
 	  documento.diseno.Secciones[seccion].style.height = tamano.height+"px";
 	  //documento.diseno.Secciones[seccion].style.gridRow: "3 / 5";
@@ -327,7 +338,8 @@ function EditorCurriculo({
 						Seccion: seccion,
 						Campo: documento.diseno.Secciones[seccion].Editable.Campo,
 						Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
-						Lista: tempIds[seccion]
+						Lista: tempIds[seccion],
+						Celdas: documento.diseno.Secciones[seccion].Editable.Celdas
 					});
 					setOpcionesPanel(
 						{Seccion: seccion}
@@ -358,12 +370,18 @@ function EditorCurriculo({
 						if(documento.diseno.Secciones[val])
 							return (<SeccionHTMLEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]}/>)
 						else if(typeof(val) !== "string"){
-							console.log(val);
+							val.style = JSON.parse(JSON.stringify(val.style? val.style : {}));
+							const t = [val.Celdas[0] * celdasPagina[0], val.Celdas[1] * celdasPagina[1]]
+							val.style.width = t[0]+"px";
+							val.style.height = t[1]+"px";
 							return (<div style={val.style}>
 								{Object.keys(val.Secciones).map((seccion) => {
-									 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[seccion]} documento={documento}/>)
+									 if(typeof(val.Secciones[seccion]) === "string")
+										return(<SeccionHTMLEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento}/>)
+									 else
+										 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento}/>)
 								})}
-							}</div>)
+							</div>)
 						}
 					})
 				}
@@ -371,7 +389,7 @@ function EditorCurriculo({
   };
   
   //Ordena bloques del usuario por Fecha (si tiene), y por categorias del curriculo y puesto
-  const OrdenarBloques = (bloques, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
+  const OrdenarBloques = (bloques, ID_Categoria_Curriculum, ID_Categoria_Puesto) => {
 	let sortedBloques = [];
 	if(!bloques)
 		return [];
@@ -391,7 +409,7 @@ function EditorCurriculo({
 	
 	//Ordenar por categorias
 	sortedBloques = sortedBloques.sort(
-		  ([, a], [, b]) => (b.ID_Categoria_Curriculo? (b.ID_Categoria_Curriculo === ID_Categoria_Curriculo? 1 : 0) : 0) - (a.ID_Categoria_Curriculo? (a.ID_Categoria_Curriculo === ID_Categoria_Curriculo? 1 : 0) : 0),
+		  ([, a], [, b]) => (b.ID_Categoria_Curriculum? (b.ID_Categoria_Curriculum === ID_Categoria_Curriculum? 1 : 0) : 0) - (a.ID_Categoria_Curriculum? (a.ID_Categoria_Curriculum === ID_Categoria_Curriculum? 1 : 0) : 0),
 		);
 	sortedBloques = sortedBloques.sort(
 		  ([, a], [, b]) => (b.ID_Categoria_Puesto? (b.ID_Categoria_Puesto === ID_Categoria_Puesto? 1 : 0) : 0) - (a.ID_Categoria_Puesto? (a.ID_Categoria_Puesto === ID_Categoria_Puesto? 1 : 0) : 0),
@@ -401,7 +419,7 @@ function EditorCurriculo({
 
   //Actualiza las IDs de bloques seleccionadas
   //Ocurre al inicio y cuando se cambia algun dato de cantidad o ID fija
-  const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculo, ID_Categoria_Puesto) => {
+  const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculum, ID_Categoria_Puesto) => {
     if (!user_data) return;
 	Object.keys(documento.datos.Secciones).map((seccion) => {
 		let cantidad = documento.diseno.Secciones[seccion].Editable.Arreglo? documento.datos.Secciones[seccion].Cantidad : 1;
@@ -434,14 +452,17 @@ function EditorCurriculo({
 	
 	const elm = document.getElementById(id);
 	let parent = elm;
-	let pos = [- doc.offsetLeft - doc.scrollLeft, - doc.offsetTop - doc.scrollTop];
+	let pos = [0, 0];
 	while(true){
+		if(parent.id? parent.id.includes("pagina") : false){
+			break;
+		}
 		pos[0] += parent.offsetLeft;
 		pos[1] += parent.offsetTop;
-		if(parent.id? parent.id.includes("Seccion") : false)
-			break;
+		
 		parent = parent.parentElement;
 	}
+	pos = [pos[0] - doc.offsetLeft*0 - doc.scrollLeft, pos[1] - doc.offsetTop*0 - doc.scrollTop]
 	pos = [Math.max(0, pos[0]), Math.max(0, pos[1])];
 	return pos;
   };
@@ -481,11 +502,14 @@ function EditorCurriculo({
 		Object.entries(documento.diseno.style).forEach(([key, value]) => {
 			documentoEstilo[key] = value;
 		});
+		documento.diseno.style = documentoEstilo;
 		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
 			paginaEstilo[key] = value;
 		});
+		documento.diseno.Paginas[0].style = paginaEstilo;
 		
 		//Registro de fuentes automatica
+		//Hacer estilos un objeto editable
 		const fonts = {};
 		Object.entries(documento.diseno.Secciones).forEach(([nombreseccion, seccion]) => {
 			if(seccion.style && seccion.style.fontFamily)
@@ -493,23 +517,30 @@ function EditorCurriculo({
 				
 			if(seccion.Estructura)
 				Object.entries(seccion.Estructura).forEach(([index, estr]) => {
-					if(estr.style && estr.style.fontFamily)
+					let newStyle = {};
+					Object.entries(estr.style? estr.style : {}).forEach(([key, val]) => newStyle[key] = val);
+					estr.style = newStyle;
+					if(estr.style.fontFamily)
 						fonts[estr.style.fontFamily] = estr.style.fontWeight? estr.style.fontWeight : 400;
 					else{
-						estr.style = estr.style? estr.style : {};
 						fonts["Roboto"] = estr.style.fontWeight? estr.style.fontWeight : 400;
-						try{
-							estr.style.fontFamily = "Roboto";
-							estr.style.fontWeight = fonts["Roboto"];
-						}catch(e){}
+						estr.style.fontFamily = "Roboto";
+						estr.style.fontWeight = fonts["Roboto"];
 					}
 					
 					if(estr.Plantilla)
 						Object.entries(estr.Plantilla).forEach(([index2, plnt]) => {
-							if(plnt.style && plnt.style.fontFamily)
+							newStyle = {};
+							Object.entries(plnt.style? plnt.style : {}).forEach(([key, val]) => newStyle[key] = val);
+							plnt.style = newStyle;
+							if(plnt.Celdas){
+								const t = celdasAPx(plnt.Celdas);
+								plnt.style.width = t.width+"px";
+								plnt.style.height = t.height+"px";
+							}
+							if(plnt.style.fontFamily)
 								fonts[plnt.style.fontFamily] = plnt.style.fontWeight? plnt.style.fontWeight : 400;
 							else{
-								plnt.style = plnt.style? plnt.style : {};
 								fonts["Roboto"] = plnt.style.fontWeight? plnt.style.fontWeight : 400;
 								plnt.style.fontFamily = "Roboto";
 								plnt.style.fontWeight = fonts["Roboto"];
@@ -528,7 +559,7 @@ function EditorCurriculo({
 		  
         >
 			  <PaginaHTMLEstructurada user_data={user_data} documento={documento} paginaEstilo={paginaEstilo}/>
-			  {document.getElementById("pagina_"+numeroDePaginas)?.scrollHeight > 841? 
+			  {document.getElementById("pagina_"+numeroDePaginas)?.scrollHeight > celdasPagina[1]? 
 			  (<div style={paginaEstilo} id={"pagina_"+(numeroDePaginas+1)}></div>) 
 			  :
 			  (<></>)
@@ -586,18 +617,19 @@ function EditorCurriculo({
       setCurriculoId(user_data.editando_curriculo);
 	  
 	  //DEBUG
-	  const doc = curriculum_manager.CopiarPlantilla("simple").Documento;//user_data.curriculums[user_data.editando_curriculo].Documento;
+	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+	  doc = editMode === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
       setDocumento(
 		doc
       );
       setCatCurriculum(
-        user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo,
+        user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculum,
       );
       setCatPuesto(
         user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto,
       );
 	  
-	  SeleccionarIDs(user_data, doc, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto);
+	  SeleccionarIDs(user_data, doc, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculum, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto);
 
       setLoading(false);
     }
@@ -662,10 +694,28 @@ function EditorCurriculo({
 				  >
 					Secciones
 				  </Button>
+				  <Button onClick={(e) => {
+					  curriculum_manager.ActualizarCurriculo(user_data, setUserData, user_data.curriculums[curriculo_id]._id, documento, categoria_curriculum, categoria_puesto)
+				  }}
+				  >
+					Guardar
+				  </Button>
+				  <Button onClick={(e) => {
+					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
+					  setEditMode(edit);
+					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  doc = edit === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  setDocumento(
+						doc
+					  );
+				  }}
+				  >
+					Modo:{" "+editMode}
+				  </Button>
 			  </div>
 			  {Editando? (
 				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}}>
-					{(Editando.Seccion && Editando.Tipo === "IDs")? (
+					{(Editando.Seccion && Editando.Celdas)? (
 						<EditorTamano 
 							user_data={user_data}
 							TextoEditar={TextoEditar} 
@@ -699,7 +749,7 @@ function EditorCurriculo({
 				<>
 				</>
 			  )}
-			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)"}}>
+			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)", position:"relative"}}>
 				  <MyHTMLDocument />
 			  </div>
 		  </div>
