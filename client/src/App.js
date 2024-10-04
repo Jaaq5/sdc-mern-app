@@ -208,6 +208,8 @@ function App() {
       cat_curr_id,
       cat_puesto_id,
     ) => {
+	  user_data.curriculums[user_data.editando_curriculo].Documento = documento;
+	  setUserData(user_data);
       axios
         .patch(apiUrl + "/api/users/actualizar-usuario-curr", {
           usuario_id: user_data.usuario_id,
