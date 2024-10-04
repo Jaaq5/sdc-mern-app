@@ -179,6 +179,35 @@ function EditorCurriculo({
           return matchedMenuItem ? matchedMenuItem.Nombre : null;
         };
 		
+  //Retorna el estilo
+  const tamanoYPosicion = (estructura) => {
+	try{
+		estructura.style = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
+	}catch(e){
+		estructura = JSON.parse(JSON.stringify(estructura? estructura : {}));
+		estructura.style = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
+	}
+	if(estructura.Celdas){
+		const t = celdasAPx(estructura.Celdas);
+		estructura.style.width = t.width+"px";
+		estructura.style.height = t.height+"px";
+	}
+	if(estructura.Pos){
+		const t = celdasAPx(estructura.Pos);
+		estructura.style.left = t.width+"px";
+		estructura.style.top = t.height+"px";
+		estructura.style.position = "absolute";
+	}
+	return estructura.style;
+  };
+  
+  const extenderPath = (path, extend) => {
+	 const newPath = [];
+	 path.forEach((p) => newPath.push(p));
+	 extend.forEach((p) => newPath.push(p));
+	 return newPath;
+  };
+		
   const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
 	estructura.Texto.forEach((campo) => {
@@ -196,7 +225,8 @@ function EditorCurriculo({
 	return texto;
   };
   
-  const ElementoTextoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoTextoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
+	  const newPath = extenderPath(path, [estructura.Editable.Campo]);
 	  return (Editando? 
 		(<></>)
 		:
@@ -208,11 +238,12 @@ function EditorCurriculo({
 				setTextoEditar(seccion.TituloSeccion);
 				setEditando({
 					Tipo: "Texto",
-					pos: posicionEnOverlay("Texto_"+nombreSeccion+"_"+index),
+					pos: posicionEnOverlay("Texto_"+nombreSeccion+"_"+index+path),
 					Seccion: nombreSeccion,
-					Campo: "TituloSeccion",
+					Campo: estructura.Editable.Campo,
 					label: estructura.Editable.Label,
 					placeholder: estructura.Editable.Placeholder,
+					path : newPath
 				});
 			}}
 			>
@@ -221,23 +252,24 @@ function EditorCurriculo({
 	  );
   };
   
-  const ElementoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
 	  if((!estructura) || !estructura.Editable)
 		  return (<></>);
 	  switch(estructura.Editable.Tipo){
 		  case "Texto":
-			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} /></>);
+			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} /></>);
 	  };
 	  return (<></>);
   };
 
-  const ElementoTextoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  
+  const ElementoTextoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
+	  const elm = obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index);
+	  //dangerouslySetInnerHTML={{__html: [elm, ()]}}
 	  return (<>
-	  <p id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
-			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
-			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
-	  </p></>);
+	  <div id={"Texto_"+nombreSeccion+"_"+index+path} style={estructura.style} key={nombreSeccion+id+index} >
+		{elm}
+		<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path}/>	
+	  </div></>);
   };
   
   const ElementoDivEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
@@ -255,46 +287,52 @@ function EditorCurriculo({
 	  </>);
   };
 	
-  const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
+  const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
 	  if(!estructura)
 		  return (<></>);
 	  
 	  switch(estructura.Tipo){
 		  case "Texto":
-			return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+			return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} />);
 		  case "Div":
-			return (<ElementoDivEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+			return (<ElementoDivEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} />);
 		  case "Imagen":
-			return (<ElementoImgEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />);
+			return (<ElementoImgEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path}/>);
+		  case "Estructura":
+		    const newPath = extenderPath(path, ["Estructura",index]);
+			const style = tamanoYPosicion(estructura);
+			estructura.style = style;
+			return (<div style={style}><ElementoEstructuradoHTML user_data={user_data} nombreSeccion={nombreSeccion} documento={documento} id={id} index={index} path={[newPath]} /></div>)
 		  case "IDs":
 		    let list = [];
 			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
 				list.push(
 					<div style={estructura.plantillaStyle}>{Object.keys(estructura.Plantilla).map((index) => {
 						return (<>
-							<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} />
+							<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} path={[]}/>
 						</>)
 					})}</div>
 				);
 			});
 			return (<div style={estructura.style}>{list}</div>);
 	  };
+	  
+	  return (<></>);
   };
 	
-  const SeccionHTMLEstructurada = ({user_data, seccion, documento, id}) => {
-	  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
+  const SeccionHTMLEstructurada = ({user_data, seccion, documento, id, path}) => {
+	  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar)
 		  return (<></>);
 	  
 	  //La posicion necesita ser relativa para que funcione correctamente
-	  if(Object.isFrozen(documento.diseno.Secciones[seccion].style)) //Ocurre la primera vez que se renderiza
+	  if(Object.isFrozen(documento.diseno.Secciones[seccion].style)){ //Ocurre la primera vez que se renderiza
 		documento.diseno.Secciones[seccion].style = documento.diseno.Secciones[seccion].style? documento.diseno.Secciones[seccion].style : {};
-	  documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
-	  documento.diseno.Secciones[seccion].style.position = documento.diseno.Secciones[seccion].style.position? documento.diseno.Secciones[seccion].style.position : "relative";
-		
-	  const tamano = celdasAPx(documento.diseno.Secciones[seccion].Celdas);
-	  documento.diseno.Secciones[seccion].style.width = tamano.width+"px";
-	  documento.diseno.Secciones[seccion].style.height = tamano.height+"px";
+		documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
+		documento.diseno.Secciones[seccion].style.position = documento.diseno.Secciones[seccion].style.position? documento.diseno.Secciones[seccion].style.position : "relative";
+	  }
+	  documento.diseno.Secciones[seccion].style = tamanoYPosicion(documento.diseno.Secciones[seccion]);
 	  documento.diseno.Secciones[seccion].style.overflow = documento.diseno.Secciones[seccion].style.overflow? documento.diseno.Secciones[seccion].style.overflow : "hidden";
+	  
 	  return (
 		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
 			{documento.diseno.Secciones[seccion].Editable? (
@@ -306,11 +344,14 @@ function EditorCurriculo({
 					setEditando({
 						Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
 						pos: posicionEnOverlay("Seccion_"+seccion),
+						path: path,
+						id: "Seccion_" + seccion,
 						Seccion: seccion,
 						Campo: documento.diseno.Secciones[seccion].Editable.Campo,
 						Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
 						Lista: tempIds[seccion],
-						Celdas: documento.diseno.Secciones[seccion].Editable.Celdas
+						Celdas: documento.diseno.Secciones[seccion].Editable.Celdas,
+						Pos: documento.diseno.Secciones[seccion].Editable.Pos
 					});
 					setOpcionesPanel(
 						{Seccion: seccion}
@@ -321,13 +362,67 @@ function EditorCurriculo({
 			) : (
 				<></>
 			)}
-			{Object.keys(documento.diseno.Secciones[seccion].Estructura).map((index) => {
+			{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
+				const newPath = extenderPath(path, ["Estructura",index]);
 				return (<>
-					<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} />
+					<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} path={newPath} />
 				</>)
 			})}
 		</div>
 	  );
+  };
+  
+  const SubPaginaEstructuraHTML = ({user_data, documento, estructura, path}) => {
+    if(documento.diseno.Secciones[estructura]){
+		return (<SeccionHTMLEstructurada user_data={user_data} seccion={estructura} documento={documento} id={documento.datos.Secciones[estructura]} path={["diseno","Secciones",estructura]} />);
+		
+	}else if(documento.diseno.Secciones.Orden[estructura]){
+		return (<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[estructura]} documento={documento} path={["diseno","Secciones",documento.diseno.Secciones.Orden[estructura]]}/>);
+			
+	}else if(typeof(estructura) === "object"){
+		estructura.style = tamanoYPosicion(estructura);
+		const id = "Estructura_"+path;
+		const p = extenderPath(path,[]);
+		return (<div id={id} style={estructura.style}>
+		     {estructura.Editable? (
+				<Button  
+					title={estructura.Editable.Titulo}
+					style={seccionEditButton}
+					id={"Edit_Button_Estructura_"+path}
+					onClick={(e) => {
+					setEditando({
+						Tipo: estructura.Editable.Tipo,
+						pos: posicionEnOverlay(id),
+						Seccion: estructura.Editable.Seccion,
+						Campo: estructura.Editable.Campo,
+						Arreglo: estructura.Editable.Arreglo,
+						Celdas: estructura.Editable.Celdas,
+						path: p,
+						id: id,
+						});
+					}} >
+						<SwapHorizontalCircleIcon style={editButtonIcon}/>
+				</Button>
+			) : (
+				<></>
+			)}
+			{estructura.Estructura? (Object.keys(estructura.Estructura).map((index) => {
+				 if(typeof(estructura.Estructura[index]) === "string")
+					return(<SeccionHTMLEstructurada user_data={user_data} seccion={estructura.Estructura[index]} id={documento.datos.Secciones[estructura.Estructura[index]]} documento={documento} path={["diseno","Secciones",estructura.Estructura[index]]}/>);
+				 else if(typeof(estructura.Estructura[index]) === "number")
+					 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[estructura.Estructura[index]]} documento={documento} path={["diseno","Secciones",documento.diseno.Secciones.Orden[estructura.Estructura[index]]]}/>);
+				 else{
+					 const newPath = extenderPath(path, ["Estructura",index]);
+					 return(<SubPaginaEstructuraHTML user_data={user_data} documento={documento} estructura={estructura.Estructura[index]} path={newPath}/>);
+				 }
+			})
+			)
+			:
+			(<></>)
+			}
+		</div>)
+	}
+	  return (<></>);
   };
   
   const PaginaHTMLEstructurada = ({user_data, documento, paginaEstilo}) => {
@@ -347,26 +442,7 @@ function EditorCurriculo({
 				</div>
 				{
 					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {
-						if(documento.diseno.Secciones[val]){
-							return (<SeccionHTMLEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]}/>);
-							
-						}else if(documento.diseno.Secciones.Orden[val]){
-							return (<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val]} documento={documento}/>);
-							
-						}else if(typeof(val) === "object"){
-							val.style = JSON.parse(JSON.stringify(val.style? val.style : {}));
-							const t = [val.Celdas[0] * celdasPagina[0], val.Celdas[1] * celdasPagina[1]]
-							val.style.width = t[0]+"px";
-							val.style.height = t[1]+"px";
-							return (<div style={val.style}>
-								{Object.keys(val.Secciones).map((seccion) => {
-									 if(typeof(val.Secciones[seccion]) === "string")
-										return(<SeccionHTMLEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento}/>);
-									 else
-										 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento}/>);
-								})}
-							</div>)
-						}
+						return (<SubPaginaEstructuraHTML user_data={user_data} documento={documento} estructura={val} path={["diseno","Paginas",0,"Estructura",key]}/>)
 					})
 				}
 			  </div>);
@@ -701,7 +777,8 @@ function EditorCurriculo({
 					Secciones
 				  </Button>
 				  <Button onClick={(e) => {
-					  curriculum_manager.ActualizarCurriculo(user_data, setUserData, user_data.curriculums[curriculo_id]._id, documento, categoria_curriculum, categoria_puesto)
+					  SeleccionarIDs(user_data, documento, categoria_curriculum, categoria_puesto);
+					  curriculum_manager.ActualizarCurriculo(user_data, setUserData, user_data.curriculums[curriculo_id]._id, documento, categoria_curriculum, categoria_puesto);
 				  }}
 				  >
 					Guardar
@@ -712,6 +789,7 @@ function EditorCurriculo({
 					  setEditMode(edit);
 					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  doc = edit === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  SeleccionarIDs(user_data, doc, categoria_curriculum, categoria_puesto);
 					  setDocumento(
 						doc
 					  );
@@ -752,8 +830,8 @@ function EditorCurriculo({
 				  }
 			  </div>
 			  {Editando? (
-				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}} onClick={(e) => {setEditando(null)}}>
-					{(Editando.Seccion && Editando.Celdas)? (
+				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}} >
+					{(Editando.Celdas || Editando.Pos)? (
 						<EditorTamano 
 							user_data={user_data}
 							TextoEditar={TextoEditar} 
@@ -787,7 +865,7 @@ function EditorCurriculo({
 				<>
 				</>
 			  )}
-			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center"}}>
+			  <div id="contenedor_documento" style={{overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center"}}>
 				  <MyHTMLDocument />
 			  </div>
 		  </div>
@@ -798,7 +876,7 @@ function EditorCurriculo({
 						tempIds={tempIds} 
 						obtenerTextoEstructura={obtenerTextoEstructura} 
 					/>
-				</PDFViewer>
+		  </PDFViewer>
         </div>
       </div>
     </>

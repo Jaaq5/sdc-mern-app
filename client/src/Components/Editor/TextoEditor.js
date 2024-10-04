@@ -30,7 +30,11 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
                         "",
                       )
 				  setTextoEditar(val);
-				  documento.diseno.Secciones[Editando.Seccion][Editando.Campo] = val;
+				  
+				  let item = documento;
+				  let continues = true;
+				  Editando.path?.forEach((p, index) => {if(index<(Editando.path.length-1) && continues && p !== "Estructura") item = item[p]; else continues = false;});
+				  item[Editando.path[Editando.path.length-1]] = val;
 				  setDocumento(documento);
 				}}
 				

@@ -92,8 +92,6 @@
           "Referencias"
         ],
         "Informacion_Personal": {
-		  "Bloque" : "Informacion_Personal",
-		  
           "Mostrar": true,
           "TituloSeccion": "prueba_4",
           "style": {
@@ -111,10 +109,9 @@
           ],
           "Editable": {
             "Titulo": "Cambiar Informacion Personal",
-            "Campo": null,
             "Tipo": "IDs",
-            "Arreglo": false,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -142,6 +139,10 @@
                 "fontWeight": 400
               }
             },
+			{
+				"Tipo" : "Estructura",
+				"Estructura" : []
+			},
             {
               "Tipo": "Texto",
               "Texto": [
@@ -150,6 +151,7 @@
               "Editable": {
                 "Tipo": "Texto",
                 "Titulo": "Editar Nombre",
+				"Campo" : "TituloSeccion",
                 "Label": "Nombre",
                 "Placeholder": "Tu nombre"
               },
@@ -254,6 +256,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de trabajos"
@@ -346,6 +349,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Eduacion Formal"
@@ -435,6 +439,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Certificaciones"
@@ -542,6 +547,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Habilidades"
@@ -629,6 +635,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Idiomas"
@@ -709,6 +716,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Proyectos"
@@ -798,6 +806,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Publicaciones"
@@ -896,6 +905,7 @@
               ],
               "Editable": {
                 "Tipo": "Texto",
+				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Referencias"

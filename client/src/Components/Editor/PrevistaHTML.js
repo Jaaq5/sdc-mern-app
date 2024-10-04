@@ -57,53 +57,73 @@ const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion,
 };
 
 const SeccionHTMLEstructurada = ({user_data, seccion, documento, id, obtenerTextoEstructura}) => {
-  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar || !documento.diseno.Secciones[seccion].Estructura)
+	  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar)
+		  return (<></>);
+	  
+	  return (
+		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
+			{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
+				return (<>
+					<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />
+				</>)
+			})}
+		</div>
+	  );
+  };
+  
+const SubPaginaEstructuraHTML = ({user_data, documento, estructura, obtenerTextoEstructura}) => {
+    if(documento.diseno.Secciones[estructura]){
+		return (<SeccionHTMLEstructurada user_data={user_data} seccion={estructura} documento={documento} id={documento.datos.Secciones[estructura]} obtenerTextoEstructura={obtenerTextoEstructura} />);
+		
+	}else if(documento.diseno.Secciones.Orden[estructura]){
+		return (<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[estructura]} documento={documento} obtenerTextoEstructura={obtenerTextoEstructura}/>);
+			
+	}else if(typeof(estructura) === "object"){
+		return (<div style={estructura.style}>
+			{estructura.Estructura? (Object.keys(estructura.Estructura).map((index) => {
+				 if(typeof(estructura.Estructura[index]) === "string")
+					return(<SeccionHTMLEstructurada user_data={user_data} seccion={estructura.Estructura[index]} id={documento.datos.Secciones[estructura.Estructura[index]]} documento={documento} obtenerTextoEstructura={obtenerTextoEstructura}/>);
+				 else if(typeof(estructura.Estructura[index]) === "number")
+					 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[estructura.Estructura[index]]} documento={documento} obtenerTextoEstructura={obtenerTextoEstructura}/>);
+				 else{
+					 return(<SubPaginaEstructuraHTML user_data={user_data} documento={documento} estructura={estructura.Estructura[index]} obtenerTextoEstructura={obtenerTextoEstructura}/>);
+				 }
+			})
+			)
+			:
+			(<></>)
+			}
+		</div>)
+	}
 	  return (<></>);
-
-  return (
-	<div id={"HTML_Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
-		{documento.diseno.Secciones[seccion].Estructura? (Object.keys(documento.diseno.Secciones[seccion].Estructura).map((index) => {
-			return (<>
-				<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index}  obtenerTextoEstructura={obtenerTextoEstructura} />
-			</>)
-		}))
-		:
-		(<></>)
-		}
-	</div>
-  );
-};
-
+  };
+  
 const PaginaHTMLEstructurada = ({user_data, documento, obtenerTextoEstructura}) => {
 	  if(!documento || !documento.diseno.Paginas || !documento.diseno.Paginas[0].Estructura){
 		  return (<div><div><p>Formato No Soportado</p></div></div>);
 	  }
-	  let listas=0;
-	  return (<div style={documento.diseno.Paginas[0].style} id={"pagina_"+1} key={"pagina_"+1}>
-				<div style={{position:"absolute"}} key={"Elementos"}></div>
+
+	  return (<div style={documento.diseno.Paginas[0].style} id={"pagina_"+1}>
+				<div style={{position:"absolute"}}>
+					{documento.diseno.Paginas[0].Elementos? (Object.entries(documento.diseno.Paginas[0].Elementos).forEach(([key, val]) => {
+						if(documento.diseno.Elementos[val]){
+							
+						}
+					}))
+					:
+					(<></>)
+					}
+				</div>
 				{
 					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {
-						if(documento.diseno.Secciones[val])
-							return (<SeccionHTMLEstructurada user_data={user_data} seccion={val} documento={documento} id={documento.datos.Secciones[val]} obtenerTextoEstructura={obtenerTextoEstructura}/>)
-						
-						else if(documento.diseno.Secciones.Orden[val])
-							return (<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val]} documento={documento}  obtenerTextoEstructura={obtenerTextoEstructura}/>)
-						
-						else if(typeof(val) === "object"){
-							listas += 1;
-							return (<div style={val.style} key={"Lista_"+listas}>
-								{Object.keys(val.Secciones).map((seccion) => {
-									 if(typeof(val.Secciones[seccion]) === "string")
-										return(<SeccionHTMLEstructurada user_data={user_data} seccion={val.Secciones[seccion]} id={documento.datos.Secciones[val.Secciones[seccion]]} documento={documento}  obtenerTextoEstructura={obtenerTextoEstructura}/>)
-									 else
-										 return(<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[val.Secciones[seccion]]} documento={documento}  obtenerTextoEstructura={obtenerTextoEstructura}/>)
-								})}
-							</div>)
-						}
+						return (<SubPaginaEstructuraHTML user_data={user_data} documento={documento} estructura={val} obtenerTextoEstructura={obtenerTextoEstructura}/>)
 					})
 				}
 			  </div>);
   };
+  
+ 
+
   
 const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
