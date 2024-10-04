@@ -107,7 +107,6 @@
             30,
             16
           ],
-		  "Pos" : [3,3],
           "Editable": {
             "Titulo": "Cambiar Informacion Personal",
             "Tipo": "IDs",

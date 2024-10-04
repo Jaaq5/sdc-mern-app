@@ -865,7 +865,7 @@ function EditorCurriculo({
 				<>
 				</>
 			  )}
-			  <div id="contenedor_documento" style={{overflow: "auto", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center"}}>
+			  <div id="contenedor_documento" style={{overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center"}}>
 				  <MyHTMLDocument />
 			  </div>
 		  </div>
