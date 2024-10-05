@@ -267,6 +267,9 @@ function App() {
         .then((response) => {
           if (response.data.curriculums) {
             plant = response.data.curriculums;
+			plant.forEach((data) => {
+				data.Documento = JSON.parse(data.Documento);
+			});
             setPlantillas(plant);
           }
         })
@@ -304,16 +307,18 @@ function App() {
           user_data.bloques.Informacion_Personal,
         )[0]; //TODO, Filtrar por categorias
 		
-        plantilla.ID_Categoria_Curriculum =
-          listas_categorias.categorias_curriculum.find(
-            (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
-          )._id;
-        plantilla.ID_Categoria_Puesto =
-          listas_categorias.categorias_puesto.find(
-            (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
-          )._id;
+		plantilla.ID_Categoria_Curriculum =
+			  listas_categorias.categorias_curriculum.find(
+				(cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
+			  )._id;
+		plantilla.ID_Categoria_Puesto =
+			  listas_categorias.categorias_puesto.find(
+				(cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
+			  )._id;
+		
         plantilla.Documento.diseno.Secciones.Informacion_Personal.TituloSeccion =
           user_data.name;
+		  
       }
       return plantilla;
     },

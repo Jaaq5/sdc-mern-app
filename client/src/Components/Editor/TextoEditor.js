@@ -46,7 +46,7 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 						setTimeout(function(){
 							e.target.focus()
 							e.target.setCustomValidity("No puede quedar vacío")
-						},0);
+						},10);
 					}
 					 }}
 			  ></TextField></form>

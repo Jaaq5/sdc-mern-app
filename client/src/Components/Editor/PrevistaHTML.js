@@ -130,7 +130,7 @@ const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructur
 	estructura.Texto.forEach((campo) => {
 		if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
 			texto += seccion[campo] === ""? estructura.Editable.Placeholder : seccion[campo];
-		}else if(id && user_data.bloques[nombreSeccion][id][campo]){ //Bloques de datos
+		}else if(id && user_data.bloques[nombreSeccion][id] && user_data.bloques[nombreSeccion][id][campo]){ //Bloques de datos
 			if(nombreSeccion === "Idiomas" && campo === "Id")
 				texto += "Idioma";//getNameById(user_data.bloques[nombreSeccion][id][campo])
 			else

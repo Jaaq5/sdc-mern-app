@@ -6,6 +6,10 @@ const Curriculums_Templates_Model = mongoose.Schema({
     type: String,
     required: true,
   },
+  Nombre: {
+	type: String,
+    required: true,
+  },
   Prevista: {
     name: {
       type: String,
@@ -19,11 +23,11 @@ const Curriculums_Templates_Model = mongoose.Schema({
   },
 
   ID_Categoria_Curriculum: {
-    type: mongoose.ObjectId,
+    type: String,
     required: true,
   },
   ID_Categoria_Puesto: {
-    type: mongoose.ObjectId,
+    type: String,
     required: true,
   },
 });
