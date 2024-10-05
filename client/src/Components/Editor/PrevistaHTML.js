@@ -37,6 +37,12 @@ const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion,
 		return (<ElementoDivEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "Imagen":
 		return (<ElementoImgEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
+	  case "Estructura":
+			return (<div style={estructura.style}>
+				{Object.entries(estructura.Estructura).map(([index, estr]) => 
+					(<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion}  estructura={estr} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />)
+				)}
+			</div>)
 	  case "IDs":
 		let list = [];
 		if(!documento.datos.tempIds){

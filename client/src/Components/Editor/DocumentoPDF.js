@@ -33,7 +33,12 @@ const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, 
 		return (<ElementoTextoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "Imagen":
 		return (<ElementoImagenEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
-	  
+	  case "Estructura":
+			return (<div style={estructura.style}>
+				{Object.entries(estructura.Estructura).map(([index, estr]) => 
+					(<ElementoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estr} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />)
+				)}
+			</div>)
 	  case "IDs":
 		let list = [];
 		
@@ -55,15 +60,34 @@ const SeccionPDFEstructurada = ({user_data, seccion, documento, id, obtenerTexto
 	  if(!documento.diseno.Secciones[seccion] || !documento.diseno.Secciones[seccion].Mostrar)
 		  return (<></>);
 	  
-	  return (
-		<View id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
-			{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
-				return (<>
-					<ElementoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />
-				</>)
-			})}
-		</View>
-	  );
+	  documento.diseno.Secciones[seccion].style = documento.diseno.Secciones[seccion].style? documento.diseno.Secciones[seccion].style : {};
+
+	  
+	  let crearContenedor = false;
+	  let posStyle = {position: "relative", width: "100%", backgroundColor: "#00f0"};
+	  const secStyle = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style))
+
+	  if(documento.diseno.Secciones[seccion].Pos){
+		  crearContenedor = true;
+		  posStyle.height = documento.diseno.Secciones[seccion].style.top;
+		  secStyle.top = "0px"
+		  secStyle.position = "relative";
+	  }
+	  
+	  const sec = (
+				<View id={"Seccion_" + seccion} style={secStyle} key={seccion}>
+					{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
+						return (<>
+							<ElementoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />
+						</>)
+					})}
+				</View>
+			  );
+	  
+	  if(crearContenedor)
+		  return (<View style={{position: "absolute", backgroundColor: "#f000", display: "flex", flexDirection: "column"}}><View style={posStyle}></View>{sec}</View>)
+	  else
+		  return sec;
 };
 
   
@@ -123,61 +147,61 @@ const DocumentoPDF = ({user_data, documento, tempIds, obtenerTextoEstructura}) =
 
     if (!documento) 
 		return (<></>);
-    else{
-		Font.register({
-			family: "ComicSans",
-			fonts: [
-				{
-				  src: ComicSans,
-				  fontWeight: 400,
-				},
-				{
-				  src: ComicSans,
-				  fontWeight: 700,
-				},
-				{
-				  src: ComicSans,
-				  fontWeight: 900,
-				}
-			]
-		});
-		Font.register({
-			family: "Roboto",
-			fonts: [
-				{
-				  src: RobotoLight,
-				  fontWeight: 400,
-				},
-				{
-				  src: RobotoRegular,
-				  fontWeight: 700,
-				},
-				{
-				  src: RobotoBold,
-				  fontWeight: 900,
-				}
-			]
-		});
-		Font.registerHyphenationCallback(word => (
-		  [word]
-		));
-		
-		const docuStyle = {};
-		Object.entries(documento.diseno.style).forEach(([key, value]) => {docuStyle[key] = value});
-		docuStyle.fontFamily = "Roboto"; //DEBUG
-		
-		let numeroDePaginas = 1;
-		return (
-        <Document
+
+	Font.register({
+		family: "ComicSans",
+		fonts: [
+			{
+			  src: ComicSans,
+			  fontWeight: 400,
+			},
+			{
+			  src: ComicSans,
+			  fontWeight: 700,
+			},
+			{
+			  src: ComicSans,
+			  fontWeight: 900,
+			}
+		]
+	});
+	Font.register({
+		family: "Roboto",
+		fonts: [
+			{
+			  src: RobotoLight,
+			  fontWeight: 400,
+			},
+			{
+			  src: RobotoRegular,
+			  fontWeight: 700,
+			},
+			{
+			  src: RobotoBold,
+			  fontWeight: 900,
+			}
+		]
+	});
+	Font.registerHyphenationCallback(word => (
+	  [word]
+	));
+	
+	const docuStyle = {};
+	Object.entries(documento.diseno.style).forEach(([key, value]) => {docuStyle[key] = value});
+	docuStyle.fontFamily = "Roboto"; //DEBUG
+	
+	let numeroDePaginas = 1;
+	return (
+		<Document
 		  id="documento_pdf"
-          style={
-            docuStyle
-          }
+		  style={
+			docuStyle
+		  }
 		  
-        >
-          <PaginaPDFEstructurada user_data={user_data} documento={documento} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>
-        </Document>
-	)};
+		>
+		  <PaginaPDFEstructurada user_data={user_data} documento={documento} tempIds={tempIds} obtenerTextoEstructura={obtenerTextoEstructura}/>
+		</Document>
+	);
  };
  
 export default DocumentoPDF;
