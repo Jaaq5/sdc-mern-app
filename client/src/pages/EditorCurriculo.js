@@ -892,15 +892,16 @@ function EditorCurriculo({
 				Vista previa
 				</div>
 			</div>
-			<div style={{ flexGrow: 1 }}>
-				<PDFViewer>
-				  <DocumentoPDF 
-						user_data={user_data}
-						documento={documento} 
-						tempIds={tempIds} 
-						obtenerTextoEstructura={obtenerTextoEstructura} 
-					/>
-		  </PDFViewer>
+
+			<div style={{ flexGrow: 1 }}> {/* Make this div grow to take available space */}
+				<PDFViewer style={{ width: '100%', height: '100%' }}>
+				<DocumentoPDF 
+					user_data={user_data}
+					documento={documento} 
+					tempIds={tempIds} 
+					obtenerTextoEstructura={obtenerTextoEstructura} 
+				/>
+				</PDFViewer>
 			</div>
 			</div>
         </div>
