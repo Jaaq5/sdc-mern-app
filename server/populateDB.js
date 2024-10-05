@@ -1,7 +1,11 @@
 const Categorias_Curriculum = require("./models/Categorias_Curriculum_Model");
 const Categorias_Habilidad = require("./models/Categorias_Habilidad_Model");
 const Categorias_Puesto = require("./models/Categorias_Puesto_Model");
-const Idiomas = require("./models/Idiomas_Model");
+const Idiomas = require("./models/Idiomas_Model") ;
+const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
+
+//const plantilla_simple = require("./Plantillas/simple.json");
+const plantilla_cuadrados = require("./Plantillas/cuadrados.json");
 
 const populateData = async () => {
   const catCurriculumData = [
@@ -49,6 +53,11 @@ const populateData = async () => {
     { name: "Hindi" },
     { name: "Cantonés" },
     { name: "Árabe" },
+  ];
+  
+  const Plantillas = [
+	//{ name : plantilla_simple.nombre, documento: plantilla_simple.Documento, categoria_curriculo: plantilla_simple.ID_Categoria_Curriculum, categoria_puesto: plantilla_simple.ID_Categoria_Puesto },
+	{ name : plantilla_cuadrados.Nombre, documento: plantilla_cuadrados.Documento, categoria_curriculo: plantilla_cuadrados.ID_Categoria_Curriculum, categoria_puesto: plantilla_cuadrados.ID_Categoria_Puesto },
   ];
 
   try {
@@ -99,6 +108,21 @@ const populateData = async () => {
       );
     }
     console.log("Collection populated with Idiomas values");
+  } catch (err) {
+    console.log("Error populating collection:", err);
+  }
+  
+  //Plantillas
+  try {
+    for (const item of Plantillas) {;
+	  
+      await Curriculums_Templates.updateOne(
+        { Nombre: item.name, Documento: JSON.stringify(item.documento), ID_Categoria_Curriculum: item.categoria_curriculo, ID_Categoria_Puesto: item.categoria_puesto },
+        { $set: item },
+        { upsert: true },
+      );
+    }
+    console.log("Collection populated with Plantillas values");
   } catch (err) {
     console.log("Error populating collection:", err);
   }

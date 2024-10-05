@@ -1,7 +1,7 @@
 {
   "ID_Categoria_Curriculum": "Laboral",
   "ID_Categoria_Puesto": "Software",
-  "Nombre" : "Simple",
+  "Nombre" : "Estudiante",
   "Documento": {
     "datos": {
       "Secciones": {
@@ -42,11 +42,11 @@
     },
     "diseno": {
 	  "__Comment" : "Estilo y elementos visuales del coumento, paginas no implementadas",
-	  "style" : {"dsiplay": "flex"},
+	  "style" : {"display": "flex"},
 	  
 	  "Paginas" : [
 		{
-			"style" : {"position" : "relative"},
+			"style" : {"position" : "relative", "display" : "flex", "flexDirection" : "row", "flexWrap" : "wrap"},
 			"Estructura" : [
 				"Bloque_1",
 				{
@@ -245,7 +245,7 @@
         "Habilidades": {
           "Mostrar": true,
           "TituloSeccion": "Habilidades",
-		  "style": {"textAlign" : "left", "color": "#fff", "marginLeft" : "10px"},
+		  "style": {"textAlign" : "left", "color": "#fff", "marginLeft" : "10px", "zIndex" : 10},
 		  "Celdas" : [16,15],
 		  "Editable" : {"Titulo" : "Cambiar Lista de Habilidades", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true, "Celdas" : true},
 		  
