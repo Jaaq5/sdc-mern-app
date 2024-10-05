@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import PrevistaHTML  from "../Components/Editor/PrevistaHTML"
+import PrevistaPlantillaHTML  from "../Components/Editor/PrevistaPlantillaHTML"
 
 import {
   Input,
@@ -56,7 +57,8 @@ function CurriculosMenu({
   const [plantillaTexto, setPlantillaTexto] = useState(
     "Una plantilla que no tiene elementos ni estructura especial.",
   );
-
+  const [PlantillaSimple, setPlantillaSimple] = useState(null);
+  
   //Form
   const [curriculo_id, setCurriculoId] = useState(true);
 
@@ -110,7 +112,8 @@ function CurriculosMenu({
             backgroundColor: "#FFFFFF",
             border: "solid 1px #999a",
             margin: "5px 5px",
-			position: "relative"
+			position: "relative",
+			width: "310px"
           }}
           key={plan_id}
         >
@@ -125,9 +128,9 @@ function CurriculosMenu({
                 marginRight: "5px",
               }}
             >
-              {category_manager.IdANombreCurriculo(
+              {!nuevo? category_manager.IdANombreCurriculo(
                 curriculos[plan_id].ID_Categoria_Curriculum,
-              )}
+              ) : curriculos[plan_id].ID_Categoria_Curriculum}
             </span>
             <span
               style={{
@@ -139,9 +142,9 @@ function CurriculosMenu({
                 marginRight: "5px",
               }}
             >
-              {category_manager.IdANombrePuesto(
+              {!nuevo? category_manager.IdANombrePuesto(
                 curriculos[plan_id].ID_Categoria_Puesto,
-              )}
+              ) : curriculos[plan_id].ID_Categoria_Puesto}
             </span>
 
             {!nuevo ? (
@@ -167,7 +170,11 @@ function CurriculosMenu({
             }}
           >
 		  
-		  <PrevistaHTML user_data={user_data} documento={curriculos[plan_id].Documento} />
+		  {nuevo?
+			(<PrevistaPlantillaHTML documento={curriculos[plan_id].Documento} />)
+			:
+			(<PrevistaHTML user_data={user_data} documento={curriculos[plan_id].Documento} />)
+		  }
 		  
 		  <div style={previstaStyle}> </div>
           </ListItemButton>
@@ -219,6 +226,7 @@ function CurriculosMenu({
       mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
 
       //Mapear plantillas a HTML
+	  setPlantillaSimple(curriculum_manager.CopiarPlantilla("simple"));
 
       //Mapear plantillas a HTML
       curriculum_manager
@@ -433,25 +441,67 @@ function CurriculosMenu({
                   overflow: "auto",
                   backgroundColor: "#ccd5",
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row", 
+				  flexWrap: "wrap"
                 }}
               >
-                <ListItemButton
-                  key={true}
-                  style={listStyle}
-                  onClick={(e) => {
-                    setPlantilla("simple");
-                    setCurriculoId(true);
-                    manejarDatos("simple", true);
-                  }}
-                >
-                  <PostAdd />
-                  <div style={{ width: "20px" }}></div>
-                  <ListItemText
-                    primary={tituloPlantilla}
-                    secondary={plantillaTexto}
-                  />
-                </ListItemButton>
+                <div
+				  style={{
+					backgroundColor: "#FFFFFF",
+					border: "solid 1px #999a",
+					margin: "5px 5px",
+					position: "relative",
+					width: "310px"
+				  }}
+				  key={"simple"}
+				>
+				  <div style={{ paddingTop: "2px" }}>
+					<span
+					  style={{
+						backgroundColor: "#4139d4",
+						borderRadius: "10px",
+						fontWeight: "900",
+						padding: "5px",
+						color: "white",
+						marginRight: "5px",
+					  }}
+					>
+					  {PlantillaSimple? category_manager.IdANombreCurriculo(
+						PlantillaSimple.ID_Categoria_Curriculum,
+					  ) : ""}
+					</span>
+					<span
+					  style={{
+						backgroundColor: "#d47a39",
+						borderRadius: "10px",
+						fontWeight: "900",
+						padding: "5px",
+						color: "white",
+						marginRight: "5px",
+					  }}
+					>
+					  {PlantillaSimple? category_manager.IdANombrePuesto(
+						PlantillaSimple.ID_Categoria_Puesto,
+					  ) : ""}
+					</span>
+				  </div>
+				  
+				  <ListItemButton
+					key={"simple"}
+					style={listStyle}
+					onClick={(e) => {
+					  setPlantilla("simple");
+					  setCurriculoId(true);
+					  manejarDatos("simple",true)
+					}}
+				  >
+				  
+				  <PrevistaPlantillaHTML user_data={user_data} documento={PlantillaSimple?.Documento} />
+				  
+				  <div style={previstaStyle}> </div>
+				  </ListItemButton>
+				</div>
+				
 
                 <div style={{ display: "flex", alignItems: "flex-start" }}>
                   {" "}
