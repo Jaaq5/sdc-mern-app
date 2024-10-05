@@ -32,7 +32,8 @@ import {
   listStyle, 
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -90,7 +91,7 @@ function EducacionFormal({
             style={deleteButton}
             onClick={(e) => elminarBloque(plan_id, index)}
           >
-            <DeleteForever />
+            <DeleteForever style = {deleteForeverStyle} />
           </Button>
         </ListItemButton>
       )),

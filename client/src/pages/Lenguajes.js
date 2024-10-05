@@ -25,7 +25,8 @@ import {
   listStyle, 
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 function Lenguajes({ user_data, setUserData, manager_bloques, category_manager}) {
@@ -79,7 +80,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
               style={deleteButton}
               onClick={(e) => eliminarLenguaje(lenguaje_id, index)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );

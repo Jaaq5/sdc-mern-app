@@ -27,7 +27,8 @@ import {
   heading,
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -135,12 +136,12 @@ function CurriculosMenu({
 
             {!nuevo ? (
               <Button
-                style={deleteButton}
+                style={{ ...deleteButton, marginRight: "10px" }}
                 onClick={(e) =>
                   eliminarCurriculo(curriculos[plan_id]._id, index)
                 }
               >
-                <DeleteForever />
+                <DeleteForever style = {deleteForeverStyle} />
               </Button>
             ) : (
               <></>

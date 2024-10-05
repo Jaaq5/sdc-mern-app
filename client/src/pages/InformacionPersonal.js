@@ -27,7 +27,8 @@ import {
   btnStyle, 
   listStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -69,7 +70,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever />
+          <DeleteForever style = {deleteForeverStyle} />
         </Button>
       </div>
     ) : user_data.userImage ? (
@@ -80,7 +81,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever />
+          <DeleteForever style = {deleteForeverStyle} />
         </Button>
       </div>
     ) : (
@@ -91,7 +92,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever />
+          <DeleteForever style = {deleteForeverStyle} />
         </Button>
       </div>
     );
@@ -114,7 +115,7 @@ function InformacionPersonal({
               style={deleteButton}
               onClick={(e) => eliminarBloque(info_id, index)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
