@@ -13,6 +13,8 @@ import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina} from "../Components
 
 import "./editor.css";
 
+import { stripeStyle, textOverlayStyle } from "../style";
+
 import {
   Input,
   InputLabel,
@@ -740,18 +742,32 @@ function EditorCurriculo({
           Modificar Currículo
         </h1>
       </div>
-      <div style={{ padding: "10px", width: "100%" }}>
+
+      <div style={{ padding: "10px", width: "110%" }}>
         <div style={{ display: "flex", minHeight: "100%" }}>
-          <div style={{ width: "30%", maxHeight: "1000px", overflow: "auto" }}>
-            <PanelSeccion
-              user_data={user_data}
-              setUserData={setUserData}
-              manager_bloques={manager_bloques}
-              category_manager={category_manager}
-			  opciones={opcionesPanel}
-            />
-          </div>
+		<div style={{ width: "30%", maxHeight: "1000px", position: "relative" }}>
+		<div style={{ ...stripeStyle, position: "absolute", top: 0, left: 0, width: "100%" }}>
+			<div style={textOverlayStyle}>
+			Edición de la sección seleccionada
+			</div>
+		</div>
+		
+		<div style={{ marginTop: "50px", height: "1000px", overflow: "auto" }}>
+			<PanelSeccion
+			user_data={user_data}
+			setUserData={setUserData}
+			manager_bloques={manager_bloques}
+			category_manager={category_manager}
+			opciones={opcionesPanel}
+			/>
+		</div>
+		</div>
 		  <div style={pdfCaja}>
+		  <div style={stripeStyle}>
+			<div style={textOverlayStyle}>
+				Editor de dator del currículo
+			</div>
+			</div>
 			  <div id="Herramientas" style={toolBar}>
 				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} 
 						document={
@@ -869,7 +885,15 @@ function EditorCurriculo({
 				  <MyHTMLDocument />
 			  </div>
 		  </div>
-		  <PDFViewer>
+
+		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+			<div style={stripeStyle}>
+				<div style={textOverlayStyle}>
+				Vista previa
+				</div>
+			</div>
+			<div style={{ flexGrow: 1 }}>
+				<PDFViewer>
 				  <DocumentoPDF 
 						user_data={user_data}
 						documento={documento} 
@@ -877,6 +901,8 @@ function EditorCurriculo({
 						obtenerTextoEstructura={obtenerTextoEstructura} 
 					/>
 		  </PDFViewer>
+			</div>
+			</div>
         </div>
       </div>
     </>

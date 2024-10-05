@@ -29,7 +29,8 @@ import {
   listStyle, 
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -101,7 +102,7 @@ function Referencias({
               style={deleteButton}
               onClick={(e) => eliminarPublicacion(referencia_id, index)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );

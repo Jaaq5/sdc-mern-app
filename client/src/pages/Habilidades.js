@@ -27,7 +27,8 @@ import {
   heading, row, 
   btnStyle, 
   listStyle, 
-  deleteButton, 
+  deleteButton,
+  deleteForeverStyle 
 } from "../style";
 
 function Habilidades({ user_data, setUserData, manager_bloques }) {
@@ -76,7 +77,7 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
               style={deleteButton}
               onClick={(e) => eliminarHabilidad(habilidad_id)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );

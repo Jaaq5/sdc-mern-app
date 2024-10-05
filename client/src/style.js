@@ -78,12 +78,17 @@ export const paperStyles = {
     overflow: "hidden",
   };
   export const deleteButton = {
-    backgroundColor: "#f55",
+    backgroundColor: "#ffffff",
     border: "0px",
     borderRadius: "5px",
     float: "right",
     cursor: "pointer",
     color: "#000",
+    padding: "2px 2px", // Smaller padding for a smaller button
+    width: "20px", // Set width for the button
+    height: "30px", // Set height for the button
+    textAlign: "center" ,
+    minWidth: "20px",    
   };
   export const dense = true;
 
@@ -154,3 +159,26 @@ export const paperStyles = {
     height: "50px",
     background: 'linear-gradient(to bottom, #C42847, #7a1436)',
   };
+
+  export const stripeStyle = {
+    position: 'relative',
+    zIndex: 10, 
+    width: '100%',
+    height: '70px',
+    background: 'linear-gradient(to right, #000022 1%, #E28413 50%, #000022 99%)',
+  };
+  
+  export const textOverlayStyle = {
+    position: 'absolute',
+    zIndex: 20,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: 'white',
+    fontSize: '24px',
+    fontWeight: 'bold',
+  };
+
+  export const deleteForeverStyle ={
+    color: theme.palette.red.main
+  }
