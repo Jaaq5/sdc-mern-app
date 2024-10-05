@@ -232,7 +232,6 @@ function CurriculosMenu({
       curriculum_manager
         .ObtenerPlantillas(null)
         .then((response) => {
-		  console.log(response)
           mapToHTML(response, setPlantillas, setPlantilla, true);
         })
         .catch((e) => {});
