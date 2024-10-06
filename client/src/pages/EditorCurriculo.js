@@ -11,6 +11,7 @@ import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrde
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
 import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina} from "../Components/Editor/EditorTamano";
+import Autosave from "../Components/Editor/Autosave";
 
 import "./editor.css";
 
@@ -39,19 +40,19 @@ import {
 	listButtonStyle, 
   } from "../style";
 
-const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
+const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	switch(Editando.Tipo){
 		case "Texto":
 			return (<>
-				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} zoom={zoom} />
 			</>)
 		case "IDs":
 			return (<>
-				<SelectorID user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} SeleccionarIDs={SeleccionarIDs}/>
+				<SelectorID user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} SeleccionarIDs={SeleccionarIDs}  zoom={zoom}/>
 			</>)
 		case "Orden":
 			return (<>
-				<SeccionOrderEditor ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+				<SeccionOrderEditor ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} zoom={zoom}/>
 			</>)
 	}
 };
@@ -139,37 +140,6 @@ function EditorCurriculo({
 	  flexDirection: "row"
   };
   
-  //PDF
-  const stilos_paleta = StyleSheet.create({
-	pagina: {
-		paddingTop: 35,
-		paddingBottom: 65,
-		paddingLeft: 35,
-		paddingRight: 35,
-		textAlign: "center",
-	},
-    seccion: {
-		margin: "1px",
-		padding: "3px",
-		width: "250px",
-		textAlign: "left",
-		backgroundColor: "#EF0FEF33",
-		position: "relative",
-		minHeight: "50px"
-    },
-	titulo: {
-		margin: 12,
-		fontSize: 14,
-		textAlign: 'justify',
-		fontFamily: 'Times-Roman'
-	},
-	item: {
-		margin: 2,
-		fontSize: 10,
-		textAlign: 'justify',
-		fontFamily: 'Times-Roman'
-	},
-  });
   
   //Editor
   const [categoria_curriculum, setCatCurriculum] = useState("");
@@ -182,6 +152,7 @@ function EditorCurriculo({
   const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
   const [minMaxDoc, setMinMaxDoc] = useState([0,0,600,800]);
   const [zoom, setZoom] = useState(1);
+  const [actualizar, setActualizar] = useState(false);
   
   //DEBUG
   const [editMode, setEditMode] = useState("Usuario");
@@ -743,6 +714,8 @@ function EditorCurriculo({
 		const divisores = [];
 		for(let i=1; i < numeroDePaginas; i+=1)
 			divisores.push(<div style={calcDivisor(i)} id={"divisor_pagina_"+(i+1)}></div>)
+		
+		setActualizar(true)
 		return (
         <div
 		  id="documento_html"
@@ -806,7 +779,7 @@ function EditorCurriculo({
       setCurriculoId(user_data.editando_curriculo);
 	  
 	  //DEBUG
-	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
 	  doc = editMode === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
       setDocumento(
 		doc
@@ -874,6 +847,11 @@ function EditorCurriculo({
 			</div>
 			</div>
 			  <div id="Herramientas" style={toolBar}>
+				  {Editando || editMode==="Plantilla"? 
+					(<div style={{color: "#ccc"}}>...</div>) 
+					: 
+					(<Autosave user_data={user_data} setUserData={setUserData} curriculum_manager={curriculum_manager} documento={documento} styles={{color: "#ccc"}}/>)
+				  }
 				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} 
 						document={
 							<DocumentoPDF 
@@ -919,7 +897,7 @@ function EditorCurriculo({
 				  <><Button onClick={(e) => {
 					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
 					  setEditMode(edit);
-					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  doc = edit === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  SeleccionarIDs(user_data, doc, categoria_curriculum, categoria_puesto);
 					  setDocumento(
@@ -963,6 +941,21 @@ function EditorCurriculo({
 			  </div>
 				  {Editando? (
 					<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: zoom}} >
+						<div id="overlay_unzoomed" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 0, zoom: (1/zoom)}} >
+						<ToolBoxSwitcher
+							user_data={user_data}
+							TextoEditar={TextoEditar} 
+							setTextoEditar={setTextoEditar} 
+							ListaEditar={ListaEditar} 
+							setListaEditar={setListaEditar} 
+							documento={documento} 
+							setDocumento={setDocumento} 
+							Editando={Editando} 
+							setEditando={setEditando}
+							SeleccionarIDs={SeleccionarIDs}
+							zoom={zoom}
+						/>
+						</div>
 						{(Editando.Celdas || Editando.Pos)? (
 							<EditorTamano 
 								user_data={user_data}
@@ -975,23 +968,12 @@ function EditorCurriculo({
 								Editando={Editando} 
 								setEditando={setEditando}
 								SeleccionarIDs={SeleccionarIDs}
+								zoom={zoom}
 							/>
 						) 
 						: 
 						(<></>)
 						}
-						<ToolBoxSwitcher
-							user_data={user_data}
-							TextoEditar={TextoEditar} 
-							setTextoEditar={setTextoEditar} 
-							ListaEditar={ListaEditar} 
-							setListaEditar={setListaEditar} 
-							documento={documento} 
-							setDocumento={setDocumento} 
-							Editando={Editando} 
-							setEditando={setEditando}
-							SeleccionarIDs={SeleccionarIDs}
-						/>
 					</div>
 				  ) : (
 					<>

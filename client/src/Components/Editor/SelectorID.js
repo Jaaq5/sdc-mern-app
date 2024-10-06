@@ -202,14 +202,14 @@ const BotonesCantidad = ({setTextoEditar, documento, setDocumento, Editando}) =>
 		</span>
 	</div>);
 };
-const EditorCantidad = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando}) => {
+/*const EditorCantidad = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando}) => {
 return (<div style={{backgroundColor: "#303030", position: "absolute", left: "300px", width: "200px", textAlign: "center"}}>
 		<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)", padding: "3px", textAlign: "center"}}>Cuantos campos mostrar</div>
 		<BotonesCantidad TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} />
 	</div>);
-};
+};*/
 
-const SelectorID = ({user_data, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
+const SelectorID = ({user_data, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	//<BloquesToHTML user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
 	
 	const [ListaSeleccionableIDs, setListaSeleccionable] = useState([]);
@@ -222,7 +222,7 @@ const SelectorID = ({user_data, ListaEditar, setListaEditar, documento, setDocum
 	Editando.path.forEach((campo) => item = item[campo]);
 	
 	return (
-	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Math.max(Editando.pos[0]-300, 0))+"px",top: (Math.max(Editando.pos[1],0))+"px", marginTop: "-10px", maxWidth: "300px"}}>
+	<div id={"Selector_IDs"} style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Math.max(Editando.pos[0]*0-300/zoom, 0)*zoom)+"px",top: (Math.max(Editando.pos[1],0)*zoom)+"px", marginTop: "-10px", maxWidth: "300px"}}>
 			<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)", padding: "3px", textAlign: "center"}}>
 				{item.Editable?.Titulo}
 				{Editando.Arreglo? (<div>

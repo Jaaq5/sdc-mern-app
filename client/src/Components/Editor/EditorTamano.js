@@ -70,11 +70,11 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 	
 	
 	const drag = (accion, index) => {
-		origenes[index] = origenes[index] === 0? [accion.clientX, accion.clientY] : origenes[index];
+		origenes[index] = origenes[index] === 0? [accion.clientX/gzoom, accion.clientY/gzoom] : origenes[index];
 	};
 	
 	const updatePos = (accion, myindex, posiciones, cajax) => {
-		movimiento[myindex] = origenes[myindex] === 0? movimiento[myindex] : [accion.clientX - origenes[myindex][0], accion.clientY - origenes[myindex][1]] ;
+		movimiento[myindex] = origenes[myindex] === 0? movimiento[myindex] : [accion.clientX/gzoom - origenes[myindex][0], accion.clientY/gzoom - origenes[myindex][1]] ;
 		movimiento[myindex] = [movimiento[myindex][0] * mults[myindex][0], movimiento[myindex][1] * mults[myindex][1]]
 		if(origenes[myindex] !== 0){
 			accion.target.style.transition = "none";
@@ -160,8 +160,8 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	
 	const drag = (accion, index) => {
 		//movimiento = origen === 0? movimiento : [accion.clientX - origen[0] - movimiento[0], accion.clientY - origen[1] - movimiento[1]] ;
-		scrollOrigin = origen === 0? [window.scrollX, window.scrollY] : scrollOrigin;
-		origen = origen === 0? [accion.clientX, accion.clientY] : [origen[0] - (ended[0] - accion.clientX), origen[1] - (ended[1] - accion.clientY)]
+		scrollOrigin = origen === 0? [window.scrollX/gzoom, window.scrollY/gzoom] : scrollOrigin;
+		origen = origen === 0? [accion.clientX/gzoom, accion.clientY/gzoom] : [origen[0] - (ended[0] - accion.clientX/gzoom), origen[1] - (ended[1] - accion.clientY/gzoom)]
 		
 		//let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 		let t = [accion.clientX - (scrollOrigin[0] - window.scrollX)*1 - origen[0], accion.clientY  - (scrollOrigin[1] - window.scrollY)*1 - origen[1]]//[pos[0] + movimiento[0] + (scrollOrigin[0] - window.scrollX), pos[1] + movimiento[1] + (scrollOrigin[1] - window.scrollY)];
@@ -172,14 +172,14 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 		
 		accion.target.style.width = "900%";
 		accion.target.style.height = "900%";
-		accion.target.style.top = "-300%";
-		accion.target.style.left = "-300%";
+		accion.target.style.top = "-400%";
+		accion.target.style.left = "-400%";
 		
 		dragging = true; 
 	};
 	
 	const updatePos = (accion, id) => {
-		movimiento = !dragging? movimiento : [accion.clientX - (scrollOrigin[0] - window.scrollX)*1 - origen[0], accion.clientY  - (scrollOrigin[1] - window.scrollY)*1 - origen[1]] ;
+		movimiento = !dragging? movimiento : [accion.clientX/gzoom - (scrollOrigin[0] - window.scrollX/gzoom)*1 - origen[0], accion.clientY/gzoom  - (scrollOrigin[1] - window.scrollY/gzoom)*1 - origen[1]] ;
 		if(dragging){
 			let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 			const c = [Math.floor(t[0]/celdasPagina[0]),Math.floor(t[1]/celdasPagina[1])];
@@ -221,7 +221,7 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 		accion.target.style.top = "0";
 		accion.target.style.left = "0";
 		
-		ended = [accion.clientX, accion.clientY];
+		ended = [accion.clientX/gzoom, accion.clientY/gzoom];
 		
 		dragging = false;
 		//calcularBotonMovimiento(tamano, t, docPos, setBotonMovimiento, path, documento, setDocumento, setPos, id);
@@ -231,7 +231,6 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 		<button id={"botton_mover"} style={{backgroundColor:"#0000", border: 0, minWidth: tamano.width+"px", minHeight: tamano.height+"px", position: "absolute", padding: 0, display: "flex", justifyContent: "center", alignItems:"center"}}
 		onMouseDown={(e) => drag(e)}
 		onMouseMove={(e) => updatePos(e, id)}
-		wheel 	=   {(e) => updatePos(e, id)}
 		onMouseUp=  {(e) => end(e, path, documento, setDocumento, id)}
 		>
 		<OpenWithIcon style={{"color" : "blue", pointerEvents: "none"}}/>
@@ -240,23 +239,23 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	setBotonMovimiento(buttonm);
 };
 
+let gzoom = 1;
 
-
-const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
+const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	//<BloquesToHTML user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
 	const [botones, setBotones] = useState([]);
 	const [tamano, setTamano] = useState([0,0]);
 	const [err, setErr] = useState(null);
-	const [caja, setCaja] = useState(null);
 	const [pos, setPos] = useState(null);
 	const [botonMovimiento, setBotonMovimiento] = useState(null);
+	
+	gzoom = zoom;
 	
 	if(!Editando || !Editando.path || !Editando.id)
 		return (<></>);
 	let e = false;
 	const cajax = document.getElementById(Editando.id);
 	if(err === null){
-		setCaja(cajax);
 		e = cajax?.clientHeight < cajax?.scrollHeight || cajax?.clientWidth < cajax?.scrollWidth;
 		setErr(e);
 	}
@@ -294,8 +293,9 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	  height: "100%",
 	  //left: Editando.pos[2]+"px",
 	  position: "absolute",
-	  backgroundImage: "repeating-linear-gradient(#fcc4 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #ccf4 0 1px, transparent 1px 100%)",
+	  backgroundImage: "linear-gradient(#fcc4 0 1px, transparent 1px 100%), linear-gradient(90deg, #ccf4 0 1px, transparent 1px 100%)",
 	  backgroundSize: celdasPagina[0]+"px "+celdasPagina[1]+"px",
+	  zIndex: -5
 	}
 	
 	return (<>
@@ -304,17 +304,18 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 		style={{width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
 		
 		>
-		
-		<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: err? "-60px" : "-30px", minWidth: "250px",width: "100%", height: "30px", transition: "all 0.5s", overflow: "hidden"}}>
-			 <WarningIcon color="warning" style={{position: "relative", top: "5px"}} />{" La caja podria ser pequeña"}
-		</div>
-		<div style={{minWidth: "250px", backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", width: "100%", height: "30px"}}>
-			<ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
-			<span id="pos_celda_texto">{initialPos? (<span>{initialPos[0]+" "}x{" "+initialPos[1]}</span>) : (<></>)}</span> 
-			{"  |  "}
-			<PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" "}
-			<span id="tamano_celda_texto">{item.Celdas[0]+" "}x{" "+item.Celdas[1]}</span>
-			<Button onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
+		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "250px", zoom: 1/gzoom}}>
+			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: err? "-60px" : "-30px", width: "100%", height: "30px", transition: "all 0.5s", overflow: "hidden"}}>
+				 <WarningIcon color="warning" style={{position: "relative", top: "5px"}} />{" La caja podria ser pequeña"}
+			</div>
+			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", width: "100%", height: "30px"}}>
+				<ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
+				<span id="pos_celda_texto">{initialPos? (<span>{initialPos[0]+" "}x{" "+initialPos[1]}</span>) : (<></>)}</span> 
+				{"  |  "}
+				<PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" "}
+				<span id="tamano_celda_texto">{item.Celdas[0]+" "}x{" "+item.Celdas[1]}</span>
+				<Button style={{zIndex: 200}} onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
+			</div>
 		</div>
 		{Editando.Pos? (<>{botonMovimiento}</>) : (<></>)}
 		{Editando.Celdas? (<>{botones}</>) : (<></>)}
