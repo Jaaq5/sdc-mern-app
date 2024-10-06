@@ -79,9 +79,9 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 		if(origenes[myindex] !== 0){
 			accion.target.style.transition = "none";
 			accion.target.style.transform = "translate("+movimiento[myindex][0]+"px,"+movimiento[myindex][1]+"px)";
-			accion.target.style.minWidth = (size*20)+"px"
-			accion.target.style.minHeight = (size*20)+"px"
-			accion.target.style.margin = (-size*10)+"px 0px 0px "+(-size*10)+"px"
+			accion.target.style.minWidth = (size*100)+"px"
+			accion.target.style.minHeight = (size*100)+"px"
+			accion.target.style.margin = (-size*50)+"px 0px 0px "+(-size*50)+"px"
 			
 
 			let t = [Math.min(Math.max(tamano.width + movimiento[myindex][0], 20),2756), Math.min(Math.max(tamano.height + movimiento[myindex][1],20), 21123)];
@@ -161,9 +161,7 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	const drag = (accion, index) => {
 		//movimiento = origen === 0? movimiento : [accion.clientX - origen[0] - movimiento[0], accion.clientY - origen[1] - movimiento[1]] ;
 		scrollOrigin = origen === 0? [window.scrollX, window.scrollY] : scrollOrigin;
-		origen = origen === 0? [accion.clientX, accion.clientY] : [origen[0] - (ended[0] - accion.clientX), origen[1] - (ended[1] - accion.clientY)];
-		console.log(scrollOrigin + ", "+ [window.scrollX, window.scrollY])
-		
+		origen = origen === 0? [accion.clientX, accion.clientY] : [origen[0] - (ended[0] - accion.clientX), origen[1] - (ended[1] - accion.clientY)]
 		
 		//let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 		let t = [accion.clientX - (scrollOrigin[0] - window.scrollX)*1 - origen[0], accion.clientY  - (scrollOrigin[1] - window.scrollY)*1 - origen[1]]//[pos[0] + movimiento[0] + (scrollOrigin[0] - window.scrollX), pos[1] + movimiento[1] + (scrollOrigin[1] - window.scrollY)];
@@ -172,10 +170,10 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 			
 		document.getElementById("pos_celda_texto").innerHTML = c[0]+" x "+c[1];//Math.floor(t[0])+" x "+Math.floor(t[1]);
 		
-		accion.target.style.width = "600%";
-		accion.target.style.height = "600%";
-		accion.target.style.top = "-200%";
-		accion.target.style.left = "-200%";
+		accion.target.style.width = "900%";
+		accion.target.style.height = "900%";
+		accion.target.style.top = "-300%";
+		accion.target.style.left = "-300%";
 		
 		dragging = true; 
 	};
@@ -271,10 +269,13 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 		setTamano(t);
 	
 	const m = cajax.currentStyle || window.getComputedStyle(cajax);
+	const doc = document.getElementById("contenedor_documento");
+	
 	let initialPos = item.Pos? item.Pos : [
-		Math.floor((Editando.pos[0] - Editando.pos[2]- Number(m.marginLeft.substring(0, m.marginLeft.length-2)))/celdasPagina[0]),
-		Math.floor((Editando.pos[1] - Number(m.marginTop.substring(0, m.marginTop.length-2)) + Editando.pos[5])/celdasPagina[1])
+		Math.floor((Editando.pos[0] - Number(m.marginLeft.substring(0, m.marginLeft.length-2))   - Editando.pos[2]   + Editando.pos[3]*1 - Number(doc.style.left.substring(0, doc.style.left.length-2))*0)/celdasPagina[0]),
+		Math.floor((Editando.pos[1] - Number(m.marginTop.substring(0, m.marginTop.length-2))     + Editando.pos[4]*0 + Editando.pos[5]*1 - Number(doc.style.top.substring(0, doc.style.top.length-2)))/celdasPagina[1])
 	];
+	
 	const p = posicionObjeto(initialPos);
 	if(pos == null)
 		setPos(p)
@@ -293,7 +294,7 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	  height: "100%",
 	  //left: Editando.pos[2]+"px",
 	  position: "absolute",
-	  backgroundImage: "repeating-linear-gradient(#ccc5 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #ccc5 0 1px, transparent 1px 100%)",
+	  backgroundImage: "repeating-linear-gradient(#fcc4 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #ccf4 0 1px, transparent 1px 100%)",
 	  backgroundSize: celdasPagina[0]+"px "+celdasPagina[1]+"px",
 	}
 	
@@ -303,14 +304,11 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 		style={{width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
 		
 		>
-		{err? (
-		<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-60px", minWidth: "230px",width: "100%", height: "30px"}}>
+		
+		<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: err? "-60px" : "-30px", minWidth: "250px",width: "100%", height: "30px", transition: "all 0.5s", overflow: "hidden"}}>
 			 <WarningIcon color="warning" style={{position: "relative", top: "5px"}} />{" La caja podria ser pequeña"}
-		</div>) 
-		: 
-		(<></>)
-		}
-		<div style={{minWidth: "230px", backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", width: "100%", height: "30px"}}>
+		</div>
+		<div style={{minWidth: "250px", backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", width: "100%", height: "30px"}}>
 			<ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
 			<span id="pos_celda_texto">{initialPos? (<span>{initialPos[0]+" "}x{" "+initialPos[1]}</span>) : (<></>)}</span> 
 			{"  |  "}

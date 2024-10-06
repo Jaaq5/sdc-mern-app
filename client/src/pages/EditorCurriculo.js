@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import Slider from '@mui/material/Slider';
 
 import DocumentoPDF from "../Components/Editor/DocumentoPDF";
 
@@ -98,10 +99,10 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	maxWidth: "20px",
-	maxHeight: "20px",
-	minWidth: "20px",
-	minHeight: "20px",
+	maxWidth: "100%",
+	maxHeight: "100%",
+	minWidth: "100%",
+	minHeight: "100%",
     cursor: "pointer",
     color: "#000",
 	margin: "0px",
@@ -109,8 +110,13 @@ function EditorCurriculo({
 	display: "inline",
 	fontSize: "inherit",
 	position: "absolute",
-	right: "2px",
-	top: "2px"
+	right: "0px",
+	top: "0px"
+  };
+  const seccionEditButtonIcon ={
+	  width: "20px", 
+	  height: "20px",
+	  display: "none"
   };
   const editButtonIcon ={
 	  width: "20px", 
@@ -126,9 +132,11 @@ function EditorCurriculo({
   const toolBar = {
 	  backgroundColor: "#303030",
 	  width: "calc(100% - 20px)",
+	  minHeight: "60px",
 	  height: "60px",
-	  padding: "10px",
-	  position: "sticky"
+	  padding: "5px",
+	  position: "sticky",
+	  flexDirection: "row"
   };
   
   //PDF
@@ -172,6 +180,8 @@ function EditorCurriculo({
   const [ListaEditar, setListaEditar] = useState([]);
   const [tempIds, setTempIds] = useState({}); //Ids calculadas automaticamente y son las que se dibujan
   const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
+  const [minMaxDoc, setMinMaxDoc] = useState([0,0,600,800]);
+  const [zoom, setZoom] = useState(1);
   
   //DEBUG
   const [editMode, setEditMode] = useState("Usuario");
@@ -189,8 +199,11 @@ function EditorCurriculo({
 		estructura = JSON.parse(JSON.stringify(estructura? estructura : {}));
 		estructura.style = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
 	}
+	const tc = [0,0];
 	if(estructura.Celdas){
 		const t = celdasAPx(estructura.Celdas);
+		tc[0] = t.width;
+		tc[1] = t.height;
 		estructura.style.width = t.width+"px";
 		estructura.style.height = t.height+"px";
 	}
@@ -221,6 +234,12 @@ function EditorCurriculo({
 		estructura.style.left = t.width+"px";
 		estructura.style.top = t.height+"px";
 		estructura.style.position = "absolute";
+		
+		
+		minMaxDoc[0] = minMaxDoc[0] < t.width? minMaxDoc[0] : t.width;
+		minMaxDoc[1] = minMaxDoc[1] < t.height? minMaxDoc[1] : t.height;
+		minMaxDoc[2] = minMaxDoc[2] > t.width + tc[0]? minMaxDoc[2] : t.width + tc[0];
+		minMaxDoc[3] = minMaxDoc[3] > t.height + tc[1]? minMaxDoc[3] : t.height + tc[1];
 	}
 	return estructura.style;
   };
@@ -305,10 +324,39 @@ function EditorCurriculo({
 	  </div></>);
   };
   
-  const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  return (<>
-		<img id={"Imagen_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
-	  </>);
+  const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
+	  const imgStyle = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
+	  imgStyle.top = 0;
+	  imgStyle.left = 0;
+	  return (<div style={estructura.style}>
+		<img id={"Imagen_"+nombreSeccion+"_"+index} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
+		{estructura.Editable? (
+						<Button  
+							title={estructura.Editable.Titulo}
+							style={seccionEditButton}
+							id={"Edit_Button_Seccion_"+seccion}
+							onClick={(e) => {
+							setEditando({
+								Tipo: estructura.Editable.Tipo,
+								pos: posicionEnOverlay("Imagen_"+nombreSeccion+"_"+index),
+								path: path,
+								id: "Imagen_"+nombreSeccion+"_"+index,
+								Seccion: nombreSeccion,
+								Campo: estructura.Editable.Campo,
+								Arreglo: estructura.Editable.Arreglo,
+								Celdas: estructura.Editable.Celdas,
+								Pos: estructura.Editable.Pos
+							});
+							setOpcionesPanel(
+								{Seccion: seccion}
+							);
+							}} >
+								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
+						</Button>
+					) : (
+						<></>
+					)}
+	  </div>);
   };
 	
   const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
@@ -398,7 +446,7 @@ function EditorCurriculo({
 								{Seccion: seccion}
 							);
 							}} >
-								<SwapHorizontalCircleIcon style={editButtonIcon}/>
+								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
 						</Button>
 					) : (
 						<></>
@@ -448,7 +496,7 @@ function EditorCurriculo({
 						id: id,
 						});
 					}} >
-						<SwapHorizontalCircleIcon style={editButtonIcon}/>
+						<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
 				</Button>
 			) : (
 				<></>
@@ -561,6 +609,7 @@ function EditorCurriculo({
   const posicionEnOverlay = (id) => {
 	let doc = document.getElementById("documento_html");
 	let container = document.getElementById("contenedor_documento");
+	let editor = document.getElementById("contenedor_documentos");
 	if(!doc)
 		return [0,0];
 	
@@ -576,8 +625,9 @@ function EditorCurriculo({
 		
 		parent = parent.parentElement;
 	}
-	pos = [pos[0] + doc.offsetLeft*1 - container.scrollLeft, pos[1] - doc.offsetTop*0 - container.scrollTop]
-	pos = [Math.max(0, pos[0]), Math.max(0, pos[1]), doc.offsetLeft*1, container.scrollLeft, doc.offsetTop*0, container.scrollTop];
+
+	pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft, pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop]
+	pos = [Math.max(-10000, pos[0]), Math.max(-10000, pos[1]), container.offsetLeft, editor.scrollLeft , container.offsetTop, editor.scrollTop];
 	return pos;
   };
   
@@ -623,11 +673,16 @@ function EditorCurriculo({
 		Object.entries(documento.diseno.style).forEach(([key, value]) => {
 			documentoEstilo[key] = value;
 		});
+		documentoEstilo.pointerEvents = "auto"
 		documento.diseno.style = documentoEstilo;
+		
+		
 		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
 			paginaEstilo[key] = value;
 		});
+		paginaEstilo.height = minMaxDoc[3]+"px"
 		documento.diseno.Paginas[0].style = paginaEstilo;
+		
 		
 		//Registro de fuentes automatica
 		//Hacer estilos un objeto editable
@@ -832,7 +887,6 @@ function EditorCurriculo({
 					>
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
-				  <span style={{color: "white"}}>Por ahora, la plantilla simple es la utilizada</span>
 				  <Button onClick={(e) => {
 					  setEditando({
 						Tipo: "Orden"
@@ -849,6 +903,18 @@ function EditorCurriculo({
 				  >
 					Guardar
 				  </Button>
+				  <Slider sx={{position: "relative", width:"200px"}}
+					aria-label="ZoomSlider"
+					valueLabelDisplay="auto"
+					defaultValue={1}
+					min={0.5}
+					max={2}
+					getAriaValueText={(val) => {return val+"x"}}
+					step={0.1}
+					onChange={(val) => {
+						setZoom(val.target.value)
+					}}
+				  />
 				  {process.env.NODE_ENV === "development"? (
 				  <><Button onClick={(e) => {
 					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
@@ -895,10 +961,26 @@ function EditorCurriculo({
 				  (<></>)
 				  }
 			  </div>
-			  {Editando? (
-				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: "0.7"}} >
-					{(Editando.Celdas || Editando.Pos)? (
-						<EditorTamano 
+				  {Editando? (
+					<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: zoom}} >
+						{(Editando.Celdas || Editando.Pos)? (
+							<EditorTamano 
+								user_data={user_data}
+								TextoEditar={TextoEditar} 
+								setTextoEditar={setTextoEditar} 
+								ListaEditar={ListaEditar} 
+								setListaEditar={setListaEditar} 
+								documento={documento} 
+								setDocumento={setDocumento} 
+								Editando={Editando} 
+								setEditando={setEditando}
+								SeleccionarIDs={SeleccionarIDs}
+							/>
+						) 
+						: 
+						(<></>)
+						}
+						<ToolBoxSwitcher
 							user_data={user_data}
 							TextoEditar={TextoEditar} 
 							setTextoEditar={setTextoEditar} 
@@ -910,30 +992,20 @@ function EditorCurriculo({
 							setEditando={setEditando}
 							SeleccionarIDs={SeleccionarIDs}
 						/>
-					) 
-					: 
-					(<></>)
-					}
-					<ToolBoxSwitcher
-					    user_data={user_data}
-						TextoEditar={TextoEditar} 
-						setTextoEditar={setTextoEditar} 
-						ListaEditar={ListaEditar} 
-						setListaEditar={setListaEditar} 
-						documento={documento} 
-						setDocumento={setDocumento} 
-						Editando={Editando} 
-						setEditando={setEditando}
-						SeleccionarIDs={SeleccionarIDs}
-					/>
-				</div>
-			  ) : (
-				<>
-				</>
-			  )}
-			  <div id="contenedor_documento" style={{overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center", zoom: "0.7"}}>
-				  <MyHTMLDocument />
-			  </div>
+					</div>
+				  ) : (
+					<>
+					</>
+				  )}
+				  
+				  <div id="contenedor_documentos" 
+					style={{width: "100%", height: "100%", overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", pointerEvents: "auto", display: "flex", justifyContent: "center", zoom: zoom, paddingTop: (-minMaxDoc[1]*0)+"px"}}
+				  >
+				    
+					<div id="contenedor_documento" style={{position: "relative", width: "50%", height: "150%", pointerEvents: "none", top: (-minMaxDoc[1])+"px", left: (-minMaxDoc[0])+"px"}}>
+					  <MyHTMLDocument />
+					</div>
+				  </div>
 		  </div>
 
 		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>

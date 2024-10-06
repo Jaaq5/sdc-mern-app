@@ -152,7 +152,7 @@ const crearBloquesToHTML = (user_data, TextoEditar, setTextoEditar, ListaEditar,
 };
 
 
-const BotonesCantidad = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando}) => {
+const BotonesCantidad = ({setTextoEditar, documento, setDocumento, Editando}) => {
 	let cantidad = documento.datos.Secciones[Editando.Seccion].Cantidad;
 	const moveButton = {
 		padding: 0,
@@ -170,7 +170,7 @@ const BotonesCantidad = ({TextoEditar, setTextoEditar, documento, setDocumento, 
 		width: "24px",
 		height: "24px",
 	};
-	setTextoEditar(cantidad);
+	
 	return (<div style={{textAlign: "center", display: "inline"}}>
 		
 		<span style={{color: "#fff", fontWeight: "900", fontSize: "1.2em"}}>
@@ -209,9 +209,11 @@ return (<div style={{backgroundColor: "#303030", position: "absolute", left: "30
 	</div>);
 };
 
-const SelectorID = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
+const SelectorID = ({user_data, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
 	//<BloquesToHTML user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+	
 	const [ListaSeleccionableIDs, setListaSeleccionable] = useState([]);
+	const [TextoEditar, setTextoEditar] = useState([]);
 	
 	if(ListaSeleccionableIDs.length === 0)
 		crearBloquesToHTML(user_data,TextoEditar,setTextoEditar,ListaSeleccionableIDs,setListaSeleccionable,documento,setDocumento,Editando,setEditando);
@@ -220,11 +222,11 @@ const SelectorID = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setLis
 	Editando.path.forEach((campo) => item = item[campo]);
 	
 	return (
-	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Editando.pos[0]-300)+"px",top: (Editando.pos[1])+"px", marginTop: "-10px", maxWidth: "300px"}}>
+	<div style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Math.max(Editando.pos[0]-300, 0))+"px",top: (Math.max(Editando.pos[1],0))+"px", marginTop: "-10px", maxWidth: "300px"}}>
 			<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)", padding: "3px", textAlign: "center"}}>
 				{item.Editable?.Titulo}
 				{Editando.Arreglo? (<div>
-				<BotonesCantidad TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} />
+				<BotonesCantidad setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} />
 				</div>) : (<>
 				</>)}
 				<Button onClick={(e) => {setEditando(null); SeleccionarIDs(user_data, documento, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Curriculo, user_data.curriculums[user_data.editando_curriculo].ID_Categoria_Puesto);}}><CheckCircleIcon color = "success" /> </Button>

@@ -127,7 +127,7 @@
                 15
               ],
               "Editable": {
-                "Tipo": "Imagen",
+                "Tipo": "Tamano",
                 "Titulo": "Foto",
                 "Label": "Foto",
                 "Placeholder": "Foto",

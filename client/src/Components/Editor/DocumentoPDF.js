@@ -69,7 +69,8 @@ const SeccionPDFEstructurada = ({user_data, seccion, documento, id, obtenerTexto
 
 	  if(documento.diseno.Secciones[seccion].Pos){
 		  crearContenedor = true;
-		  posStyle.height = documento.diseno.Secciones[seccion].style.top;
+		  //posStyle.height = documento.diseno.Secciones[seccion].style.top;
+		  posStyle.height = (400 + Number(documento.diseno.Secciones[seccion].style.top.substring(0,documento.diseno.Secciones[seccion].style.top.length-2)))+"px"
 		  secStyle.top = "0px"
 		  secStyle.position = "relative";
 	  }
@@ -85,7 +86,7 @@ const SeccionPDFEstructurada = ({user_data, seccion, documento, id, obtenerTexto
 			  );
 	  
 	  if(crearContenedor)
-		  return (<View style={{position: "absolute", backgroundColor: "#f000", display: "flex", flexDirection: "column"}}><View style={posStyle}></View>{sec}</View>)
+		  return (<View style={{position: "absolute", backgroundColor: "#f000", display: "flex", flexDirection: "column", marginTop: "-400px"}}><View style={posStyle}></View>{sec}</View>)
 	  else
 		  return sec;
 };
