@@ -98,13 +98,16 @@
             "position": "relative",
             "textAlign": "left",
             "marginTop": "0px",
-            "marginLeft": "150px",
+            "marginLeft": "0px",
             "overflow": "visible",
             "width": "446.25px",
-            "height": "224.26666666666668px"
+            "height": "224.26666666666668px",
+			
+			"display" : "flex",
+			"flexDirection" : "row"
           },
           "Celdas": [
-            30,
+            40,
             16
           ],
           "Editable": {
@@ -124,15 +127,16 @@
                 15
               ],
               "Editable": {
-                "Tipo": "Imagen",
+                "Tipo": "Tamano",
                 "Titulo": "Foto",
                 "Label": "Foto",
                 "Placeholder": "Foto",
-                "Celdas": true
+                "Celdas": true,
+				"Pos": true
               },
               "style": {
-                "position": "absolute",
-                "left": "-150px",
+                "position": "relative",
+                "left": "0px",
                 "width": "148.75px",
                 "height": "210.25px",
                 "fontFamily": "Roboto",
@@ -141,90 +145,92 @@
             },
 			{
 				"Tipo" : "Estructura",
-				"Estructura" : []
-			},
-            {
-              "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
-              "Editable": {
-                "Tipo": "Texto",
-                "Titulo": "Editar Nombre",
-				"Campo" : "TituloSeccion",
-                "Label": "Nombre",
-                "Placeholder": "Tu nombre"
-              },
-              "style": {
-                "fontWeight": 900,
-                "fontSize": "26px",
-                "marginBottom": "10px",
-                "display": "flex",
-                "fontFamily": "Roboto"
-              }
-            },
-            {
-              "Tipo": "Texto",
-              "Texto": [
-                "Sobre_Mi"
-              ],
-              "style": {
-                "dsiplay": "flex",
-                "border": "0pt",
-                "borderTop": "1pt",
-                "borderBottom": "1pt",
-                "borderColor": "#ccc",
-                "borderStyle": "solid",
-                "marginBottom": "10px",
-                "fontSize": "16px",
-                "fontFamily": "Roboto",
-                "fontWeight": 400
-              }
-            },
-            {
-              "Tipo": "Texto",
-              "Texto": [
-                "Puesto"
-              ],
-              "style": {
-                "dsiplay": "flex",
-                "fontWeight": 400,
-                "fontFamily": "Roboto"
-              }
-            },
-            {
-              "Tipo": "Texto",
-              "Texto": [
-                "Contactos: "
-              ],
-              "style": {
-                "dsiplay": "flex",
-                "fontFamily": "Roboto",
-                "fontWeight": 400
-              }
-            },
-            {
-              "Tipo": "Texto",
-              "Texto": [
-                "Telefono"
-              ],
-              "style": {
-                "dsiplay": "flex",
-                "fontFamily": "Roboto",
-                "fontWeight": 400
-              }
-            },
-            {
-              "Tipo": "Texto",
-              "Texto": [
-                "Correo"
-              ],
-              "style": {
-                "dsiplay": "flex",
-                "fontFamily": "Roboto",
-                "fontWeight": 400
-              }
-            }
+				"style" : {"flexGrow" : 1},
+				"Estructura" : [
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"TituloSeccion"
+					  ],
+					  "Editable": {
+						"Tipo": "Texto",
+						"Titulo": "Editar Nombre",
+						"Campo" : "TituloSeccion",
+						"Label": "Nombre",
+						"Placeholder": "Tu nombre"
+					  },
+					  "style": {
+						"fontWeight": 900,
+						"fontSize": "26px",
+						"marginBottom": "10px",
+						"display": "flex",
+						"fontFamily": "Roboto"
+					  }
+					},
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"Sobre_Mi"
+					  ],
+					  "style": {
+						"dsiplay": "flex",
+						"border": "0pt",
+						"borderTop": "1pt",
+						"borderBottom": "1pt",
+						"borderColor": "#ccc",
+						"borderStyle": "solid",
+						"marginBottom": "10px",
+						"fontSize": "16px",
+						"fontFamily": "Roboto",
+						"fontWeight": 400
+					  }
+					},
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"Puesto"
+					  ],
+					  "style": {
+						"dsiplay": "flex",
+						"fontWeight": 400,
+						"fontFamily": "Roboto"
+					  }
+					},
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"Contactos: "
+					  ],
+					  "style": {
+						"dsiplay": "flex",
+						"fontFamily": "Roboto",
+						"fontWeight": 400
+					  }
+					},
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"Telefono"
+					  ],
+					  "style": {
+						"dsiplay": "flex",
+						"fontFamily": "Roboto",
+						"fontWeight": 400
+					  }
+					},
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"Correo"
+					  ],
+					  "style": {
+						"dsiplay": "flex",
+						"fontFamily": "Roboto",
+						"fontWeight": 400
+					  }
+					}
+				]
+			}
           ]
         },
         "Experiencias_Laborales": {
@@ -246,7 +252,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -339,7 +346,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -429,7 +437,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -537,7 +546,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -625,7 +635,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -706,7 +717,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -796,7 +808,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {
@@ -895,7 +908,8 @@
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
-            "Celdas": true
+            "Celdas": true,
+			"Pos": true
           },
           "Estructura": [
             {

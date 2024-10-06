@@ -57,9 +57,13 @@ const ElementoEstructuradoHTML = ({documento, nombreSeccion, seccion, estructura
 	  case "Imagen":
 		return (<ElementoImgEstructuradoHTML  documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "Estructura":
-		const style = tamanoYPosicion(estructura);
-		estructura.style = style;
-		return (<div style={style}><ElementoEstructuradoHTML nombreSeccion={nombreSeccion} documento={documento} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} /></div>)
+			const style = tamanoYPosicion(estructura);
+			estructura.style = style;
+			return (<div style={style}>
+				{Object.entries(estructura.Estructura).map(([index, estr]) => 
+					(<ElementoEstructuradoHTML documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estr} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />)
+				)}
+			</div>)
 	  case "IDs":
 		let list = [];
 		for(let i = 0; i < documento.datos.Secciones[nombreSeccion].Cantidad; i+=1){

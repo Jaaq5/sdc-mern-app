@@ -210,24 +210,23 @@ function App() {
     ) => {
 	  user_data.curriculums[user_data.editando_curriculo].Documento = documento;
 	  setUserData(user_data);
-      axios
+      return axios
         .patch(apiUrl + "/api/users/actualizar-usuario-curr", {
           usuario_id: user_data.usuario_id,
           curriculum_id: curriculo_id,
           documento: JSON.stringify(documento),
           categoria_curriculum_id: cat_curr_id,
           categoria_puesto_id: cat_puesto_id,
-        })
-        .then((response) => {
+        })/*.then((response) => {
           //Revisar respuesta si es necesario
           if (response.data.success && response.data.curriculum_id) {
             return response.data.curriculum_id;
           }
-        })
+        })*/
         .catch((err) => {
           console.log(err);
         });
-      return null;
+      //return null;
     },
 
     EliminarCurriculo: async (user_data, setUserData, index, curriculo_id) => {
