@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import Slider from '@mui/material/Slider';
 
 import DocumentoPDF from "../Components/Editor/DocumentoPDF";
 
@@ -10,6 +11,7 @@ import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrde
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
 import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina} from "../Components/Editor/EditorTamano";
+import Autosave from "../Components/Editor/Autosave";
 
 import "./editor.css";
 
@@ -38,19 +40,19 @@ import {
 	listButtonStyle, 
   } from "../style";
 
-const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs}) => {
+const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	switch(Editando.Tipo){
 		case "Texto":
 			return (<>
-				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+				<TextoEditor TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} zoom={zoom} />
 			</>)
 		case "IDs":
 			return (<>
-				<SelectorID user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} SeleccionarIDs={SeleccionarIDs}/>
+				<SelectorID user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} SeleccionarIDs={SeleccionarIDs}  zoom={zoom}/>
 			</>)
 		case "Orden":
 			return (<>
-				<SeccionOrderEditor ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
+				<SeccionOrderEditor ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} zoom={zoom}/>
 			</>)
 	}
 };
@@ -98,10 +100,10 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	maxWidth: "20px",
-	maxHeight: "20px",
-	minWidth: "20px",
-	minHeight: "20px",
+	maxWidth: "100%",
+	maxHeight: "100%",
+	minWidth: "100%",
+	minHeight: "100%",
     cursor: "pointer",
     color: "#000",
 	margin: "0px",
@@ -109,8 +111,13 @@ function EditorCurriculo({
 	display: "inline",
 	fontSize: "inherit",
 	position: "absolute",
-	right: "2px",
-	top: "2px"
+	right: "0px",
+	top: "0px"
+  };
+  const seccionEditButtonIcon ={
+	  width: "20px", 
+	  height: "20px",
+	  display: "none"
   };
   const editButtonIcon ={
 	  width: "20px", 
@@ -119,49 +126,20 @@ function EditorCurriculo({
   const pdfCaja = {
 	  backgroundColor: "#303030",
 	  height: "1000px",
-	  width: "auto",
+	  width: "70%",
 	  minWidth: (celdasPagina[0]*40)+"px",
 	  overflow: "hidden",
   };
   const toolBar = {
 	  backgroundColor: "#303030",
 	  width: "calc(100% - 20px)",
+	  minHeight: "60px",
 	  height: "60px",
-	  padding: "10px",
-	  position: "sticky"
+	  padding: "5px",
+	  position: "sticky",
+	  flexDirection: "row"
   };
   
-  //PDF
-  const stilos_paleta = StyleSheet.create({
-	pagina: {
-		paddingTop: 35,
-		paddingBottom: 65,
-		paddingLeft: 35,
-		paddingRight: 35,
-		textAlign: "center",
-	},
-    seccion: {
-		margin: "1px",
-		padding: "3px",
-		width: "250px",
-		textAlign: "left",
-		backgroundColor: "#EF0FEF33",
-		position: "relative",
-		minHeight: "50px"
-    },
-	titulo: {
-		margin: 12,
-		fontSize: 14,
-		textAlign: 'justify',
-		fontFamily: 'Times-Roman'
-	},
-	item: {
-		margin: 2,
-		fontSize: 10,
-		textAlign: 'justify',
-		fontFamily: 'Times-Roman'
-	},
-  });
   
   //Editor
   const [categoria_curriculum, setCatCurriculum] = useState("");
@@ -172,6 +150,9 @@ function EditorCurriculo({
   const [ListaEditar, setListaEditar] = useState([]);
   const [tempIds, setTempIds] = useState({}); //Ids calculadas automaticamente y son las que se dibujan
   const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
+  const [minMaxDoc, setMinMaxDoc] = useState([0,0,600,800]);
+  const [zoom, setZoom] = useState(1);
+  const [actualizar, setActualizar] = useState(false);
   
   //DEBUG
   const [editMode, setEditMode] = useState("Usuario");
@@ -182,23 +163,54 @@ function EditorCurriculo({
         };
 		
   //Retorna el estilo
-  const tamanoYPosicion = (estructura) => {
+  const tamanoYPosicion = (estructura, pindex = 0, index = 0) => {
 	try{
 		estructura.style = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
 	}catch(e){
 		estructura = JSON.parse(JSON.stringify(estructura? estructura : {}));
 		estructura.style = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
 	}
+	const tc = [0,0];
 	if(estructura.Celdas){
 		const t = celdasAPx(estructura.Celdas);
+		tc[0] = t.width;
+		tc[1] = t.height;
 		estructura.style.width = t.width+"px";
 		estructura.style.height = t.height+"px";
 	}
 	if(estructura.Pos){
+		//TODO
+		//Hacer esto al cometer cambios
+		/*const tPos = [estructura.Pos[0], estructura.Pos[1]];
+		if(estructura.Estructura){
+			if(tPos[1] > (pindex+1)*60){
+				tPos[1] -= (pindex+1)*60;
+				if(documento.diseno.Paginas[pindex+1] && documento.diseno.Paginas[pindex+1].Estructura.indexOf(index) < 0)
+					documento.diseno.Paginas[pindex+1].Estructura.push(index);
+				else{
+					documento.diseno.Paginas.push({
+						style: documento.diseno.Paginas[0].style,
+						Elementos: documento.diseno.Paginas[0].Elementos,
+						Estructura: [index]
+					});
+				}
+				//Remover de la pagina anterior
+				delete documento.diseno.Paginas[pindex].Estructura[documento.diseno.Paginas[pindex].Estructura.indexOf(index)];
+				
+			}else{
+				tPos[1] -= (pindex)*60;
+			}
+		}*/
 		const t = celdasAPx(estructura.Pos);
 		estructura.style.left = t.width+"px";
 		estructura.style.top = t.height+"px";
 		estructura.style.position = "absolute";
+		
+		
+		minMaxDoc[0] = minMaxDoc[0] < t.width? minMaxDoc[0] : t.width;
+		minMaxDoc[1] = minMaxDoc[1] < t.height? minMaxDoc[1] : t.height;
+		minMaxDoc[2] = minMaxDoc[2] > t.width + tc[0]? minMaxDoc[2] : t.width + tc[0];
+		minMaxDoc[3] = minMaxDoc[3] > t.height + tc[1]? minMaxDoc[3] : t.height + tc[1];
 	}
 	return estructura.style;
   };
@@ -283,16 +295,45 @@ function EditorCurriculo({
 	  </div></>);
   };
   
-  const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  return (<>
-		<img id={"Imagen_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
-	  </>);
+  const ElementoImgEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
+	  const imgStyle = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
+	  imgStyle.top = 0;
+	  imgStyle.left = 0;
+	  return (<div style={estructura.style}>
+		<img id={"Imagen_"+nombreSeccion+"_"+index} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
+		{estructura.Editable? (
+						<Button  
+							title={estructura.Editable.Titulo}
+							style={seccionEditButton}
+							id={"Edit_Button_Seccion_"+seccion}
+							onClick={(e) => {
+							setEditando({
+								Tipo: estructura.Editable.Tipo,
+								pos: posicionEnOverlay("Imagen_"+nombreSeccion+"_"+index),
+								path: path,
+								id: "Imagen_"+nombreSeccion+"_"+index,
+								Seccion: nombreSeccion,
+								Campo: estructura.Editable.Campo,
+								Arreglo: estructura.Editable.Arreglo,
+								Celdas: estructura.Editable.Celdas,
+								Pos: estructura.Editable.Pos
+							});
+							setOpcionesPanel(
+								{Seccion: seccion}
+							);
+							}} >
+								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
+						</Button>
+					) : (
+						<></>
+					)}
+	  </div>);
   };
 	
   const ElementoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
 	  if(!estructura)
 		  return (<></>);
-	  
+	  estructura.style = tamanoYPosicion(estructura);
 	  switch(estructura.Tipo){
 		  case "Texto":
 			return (<ElementoTextoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} />);
@@ -304,7 +345,11 @@ function EditorCurriculo({
 		    const newPath = extenderPath(path, ["Estructura",index]);
 			const style = tamanoYPosicion(estructura);
 			estructura.style = style;
-			return (<div style={style}><ElementoEstructuradoHTML user_data={user_data} nombreSeccion={nombreSeccion} documento={documento} id={id} index={index} path={[newPath]} /></div>)
+			return (<div style={style}>
+				{Object.entries(estructura.Estructura).map(([index, estr]) => 
+					(<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion}  estructura={estr} id={id} index={index} path={extenderPath(path, ["Estructura",index])} />)
+				)}
+			</div>)
 		  case "IDs":
 		    let list = [];
 			tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
@@ -332,46 +377,64 @@ function EditorCurriculo({
 		documento.diseno.Secciones[seccion].style = JSON.parse(JSON.stringify(documento.diseno.Secciones[seccion].style));
 		documento.diseno.Secciones[seccion].style.position = documento.diseno.Secciones[seccion].style.position? documento.diseno.Secciones[seccion].style.position : "relative";
 	  }
-	  documento.diseno.Secciones[seccion].style = tamanoYPosicion(documento.diseno.Secciones[seccion]);
+	  
+	  const pindex = path.indexOf("Paginas")+1;
+	  const ind = documento.diseno.Secciones.Orden.indexOf(seccion);
+	  documento.diseno.Secciones[seccion].style = tamanoYPosicion(documento.diseno.Secciones[seccion], pindex, ind<0? seccion : ind);
 	  documento.diseno.Secciones[seccion].style.overflow = documento.diseno.Secciones[seccion].style.overflow? documento.diseno.Secciones[seccion].style.overflow : "hidden";
 	  
-	  return (
-		<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
-			{documento.diseno.Secciones[seccion].Editable? (
-				<Button  
-					title={documento.diseno.Secciones[seccion].Editable.Titulo}
-					style={seccionEditButton}
-					id={"Edit_Button_Seccion_"+seccion}
-					onClick={(e) => {
-					setEditando({
-						Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
-						pos: posicionEnOverlay("Seccion_"+seccion),
-						path: path,
-						id: "Seccion_" + seccion,
-						Seccion: seccion,
-						Campo: documento.diseno.Secciones[seccion].Editable.Campo,
-						Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
-						Lista: tempIds[seccion],
-						Celdas: documento.diseno.Secciones[seccion].Editable.Celdas,
-						Pos: documento.diseno.Secciones[seccion].Editable.Pos
-					});
-					setOpcionesPanel(
-						{Seccion: seccion}
-					);
-					}} >
-						<SwapHorizontalCircleIcon style={editButtonIcon}/>
-				</Button>
-			) : (
-				<></>
-			)}
-			{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
-				const newPath = extenderPath(path, ["Estructura",index]);
-				return (<>
-					<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} path={newPath} />
-				</>)
-			})}
-		</div>
-	  );
+	  let crearContenedor = false;
+	  let posStyle = {position: "relative", pointerEvents: "none", width: "100%"};
+	  if(documento.diseno.Secciones[seccion].Pos){
+		  //crearContenedor = true;
+		  posStyle.height = documento.diseno.Secciones[seccion].style.top;
+		  //documento.diseno.Secciones[seccion].style.top = "0px"
+		  //documento.diseno.Secciones[seccion].style.position = "relative";
+		  //documento.diseno.Secciones[seccion].style.pointerEvents = "auto";
+	  }
+	  
+	  const sec = (
+				<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
+					{documento.diseno.Secciones[seccion].Editable? (
+						<Button  
+							title={documento.diseno.Secciones[seccion].Editable.Titulo}
+							style={seccionEditButton}
+							id={"Edit_Button_Seccion_"+seccion}
+							onClick={(e) => {
+							setEditando({
+								Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
+								pos: posicionEnOverlay("Seccion_"+seccion),
+								path: path,
+								id: "Seccion_" + seccion,
+								Seccion: seccion,
+								Campo: documento.diseno.Secciones[seccion].Editable.Campo,
+								Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
+								Lista: tempIds[seccion],
+								Celdas: documento.diseno.Secciones[seccion].Editable.Celdas,
+								Pos: documento.diseno.Secciones[seccion].Editable.Pos
+							});
+							setOpcionesPanel(
+								{Seccion: seccion}
+							);
+							}} >
+								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
+						</Button>
+					) : (
+						<></>
+					)}
+					{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
+						const newPath = extenderPath(path, ["Estructura",index]);
+						return (<>
+							<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={seccion} seccion={documento.diseno.Secciones[seccion]} estructura={documento.diseno.Secciones[seccion].Estructura[index]} id={id} index={index} path={newPath} />
+						</>)
+					})}
+				</div>
+			  );
+	  
+	  if(crearContenedor)
+		  return (<div style={{position: "absolute", backgroundColor: "#0000", pointerEvents: "none"}}><div style={posStyle}></div>{sec}</div>)
+	  else
+			return sec;
   };
   
   const SubPaginaEstructuraHTML = ({user_data, documento, estructura, path}) => {
@@ -382,7 +445,8 @@ function EditorCurriculo({
 		return (<SeccionHTMLEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[estructura]} documento={documento} path={["diseno","Secciones",documento.diseno.Secciones.Orden[estructura]]}/>);
 			
 	}else if(typeof(estructura) === "object"){
-		estructura.style = tamanoYPosicion(estructura);
+		const pindex = path.indexOf("Paginas")+1;
+		estructura.style = tamanoYPosicion(estructura, pindex, estructura);
 		const id = "Estructura_"+path;
 		const p = extenderPath(path,[]);
 		return (<div id={id} style={estructura.style}>
@@ -403,7 +467,7 @@ function EditorCurriculo({
 						id: id,
 						});
 					}} >
-						<SwapHorizontalCircleIcon style={editButtonIcon}/>
+						<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
 				</Button>
 			) : (
 				<></>
@@ -424,16 +488,18 @@ function EditorCurriculo({
 			}
 		</div>)
 	}
-	  return (<></>);
+	return (<></>);
   };
   
-  const PaginaHTMLEstructurada = ({user_data, documento, paginaEstilo}) => {
+  const PaginaHTMLEstructurada = ({user_data, documento, paginaEstilo, pindex}) => {
 	  if(!documento)
 		  return (<></>);
-
-	  return (<div style={paginaEstilo} id={"pagina_"+1}>
+	  const styled = {};
+	  Object.entries(paginaEstilo).forEach(([key, val]) => styled[key] = val);
+	  styled.top = (pindex*celdasPagina*60)+"px";
+	  return (<div style={styled} id={"pagina_"+pindex}>
 				<div style={{position:"absolute"}}>
-					{documento.diseno.Paginas[0].Elementos? (Object.entries(documento.diseno.Paginas[0].Elementos).forEach(([key, val]) => {
+					{documento.diseno.Paginas[pindex]?.Elementos? (Object.entries(documento.diseno.Paginas[pindex].Elementos).forEach(([key, val]) => {
 						if(documento.diseno.Elementos[val]){
 							
 						}
@@ -442,10 +508,13 @@ function EditorCurriculo({
 					(<></>)
 					}
 				</div>
-				{
-					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {
-						return (<SubPaginaEstructuraHTML user_data={user_data} documento={documento} estructura={val} path={["diseno","Paginas",0,"Estructura",key]}/>)
-					})
+				{documento.diseno.Paginas[pindex]?.Estructura?
+					(Object.entries(documento.diseno.Paginas[pindex].Estructura).map(([key, val]) => {
+						return (<SubPaginaEstructuraHTML user_data={user_data} documento={documento} estructura={val} path={["diseno","Paginas",pindex,"Estructura",key]}/>)
+					}))
+					:
+					(<></>)
+					
 				}
 			  </div>);
   };
@@ -511,6 +580,7 @@ function EditorCurriculo({
   const posicionEnOverlay = (id) => {
 	let doc = document.getElementById("documento_html");
 	let container = document.getElementById("contenedor_documento");
+	let editor = document.getElementById("contenedor_documentos");
 	if(!doc)
 		return [0,0];
 	
@@ -526,8 +596,9 @@ function EditorCurriculo({
 		
 		parent = parent.parentElement;
 	}
-	pos = [pos[0] + doc.offsetLeft*1 - container.scrollLeft, pos[1] - doc.offsetTop*0 - container.scrollTop]
-	pos = [Math.max(0, pos[0]), Math.max(0, pos[1])];
+
+	pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft, pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop]
+	pos = [Math.max(-10000, pos[0]), Math.max(-10000, pos[1]), container.offsetLeft, editor.scrollLeft , container.offsetTop, editor.scrollTop];
 	return pos;
   };
   
@@ -553,7 +624,8 @@ function EditorCurriculo({
 		//gridTemplateColumns: "repeat(40, 1fr)",
 		//gridTemplateRows: "repeat(60, 1fr)",
 		flexDirection: "row",
-		flexWrap: "wrap"
+		flexWrap: "wrap",
+		//overflow: "visible"
   };
   const divisorPagina = {
 	  position: "absolute",
@@ -572,11 +644,16 @@ function EditorCurriculo({
 		Object.entries(documento.diseno.style).forEach(([key, value]) => {
 			documentoEstilo[key] = value;
 		});
+		documentoEstilo.pointerEvents = "auto"
 		documento.diseno.style = documentoEstilo;
+		
+		
 		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
 			paginaEstilo[key] = value;
 		});
+		paginaEstilo.height = minMaxDoc[3]+"px"
 		documento.diseno.Paginas[0].style = paginaEstilo;
+		
 		
 		//Registro de fuentes automatica
 		//Hacer estilos un objeto editable
@@ -631,13 +708,14 @@ function EditorCurriculo({
 			return style;
 		};
 		
-		const pagina = document.getElementById("pagina_1");
+		const pagina = document.getElementById("pagina_0");
 		let numeroDePaginas = pagina? Math.ceil(pagina.scrollHeight/(celdasPagina[1]*60)) : 1;
 		
 		const divisores = [];
 		for(let i=1; i < numeroDePaginas; i+=1)
 			divisores.push(<div style={calcDivisor(i)} id={"divisor_pagina_"+(i+1)}></div>)
 		
+		setActualizar(true)
 		return (
         <div
 		  id="documento_html"
@@ -646,7 +724,7 @@ function EditorCurriculo({
           }
 		  
         >
-			  <PaginaHTMLEstructurada user_data={user_data} documento={documento} paginaEstilo={paginaEstilo}/>
+			  <PaginaHTMLEstructurada user_data={user_data} documento={documento} paginaEstilo={paginaEstilo} pindex={0}/>
 			  {divisores}
 		</div>
 	)}
@@ -701,7 +779,7 @@ function EditorCurriculo({
       setCurriculoId(user_data.editando_curriculo);
 	  
 	  //DEBUG
-	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
 	  doc = editMode === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
       setDocumento(
 		doc
@@ -737,7 +815,7 @@ function EditorCurriculo({
 
   return (
     <>
-      <div>
+      <div >
         <h1 style={{ color: "white", fontSize: "5rem" }}>
           Modificar Currículo
         </h1>
@@ -745,14 +823,14 @@ function EditorCurriculo({
 
       <div style={{ padding: "10px", width: "110%" }}>
         <div style={{ display: "flex", minHeight: "100%" }}>
-		<div style={{ width: "30%", maxHeight: "1000px", position: "relative" }}>
+		<div style={{ width: "30%", maxHeight: "1000px", position: "relative", display: "none" }}>
 		<div style={{ ...stripeStyle, position: "absolute", top: 0, left: 0, width: "100%" }}>
 			<div style={textOverlayStyle}>
 			Edición de la sección seleccionada
 			</div>
 		</div>
 		
-		<div style={{ marginTop: "50px", height: "1000px", overflow: "auto" }}>
+		<div style={{ marginTop: "50px", height: "1000px", overflow: "auto"}}>
 			<PanelSeccion
 			user_data={user_data}
 			setUserData={setUserData}
@@ -769,6 +847,11 @@ function EditorCurriculo({
 			</div>
 			</div>
 			  <div id="Herramientas" style={toolBar}>
+				  {Editando || editMode==="Plantilla"? 
+					(<div style={{color: "#ccc"}}>...</div>) 
+					: 
+					(<Autosave user_data={user_data} setUserData={setUserData} curriculum_manager={curriculum_manager} documento={documento} styles={{color: "#ccc"}}/>)
+				  }
 				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} 
 						document={
 							<DocumentoPDF 
@@ -782,7 +865,6 @@ function EditorCurriculo({
 					>
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
-				  <span style={{color: "white"}}>Por ahora, la plantilla simple es la utilizada</span>
 				  <Button onClick={(e) => {
 					  setEditando({
 						Tipo: "Orden"
@@ -799,11 +881,23 @@ function EditorCurriculo({
 				  >
 					Guardar
 				  </Button>
+				  <Slider sx={{position: "relative", width:"200px"}}
+					aria-label="ZoomSlider"
+					valueLabelDisplay="auto"
+					defaultValue={1}
+					min={0.5}
+					max={2}
+					getAriaValueText={(val) => {return val+"x"}}
+					step={0.1}
+					onChange={(val) => {
+						setZoom(val.target.value)
+					}}
+				  />
 				  {process.env.NODE_ENV === "development"? (
 				  <><Button onClick={(e) => {
 					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
 					  setEditMode(edit);
-					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento.diseno.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
+					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  doc = edit === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  SeleccionarIDs(user_data, doc, categoria_curriculum, categoria_puesto);
 					  setDocumento(
@@ -845,10 +939,10 @@ function EditorCurriculo({
 				  (<></>)
 				  }
 			  </div>
-			  {Editando? (
-				<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99}} >
-					{(Editando.Celdas || Editando.Pos)? (
-						<EditorTamano 
+				  {Editando? (
+					<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: zoom}} >
+						<div id="overlay_unzoomed" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 0, zoom: (1/zoom)}} >
+						<ToolBoxSwitcher
 							user_data={user_data}
 							TextoEditar={TextoEditar} 
 							setTextoEditar={setTextoEditar} 
@@ -859,31 +953,41 @@ function EditorCurriculo({
 							Editando={Editando} 
 							setEditando={setEditando}
 							SeleccionarIDs={SeleccionarIDs}
+							zoom={zoom}
 						/>
-					) 
-					: 
-					(<></>)
-					}
-					<ToolBoxSwitcher
-					    user_data={user_data}
-						TextoEditar={TextoEditar} 
-						setTextoEditar={setTextoEditar} 
-						ListaEditar={ListaEditar} 
-						setListaEditar={setListaEditar} 
-						documento={documento} 
-						setDocumento={setDocumento} 
-						Editando={Editando} 
-						setEditando={setEditando}
-						SeleccionarIDs={SeleccionarIDs}
-					/>
-				</div>
-			  ) : (
-				<>
-				</>
-			  )}
-			  <div id="contenedor_documento" style={{overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", display: "flex", justifyContent: "center"}}>
-				  <MyHTMLDocument />
-			  </div>
+						</div>
+						{(Editando.Celdas || Editando.Pos)? (
+							<EditorTamano 
+								user_data={user_data}
+								TextoEditar={TextoEditar} 
+								setTextoEditar={setTextoEditar} 
+								ListaEditar={ListaEditar} 
+								setListaEditar={setListaEditar} 
+								documento={documento} 
+								setDocumento={setDocumento} 
+								Editando={Editando} 
+								setEditando={setEditando}
+								SeleccionarIDs={SeleccionarIDs}
+								zoom={zoom}
+							/>
+						) 
+						: 
+						(<></>)
+						}
+					</div>
+				  ) : (
+					<>
+					</>
+				  )}
+				  
+				  <div id="contenedor_documentos" 
+					style={{width: "100%", height: "100%", overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", pointerEvents: "auto", display: "flex", justifyContent: "center", zoom: zoom, paddingTop: (-minMaxDoc[1]*0)+"px"}}
+				  >
+				    
+					<div id="contenedor_documento" style={{position: "relative", width: "50%", height: "150%", pointerEvents: "none", top: (-minMaxDoc[1])+"px", left: (-minMaxDoc[0])+"px"}}>
+					  <MyHTMLDocument />
+					</div>
+				  </div>
 		  </div>
 
 		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
