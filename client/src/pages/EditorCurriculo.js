@@ -10,7 +10,7 @@ import PanelSeccion from "../Components/Editor/PanelSeccion";
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
-import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina} from "../Components/Editor/EditorTamano";
+import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, GridCSS} from "../Components/Editor/EditorTamano";
 import Autosave from "../Components/Editor/Autosave";
 
 import "./editor.css";
@@ -212,6 +212,7 @@ function EditorCurriculo({
 		minMaxDoc[1] = minMaxDoc[1] < t.height? minMaxDoc[1] : t.height;
 		minMaxDoc[2] = minMaxDoc[2] > t.width + tc[0]? minMaxDoc[2] : t.width + tc[0];
 		minMaxDoc[3] = minMaxDoc[3] > t.height + tc[1]? minMaxDoc[3] : t.height + tc[1];
+		setMinMaxDoc(minMaxDoc);
 	}
 	return estructura.style;
   };
@@ -225,14 +226,26 @@ function EditorCurriculo({
 		
   const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
-	estructura.Texto.forEach((campo) => {
-		if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
+	let skipNext = 0;
+	estructura.Texto.forEach((campo, index) => {
+		if(skipNext > 0){
+			skipNext -= 1;
+		//Modificadores de texto, TODO
+		}else if (campo === "__year"){
+			texto += (new Date(user_data.bloques[nombreSeccion][id][estructura.Texto[index+1]])).getFullYear();
+			skipNext = 1;
+		}else if (campo === "__check"){
+			texto += user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]]? estructura.Texto[index+1]+estructura.Texto[index+2] : "";
+			skipNext = 2;
+		}else if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
 			texto += seccion[campo] === ""? estructura.Editable.Placeholder : seccion[campo];
-		}else if(id && user_data.bloques[nombreSeccion][id][campo]){ //Bloques de datos
+		}else if(id && (user_data.bloques[nombreSeccion][id][campo] || user_data.bloques[nombreSeccion][id][campo] === "")){ //Bloques de datos
 			if(nombreSeccion === "Idiomas" && campo === "Id")
 				texto += getNameById(user_data.bloques[nombreSeccion][id][campo])
-			else
+			
+			else{
 				texto += user_data.bloques[nombreSeccion][id][campo]
+			}
 		}else{ //Texto generico
 			texto += campo;
 		}
@@ -251,6 +264,7 @@ function EditorCurriculo({
 			id={"Edit_Button_Texto_"+nombreSeccion+"_"+index}
 			onClick={(e) => {
 				setTextoEditar(seccion.TituloSeccion);
+				setEditando(null);
 				setEditando({
 					Tipo: "Texto",
 					pos: posicionEnOverlay("Texto_"+nombreSeccion+"_"+index+path),
@@ -308,6 +322,7 @@ function EditorCurriculo({
 							style={seccionEditButton}
 							id={"Edit_Button_Seccion_"+seccion}
 							onClick={(e) => {
+							setEditando(null);
 							setEditando({
 								Tipo: estructura.Editable.Tipo,
 								pos: posicionEnOverlay("Imagen_"+nombreSeccion+"_"+index),
@@ -319,9 +334,9 @@ function EditorCurriculo({
 								Celdas: estructura.Editable.Celdas,
 								Pos: estructura.Editable.Pos
 							});
-							setOpcionesPanel(
-								{Seccion: seccion}
-							);
+							//setOpcionesPanel(
+							//	{Seccion: seccion}
+							//);
 							}} >
 								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
 						</Button>
@@ -395,28 +410,37 @@ function EditorCurriculo({
 	  }
 	  
 	  const sec = (
-				<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion}>
+				<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion} 
+					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Seccion_" + seccion).style.transition = "all 0.5s"}}
+					onMouseLeave={(e) => { document.getElementById("Seccion_" + seccion).style.transition = ""; document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"}}
+					>
 					{documento.diseno.Secciones[seccion].Editable? (
 						<Button  
 							title={documento.diseno.Secciones[seccion].Editable.Titulo}
 							style={seccionEditButton}
 							id={"Edit_Button_Seccion_"+seccion}
 							onClick={(e) => {
-							setEditando({
-								Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
-								pos: posicionEnOverlay("Seccion_"+seccion),
-								path: path,
-								id: "Seccion_" + seccion,
-								Seccion: seccion,
-								Campo: documento.diseno.Secciones[seccion].Editable.Campo,
-								Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
-								Lista: tempIds[seccion],
-								Celdas: documento.diseno.Secciones[seccion].Editable.Celdas,
-								Pos: documento.diseno.Secciones[seccion].Editable.Pos
-							});
-							setOpcionesPanel(
-								{Seccion: seccion}
-							);
+							setEditando(null);
+							setTimeout(function(){
+								setEditando({
+									Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
+									pos: posicionEnOverlay("Seccion_"+seccion),
+									path: path,
+									id: "Seccion_" + seccion,
+									Seccion: seccion,
+									Campo: documento.diseno.Secciones[seccion].Editable.Campo,
+									Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
+									Lista: tempIds[seccion],
+									Celdas: documento.diseno.Secciones[seccion].Editable.Celdas,
+									Pos: documento.diseno.Secciones[seccion].Editable.Pos,
+									ID_Categoria_Curriculum: categoria_curriculum,
+									ID_Categoria_Puesto: categoria_puesto
+								});
+							}, 15)
+							
+							//setOpcionesPanel(
+							//	{Seccion: seccion}
+							//);
 							}} >
 								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
 						</Button>
@@ -457,6 +481,7 @@ function EditorCurriculo({
 					style={seccionEditButton}
 					id={"Edit_Button_Estructura_"+path}
 					onClick={(e) => {
+					setEditando(null);
 					setEditando({
 						Tipo: estructura.Editable.Tipo,
 						pos: posicionEnOverlay(id),
@@ -554,7 +579,7 @@ function EditorCurriculo({
   const SeleccionarIDs = (user_data, documento, ID_Categoria_Curriculum, ID_Categoria_Puesto) => {
     if (!user_data) return;
 	Object.keys(documento.datos.Secciones).map((seccion) => {
-		let cantidad = documento.diseno.Secciones[seccion].Editable.Arreglo? documento.datos.Secciones[seccion].Cantidad : 1;
+		let cantidad = documento.diseno.Secciones[seccion].Editable && documento.diseno.Secciones[seccion].Editable.Arreglo? documento.datos.Secciones[seccion].Cantidad : 1;
 		let lista = OrdenarBloques(user_data.bloques[seccion]);
 		cantidad = Math.min(lista.length, cantidad);
 		tempIds[seccion] = [];
@@ -579,9 +604,12 @@ function EditorCurriculo({
   };
   
   const posicionEnOverlay = (id) => {
-	let doc = document.getElementById("documento_html");
-	let container = document.getElementById("contenedor_documento");
-	let editor = document.getElementById("contenedor_documentos");
+	const doc = document.getElementById("documento_html");
+	const container = document.getElementById("contenedor_documento");
+	const editor = document.getElementById("contenedor_documentos");
+	const pag = document.getElementById("pagina_0");
+	const pagStyle = pag.currentStyle || window.getComputedStyle(pag);
+	console.log(pagStyle.marginLeft)
 	if(!doc)
 		return [0,0];
 	
@@ -598,7 +626,7 @@ function EditorCurriculo({
 		parent = parent.parentElement;
 	}
 
-	pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft, pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop]
+	pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft + Number(pagStyle.marginLeft.substring(0, pagStyle.marginLeft.length-2)), pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop + Number(pagStyle.marginTop.substring(0, pagStyle.marginTop.length-2))];
 	pos = [Math.max(-10000, pos[0]), Math.max(-10000, pos[1]), container.offsetLeft, editor.scrollLeft , container.offsetTop, editor.scrollTop];
 	return pos;
   };
@@ -647,14 +675,6 @@ function EditorCurriculo({
 		});
 		documentoEstilo.pointerEvents = "auto"
 		documento.diseno.style = documentoEstilo;
-		
-		
-		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
-			paginaEstilo[key] = value;
-		});
-		paginaEstilo.height = minMaxDoc[3]+"px"
-		documento.diseno.Paginas[0].style = paginaEstilo;
-		
 		
 		//Registro de fuentes automatica
 		//Hacer estilos un objeto editable
@@ -710,13 +730,20 @@ function EditorCurriculo({
 		};
 		
 		const pagina = document.getElementById("pagina_0");
-		let numeroDePaginas = pagina? Math.ceil(pagina.scrollHeight/(celdasPagina[1]*60)) : 1;
+		const height = Math.max(minMaxDoc[3], pagina? pagina.scrollHeight : 0);
+		let numeroDePaginas = pagina? Math.ceil(height/(celdasPagina[1]*60)) : 1;
 		
 		const divisores = [];
 		for(let i=1; i < numeroDePaginas; i+=1)
 			divisores.push(<div style={calcDivisor(i)} id={"divisor_pagina_"+(i+1)}></div>)
 		
-		setActualizar(true)
+		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
+			paginaEstilo[key] = value;
+		});
+		//paginaEstilo.height = numeroDePaginas*(celdasPagina[1]*60)+"px";//minMaxDoc[3]+"px"
+		documento.diseno.Paginas[0].style = paginaEstilo;
+		
+
 		return (
         <div
 		  id="documento_html"
@@ -867,6 +894,7 @@ function EditorCurriculo({
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
 				  <Button style={{ color: theme.palette.yellow.main }} onClick={(e) => {
+					  setEditando(null);
 					  setEditando({
 						Tipo: "Orden"
 					});
@@ -942,7 +970,8 @@ function EditorCurriculo({
 				  }
 			  </div>
 				  {Editando? (
-					<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: zoom}} >
+					<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: zoom, pointerEvents: "auto" }} >
+						{(Editando.Celdas || Editando.Pos)? (<GridCSS />) : (<></>)}
 						<div id="overlay_unzoomed" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 0, zoom: (1/zoom)}} >
 						<ToolBoxSwitcher
 							user_data={user_data}
@@ -983,7 +1012,7 @@ function EditorCurriculo({
 				  )}
 				  
 				  <div id="contenedor_documentos" 
-					style={{width: "100%", height: "100%", overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", pointerEvents: "auto", display: "flex", justifyContent: "center", zoom: zoom, paddingTop: (-minMaxDoc[1]*0)+"px"}}
+					style={{width: "100%", height: "100%", overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", pointerEvents: "auto", display: "flex", justifyContent: "center", zoom: zoom, transition: "all 1.2s"}}
 				  >
 				    
 					<div id="contenedor_documento" style={{position: "relative", width: "50%", height: "150%", pointerEvents: "none", top: (-minMaxDoc[1])+"px", left: (-minMaxDoc[0])+"px"}}>
@@ -992,7 +1021,7 @@ function EditorCurriculo({
 				  </div>
 		  </div>
 
-		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', zIndex: 400 }}>
 			<div style={stripeStyle}>
 				<div style={textOverlayStyle}>
 				Vista previa
@@ -1000,7 +1029,7 @@ function EditorCurriculo({
 			</div>
 
 			<div style={{ flexGrow: 1 }}> {/* Make this div grow to take available space */}
-				<PDFViewer style={{ width: '100%', height: '100%' }}>
+				<PDFViewer style={{ width: '100%', height: '100%'}}>
 				<DocumentoPDF 
 					user_data={user_data}
 					documento={documento} 

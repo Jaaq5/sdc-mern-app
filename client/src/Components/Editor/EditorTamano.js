@@ -9,7 +9,7 @@ import PhotoSizeSelectSmallIcon from '@mui/icons-material/PhotoSizeSelectSmall';
 import ControlCameraIcon from '@mui/icons-material/ControlCamera';
 
 const celdasPagina = [595/40, 841/60]//react-pdf    [756 / 40, 1123 / 60]; //En px
-const tamanoObjeto = (path, documento, setDocumento) => {
+const tamanoObjeto = (path, documento, setDocumento, id = "") => {
   if(!documento)
 	  return {width:0, height:0};
 
@@ -19,12 +19,25 @@ const tamanoObjeto = (path, documento, setDocumento) => {
   else
 	path.forEach((campo) => item = item[campo]);
   
+  const elm = document.getElementById(id);
+  const mrgnCeldas = [0,0];
+  if(elm){
+	  const style = elm.currentStyle || window.getComputedStyle(elm);
+	  mrgnCeldas[0] = Number(style.marginLeft.substring(0, style.marginLeft.length-2))/celdasPagina[0];
+	  mrgnCeldas[1] = Number(style.marginTop.substring(0, style.marginTop.length-2))/celdasPagina[1];
+  }
+  
+  
   if(item.Celdas){
-	  return celdasAPx(item.Celdas);
+	  mrgnCeldas[0] += item.Celdas[0];
+	  mrgnCeldas[1] += item.Celdas[1];
+	  return celdasAPx(mrgnCeldas);
   }else{
-	  item.Celdas = [10,10];
+	  mrgnCeldas[0] += 10;
+	  mrgnCeldas[1] += 10;
+	  item.Celdas = mrgnCeldas;
 	  setDocumento(documento);
-	  return celdasAPx([10,10]);
+	  return celdasAPx(mrgnCeldas);
   }
 };
 
@@ -241,6 +254,19 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 
 let gzoom = 1;
 
+function GridCSS({}){
+	const gridStyle = {
+	  width: "100%",//(celdasPagina[0]*60)+"px",
+	  height: "100%",
+	  //left: Editando.pos[2]+"px",
+	  position: "absolute",
+	  backgroundImage: "linear-gradient(#fcc4 0 1px, transparent 1px 100%), linear-gradient(90deg, #ccf4 0 1px, transparent 1px 100%)",
+	  backgroundSize: celdasPagina[0]+"px "+celdasPagina[1]+"px",
+	  zIndex: 0
+	};
+	return (<div style={gridStyle}></div>)
+}
+
 const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	//<BloquesToHTML user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
 	const [botones, setBotones] = useState([]);
@@ -261,18 +287,24 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	}
 	
 	let item = documento;
-	Editando.path.forEach((campo) => item = item[campo]);
+	Editando.path.forEach((campo) => {item = item[campo]});
+	const hasParent = Editando.path[Editando.path.length-1] !== Editando.Seccion;
 	
-	const t = tamanoObjeto(item, documento, setDocumento)
+	const t = tamanoObjeto(item, documento, setDocumento, Editando.id);
 	if(tamano[0] === 0)
 		setTamano(t);
 	
 	const m = cajax.currentStyle || window.getComputedStyle(cajax);
 	const doc = document.getElementById("contenedor_documento");
 	
+	const offset = hasParent? [0,0] : 
+	[
+		Math.floor((Editando.pos[0] - Number(m.marginLeft.substring(0, m.marginLeft.length-2)) - Editando.pos[2]   + Editando.pos[3]*1 + Number(doc.style.left.substring(0, doc.style.left.length-2)) - Number(doc.style.left.substring(0, doc.style.left.length-2))*0)/celdasPagina[0]),
+		Math.floor((Editando.pos[1] - Number(m.marginTop.substring(0, m.marginTop.length-2))   + Editando.pos[4]*0 + Editando.pos[5]*1 - Number(doc.style.top.substring(0, doc.style.top.length-2)))/celdasPagina[1])
+	];
 	let initialPos = item.Pos? item.Pos : [
-		Math.floor((Editando.pos[0] - Number(m.marginLeft.substring(0, m.marginLeft.length-2))   - Editando.pos[2]   + Editando.pos[3]*1 - Number(doc.style.left.substring(0, doc.style.left.length-2))*0)/celdasPagina[0]),
-		Math.floor((Editando.pos[1] - Number(m.marginTop.substring(0, m.marginTop.length-2))     + Editando.pos[4]*0 + Editando.pos[5]*1 - Number(doc.style.top.substring(0, doc.style.top.length-2)))/celdasPagina[1])
+		offset[0],
+		offset[1]
 	];
 	
 	const p = posicionObjeto(initialPos);
@@ -299,9 +331,8 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	}
 	
 	return (<>
-	<div style={gridStyle}></div>
 	<div id="caja_tamano" 
-		style={{width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
+		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
 		
 		>
 		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "250px", zoom: 1/gzoom}}>
@@ -322,4 +353,4 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	</div></>);
 };
 
-export {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina};
+export {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, GridCSS};
