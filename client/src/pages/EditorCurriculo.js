@@ -609,7 +609,6 @@ function EditorCurriculo({
 	const editor = document.getElementById("contenedor_documentos");
 	const pag = document.getElementById("pagina_0");
 	const pagStyle = pag.currentStyle || window.getComputedStyle(pag);
-	console.log(pagStyle.marginLeft)
 	if(!doc)
 		return [0,0];
 	
