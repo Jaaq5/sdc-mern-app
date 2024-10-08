@@ -117,10 +117,19 @@ const populateData = async () => {
     for (const item of Plantillas) {;
 	  
       await Curriculums_Templates.updateOne(
-        { Nombre: item.name, Documento: JSON.stringify(item.documento), ID_Categoria_Curriculum: item.categoria_curriculo, ID_Categoria_Puesto: item.categoria_puesto },
+        { Nombre: item.name, ID_Categoria_Curriculum: item.categoria_curriculo, ID_Categoria_Puesto: item.categoria_puesto },
         { $set: item },
         { upsert: true },
       );
+	  await Curriculums_Templates.updateOne(
+        { Nombre: item.name },
+        { $set: {
+			Documento: JSON.stringify(item.documento)
+			}
+		},
+      );
+	  
+	  
     }
     console.log("Collection populated with Plantillas values");
   } catch (err) {
