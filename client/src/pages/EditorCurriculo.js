@@ -39,6 +39,7 @@ import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import {
 	listButtonStyle, 
   } from "../style";
+import { theme } from "../theme";
 
 const ToolBoxSwitcher = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	switch(Editando.Tipo){
@@ -852,7 +853,7 @@ function EditorCurriculo({
 					: 
 					(<Autosave user_data={user_data} setUserData={setUserData} curriculum_manager={curriculum_manager} documento={documento} styles={{color: "#ccc"}}/>)
 				  }
-				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: "#4ff78d"}} 
+				  <PDFDownloadLink style={{padding: "5px", borderRadius:"5px", backgroundColor: theme.palette.yellow.main, color: theme.palette.white.main}} 
 						document={
 							<DocumentoPDF 
 								user_data={user_data}
@@ -865,7 +866,7 @@ function EditorCurriculo({
 					>
 						{({ blob, url, loading, error }) => (loading ? 'Cargando...' : 'Descargar')}
 				  </PDFDownloadLink>
-				  <Button onClick={(e) => {
+				  <Button style={{ color: theme.palette.yellow.main }} onClick={(e) => {
 					  setEditando({
 						Tipo: "Orden"
 					});
@@ -874,7 +875,7 @@ function EditorCurriculo({
 				  >
 					Secciones
 				  </Button>
-				  <Button onClick={(e) => {
+				  <Button style={{ color: theme.palette.yellow.main }} onClick={(e) => {
 					  SeleccionarIDs(user_data, documento, categoria_curriculum, categoria_puesto);
 					  curriculum_manager.ActualizarCurriculo(user_data, setUserData, user_data.curriculums[curriculo_id]._id, documento, categoria_curriculum, categoria_puesto);
 				  }}
@@ -889,12 +890,13 @@ function EditorCurriculo({
 					max={2}
 					getAriaValueText={(val) => {return val+"x"}}
 					step={0.1}
+					style={{ color: theme.palette.yellow.main }}
 					onChange={(val) => {
 						setZoom(val.target.value)
 					}}
 				  />
 				  {process.env.NODE_ENV === "development"? (
-				  <><Button onClick={(e) => {
+				  <><Button style={{ color: theme.palette.yellow.main }} onClick={(e) => {
 					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
 					  setEditMode(edit);
 					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
@@ -908,7 +910,7 @@ function EditorCurriculo({
 					Modo:{" "+editMode}
 				  </Button>
 				  {editMode === "Plantilla"?
-					  (<Button onClick={(e) => {
+					  (<Button style={{ color: theme.palette.yellow.main }} onClick={(e) => {
 						    var a = document.createElement("a");
 							const id = documento.datos.Secciones.Informacion_Personal;
 							delete documento.datos.tempIds;
