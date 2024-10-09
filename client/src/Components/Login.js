@@ -14,7 +14,7 @@ import { apiUrl } from "../consts";
 
 //style
 import {
-  paperStyle, 
+  paperStyles, 
   heading, row, 
   btnStyle, 
   label
@@ -47,7 +47,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
                   },
                 );
                 setUserData(response.data.data);
-                navigate("/home"); //, { state: { usuario_id: usuario_id, user_data: response.data.data } });
+                navigate("/curriculo-menu"); //, { state: { usuario_id: usuario_id, user_data: response.data.data } });
               }
             })
             .catch((err) => {
@@ -62,9 +62,9 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
 
   return (
     <div>
-      <Grid align="center" className="wrapper">
+      <Grid align="center" className="wrapper" sx={{ marginTop: "150px" }}>
         <Paper
-          style={paperStyle}
+          style={paperStyles}
           sx={{
             width: {
               xs: "80vw",

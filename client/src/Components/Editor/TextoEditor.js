@@ -2,14 +2,14 @@ import {
   TextField,
 } from "@mui/material";
 
-const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando}) => {
+const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando, zoom}) => {
 	  if(!documento)
 		  return (<></>);
 	  setTimeout(function(){document.getElementById("Editor_Texto_Input")?.focus()},200);
-	  return (<div style={{position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", marginTop: "-10px"}}>
+	  return (<div style={{position: "absolute", left: (Editando.pos[0]*zoom)+"px",top: (Editando.pos[1]*zoom)+"px", marginTop: "-10px"}}>
 			<form><TextField
 				id="Editor_Texto_Input"
-				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100}}
+				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100, marginTop: documento.diseno.Secciones[Editando.Seccion].style.marginTop || documento.diseno.Secciones[Editando.Seccion].style.margin}}
 				InputProps = {{style: {color: "#000"}}}
 				variant="standard"
 				size="small"
@@ -30,7 +30,11 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
                         "",
                       )
 				  setTextoEditar(val);
-				  documento.diseno.Secciones[Editando.Seccion][Editando.Campo] = val;
+				  
+				  let item = documento;
+				  let continues = true;
+				  Editando.path?.forEach((p, index) => {if(index<(Editando.path.length-1) && continues && p !== "Estructura") item = item[p]; else continues = false;});
+				  item[Editando.path[Editando.path.length-1]] = val;
 				  setDocumento(documento);
 				}}
 				
@@ -42,7 +46,7 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 						setTimeout(function(){
 							e.target.focus()
 							e.target.setCustomValidity("No puede quedar vacío")
-						},0);
+						},10);
 					}
 					 }}
 			  ></TextField></form>

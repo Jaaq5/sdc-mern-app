@@ -22,12 +22,13 @@ import axios from "axios";
 
 //style
 import {
-  paperStyle, 
+  paperStylem, 
   paperSX, 
   heading, row, 
   btnStyle, 
   listStyle, 
-  deleteButton, 
+  deleteButton,
+  deleteForeverStyle 
 } from "../style";
 
 function Habilidades({ user_data, setUserData, manager_bloques }) {
@@ -76,7 +77,7 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
               style={deleteButton}
               onClick={(e) => eliminarHabilidad(habilidad_id)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -195,22 +196,11 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
     <>
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Habilidades</h1>
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
-            color="success"
-            component={Link}
-            to="/home"
-          >
-            Volver a Inicio
-          </Button>
-        </div>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStylem} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Habilidades
               </Typography>
@@ -242,7 +232,7 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStylem} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Habilidad
                 </Typography>

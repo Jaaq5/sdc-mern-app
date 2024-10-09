@@ -18,14 +18,15 @@ import { PostAdd, DeleteForever } from "@mui/icons-material";
 
 //style
 import {
-  paperStyle, 
+  paperStyles, 
   paperSX, 
   heading, row, 
   btnStyle, 
   listStyle, 
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 function Lenguajes({ user_data, setUserData, manager_bloques, category_manager}) {
@@ -79,7 +80,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
               style={deleteButton}
               onClick={(e) => eliminarLenguaje(lenguaje_id, index)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -204,22 +205,11 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
     <>
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Idiomas</h1>
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
-            color="success"
-            component={Link}
-            to="/home"
-          >
-            Volver a Inicio
-          </Button>
-        </div>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStyles} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Idiomas conocidos
               </Typography>
@@ -248,7 +238,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStyles} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Lenguaje
                 </Typography>

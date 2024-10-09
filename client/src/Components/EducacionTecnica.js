@@ -24,7 +24,7 @@ import { AddCard, DeleteForever, PostAdd } from "@mui/icons-material";
 
 //style
 import {
-  paperStyle, 
+  paperStyleb,
   paperSX, 
   heading, row, 
   btnStyle, 
@@ -32,7 +32,8 @@ import {
   listStyle, 
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -89,7 +90,7 @@ function EducacionTecnica({
             style={deleteButton}
             onClick={(e) => elminarBloque(plan_id, index)}
           >
-            <DeleteForever />
+            <DeleteForever style = {deleteForeverStyle} />
           </Button>
         </ListItemButton>
       )),
@@ -257,7 +258,7 @@ function EducacionTecnica({
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStyleb} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Tus títulos
               </Typography>
@@ -289,7 +290,7 @@ function EducacionTecnica({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStyleb} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Título
                 </Typography>

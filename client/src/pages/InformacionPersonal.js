@@ -13,6 +13,7 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
+import { theme } from "../theme";
 
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 import { apiUrl } from "../consts";
@@ -20,13 +21,14 @@ import axios from "axios";
 
 //styles
 import {
-  paperStyle, 
+  paperStyleb, 
   paperSX, 
   heading, row, 
   btnStyle, 
   listStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -68,7 +70,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever />
+          <DeleteForever style = {deleteForeverStyle} />
         </Button>
       </div>
     ) : user_data.userImage ? (
@@ -79,7 +81,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever />
+          <DeleteForever style = {deleteForeverStyle} />
         </Button>
       </div>
     ) : (
@@ -90,7 +92,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever />
+          <DeleteForever style = {deleteForeverStyle} />
         </Button>
       </div>
     );
@@ -113,7 +115,7 @@ function InformacionPersonal({
               style={deleteButton}
               onClick={(e) => eliminarBloque(info_id, index)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -295,22 +297,11 @@ function InformacionPersonal({
         <h1 style={{ color: "white", fontSize: "5rem" }}>
           Información Personal
         </h1>
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
-            color="success"
-            component={Link}
-            to="/home"
-          >
-            Volver a Inicio
-          </Button>
-        </div>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStyleb} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Información Personal
               </Typography>
@@ -325,7 +316,7 @@ function InformacionPersonal({
               >
                 <ListItemButton
                   key={true}
-                  style={{ ...listStyle, backgroundColor: "#4f96" }}
+                  style={( listStyle, { backgroundColor: "#4f96"})}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />
@@ -342,7 +333,7 @@ function InformacionPersonal({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStyleb} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Información
                   Personal
@@ -361,6 +352,9 @@ function InformacionPersonal({
                     onChange={(e) => {
                       const regex = /^[0-9\b]+$/;
                       if (e.target.value === "" || regex.test(e.target.value)) {
+						e.target.setCustomValidity(
+                        "",
+                        )
                         setTelefono(e.target.value);
                       }
                     }}
@@ -422,7 +416,7 @@ function InformacionPersonal({
                   <Button
                     variant="contained"
                     component="label"
-                    style={{ marginRight: "10px" }}
+                    style={{ marginRight: "10px" , backgroundColor: theme.palette.yellow.main}}
                   >
                     Subir Imagen
                     <input

@@ -22,14 +22,15 @@ import "react-international-phone/style.css";
 
 //style
 import {
-  paperStyle, 
+  paperStylexb, 
   paperSX, 
   heading, row, 
   btnStyle, 
   listStyle, 
   listButtonStyle, 
   deleteButton, 
-  dense
+  dense,
+  deleteForeverStyle
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -101,7 +102,7 @@ function Referencias({
               style={deleteButton}
               onClick={(e) => eliminarPublicacion(referencia_id, index)}
             >
-              <DeleteForever />
+              <DeleteForever style = {deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -245,22 +246,11 @@ function Referencias({
     <>
       <div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Referencias</h1>
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{ ...btnStyle, backgroundColor: "green" }}
-            color="success"
-            component={Link}
-            to="/home"
-          >
-            Volver a Inicio
-          </Button>
-        </div>
       </div>
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
-            <Paper style={paperStyle} sx={paperSX}>
+            <Paper style={paperStylexb} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
                 Referencias
               </Typography>
@@ -275,7 +265,7 @@ function Referencias({
               >
                 <ListItemButton
                   key={true}
-                  style={{ ...listStyle, backgroundColor: "#4f96" }}
+                  style={(listStyle, { backgroundColor: "#4f96" })}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />
@@ -292,7 +282,7 @@ function Referencias({
           <div style={{ width: "20px" }}></div>
           <div>
             <Grid align="center" className="wrapper">
-              <Paper style={paperStyle} sx={paperSX}>
+              <Paper style={paperStylexb} sx={paperSX}>
                 <Typography component="h3" variant="h3" style={heading}>
                   {referencia_id === true ? "Añadir" : "Modificar"} Referencia
                 </Typography>
