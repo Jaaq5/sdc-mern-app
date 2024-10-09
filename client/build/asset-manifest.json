@@ -1,12 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.84bb04d3.css",
-    "main.js": "/static/js/main.8a4abe96.js",
-    "static/js/453.419a5d54.chunk.js": "/static/js/453.419a5d54.chunk.js",
+    "main.css": "/static/css/main.92143993.css",
+    "main.js": "/static/js/main.c3d9c713.js",
+    "static/js/453.258b012d.chunk.js": "/static/js/453.258b012d.chunk.js",
+    "static/media/Roboto-Thin.ttf": "/static/media/Roboto-Thin.a4d410dfda20e10f3aed.ttf",
+    "static/media/Roboto-Regular.ttf": "/static/media/Roboto-Regular.27f62b53b93858475a7f.ttf",
+    "static/media/Roboto-Bold.ttf": "/static/media/Roboto-Bold.d50a80138ec4f2fb5e9f.ttf",
+    "static/media/Roboto-Light.ttf": "/static/media/Roboto-Light.839cb7309f46fed11436.ttf",
+    "static/media/Comic Sans MS.ttf": "/static/media/Comic Sans MS.e1a8ddd3483d85e2e8fd.ttf",
     "index.html": "/index.html",
-    "main.84bb04d3.css.map": "/static/css/main.84bb04d3.css.map",
-    "main.8a4abe96.js.map": "/static/js/main.8a4abe96.js.map",
-    "453.419a5d54.chunk.js.map": "/static/js/453.419a5d54.chunk.js.map"
+    "main.92143993.css.map": "/static/css/main.92143993.css.map",
+    "main.c3d9c713.js.map": "/static/js/main.c3d9c713.js.map",
+    "453.258b012d.chunk.js.map": "/static/js/453.258b012d.chunk.js.map"
   },
-  "entrypoints": ["static/css/main.84bb04d3.css", "static/js/main.8a4abe96.js"]
+  "entrypoints": [
+    "static/css/main.92143993.css",
+    "static/js/main.c3d9c713.js"
+  ]
 }
