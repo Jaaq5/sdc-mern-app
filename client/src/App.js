@@ -302,9 +302,8 @@ function App() {
       }
 
       if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
-        plantilla.Documento.datos.Secciones.Informacion_Personal = Object.keys(
-          user_data.bloques.Informacion_Personal,
-        )[0]; //TODO, Filtrar por categorias
+        const infoPersonalBloques = user_data.bloques.Informacion_Personal;
+        plantilla.Documento.datos.Secciones.Informacion_Personal = infoPersonalBloques ? Object.keys(infoPersonalBloques)[0] : null;
 		
 		plantilla.ID_Categoria_Curriculum =
 			  listas_categorias.categorias_curriculum.find(

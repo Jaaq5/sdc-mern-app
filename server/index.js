@@ -77,10 +77,7 @@ if (process.env.NODE_ENV === "production") {
 // Connect to MongoDB #########################################################
 const mongoUri = process.env.MONGO_URI;
 
-mongoose.connect(mongoUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(mongoUri);
 
 mongoose.connection.once("open", async () => {
   console.log("Connected to MongoDB");

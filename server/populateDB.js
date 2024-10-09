@@ -5,7 +5,7 @@ const Idiomas = require("./models/Idiomas_Model") ;
 const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
 //const plantilla_simple = require("./Plantillas/simple.json");
-const plantilla_cuadrados = require("./Plantillas/cuadrados.json");
+const plantilla_cuadrados = require("./plantillas/cuadrados.json");
 
 const populateData = async () => {
   const catCurriculumData = [
