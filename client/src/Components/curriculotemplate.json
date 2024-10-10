@@ -856,7 +856,7 @@
                   "Texto": [
                     "Fecha_Publicacion",
                     " - ",
-                    "Titulo"
+                    "Titulo" 
                   ],
                   "style": {
                     "dsiplay": "flex",
@@ -867,7 +867,7 @@
                 {
                   "Tipo": "Texto",
                   "Texto": [
-                    "Publicadora"
+                    "Publicadora", ", "
                   ],
                   "style": {
                     "dsiplay": "flex",

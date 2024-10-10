@@ -235,7 +235,7 @@ function EditorCurriculo({
 			texto += (new Date(user_data.bloques[nombreSeccion][id][estructura.Texto[index+1]])).getFullYear();
 			skipNext = 1;
 		}else if (campo === "__check"){
-			texto += user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]]? estructura.Texto[index+1]+estructura.Texto[index+2] : "";
+			texto += user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]]? estructura.Texto[index+1]+user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]] : "";
 			skipNext = 2;
 		}else if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
 			texto += seccion[campo] === ""? estructura.Editable.Placeholder : seccion[campo];

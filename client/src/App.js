@@ -180,7 +180,7 @@ function App() {
     CrearCurriculo: async (user_data, setUserData, plantilla) => {
       if (!plantilla) return null;
 
-      axios
+      return axios
         .post(apiUrl + "/api/users/crear-curriculum", {
           usuario_id: user_data.usuario_id,
           documento: JSON.stringify(plantilla.Documento),
@@ -189,8 +189,9 @@ function App() {
         })
         .then((response) => {
           if (response.data.success) {
-            //user_data.curriculums.push(plantilla);
-            //setUserData(user_data);
+			plantilla._id = response.data.curriculum_id;
+            user_data.curriculums.push(plantilla);
+            setUserData(user_data);
             return user_data.curriculums.length - 1;
           }
         })
