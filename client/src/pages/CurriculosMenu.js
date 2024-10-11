@@ -327,10 +327,6 @@ function CurriculosMenu({
         .catch((e) => {
           console.log(e);
         });
-
-      //user_data.curriculums.push(plantilla);
-      //setUserData(user_data);
-      
     }
   };
 

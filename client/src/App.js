@@ -280,16 +280,14 @@ function App() {
     },
 
     CopiarPlantilla: (plantilla_id) => {
+	  let plantilla = plantillas[plantilla_id]? plantillas[plantilla_id] : plantillas.find((plnt) => plnt._id === plantilla_id);
+
       if (
         plantilla_id !== "simple" &&
-        plantilla_id !== "laboral" &&
-        plantilla_id !== "academico" &&
-        plantilla_id !== "harvard" &&
-        !plantillas[plantilla_id]
+        !plantilla
       )
         return null;
 
-      let plantilla = null;
       if (plantilla_id === "simple") {
         plantilla = JSON.parse(JSON.stringify(plantilla_simple));
       } else if (plantilla_id === "laboral") {
@@ -299,7 +297,7 @@ function App() {
       } else if (plantilla_id === "harvard") {
         plantilla = JSON.parse(JSON.stringify(plantilla_harvard));
       } else {
-        plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
+        plantilla = JSON.parse(JSON.stringify(plantilla));
       }
 
       if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
