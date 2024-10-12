@@ -21,8 +21,7 @@ const ElementoImagenEstructuradoPDF = ({user_data, documento, nombreSeccion, sec
   </>);
 };
 
-const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
-  //console.log("Texto: "+nombreSeccion+", "+id+", "+index+", "+estructura.Tipo)
+const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => { 
   if(!estructura || !documento.datos.tempIds)
 	  return (<></>);
   
@@ -71,9 +70,13 @@ const SeccionPDFEstructurada = ({user_data, seccion, documento, id, obtenerTexto
 		  crearContenedor = true;
 		  //posStyle.height = documento.diseno.Secciones[seccion].style.top;
 		  posStyle.height = (400 + Number(documento.diseno.Secciones[seccion].style.top.substring(0,documento.diseno.Secciones[seccion].style.top.length-2)))+"px"
-		  secStyle.top = "0px"
+		  secStyle.top = "0pt"
 		  secStyle.position = "relative";
 	  }
+	  
+	  //const itemStyle = {};
+	  //Object.entries(estructura.style).map(([key, val]) => itemStyle[key] = val);
+	  secStyle.width = secStyle.width.substring(0,secStyle.width.length-2)+"px";
 	  
 	  const sec = (
 				<View id={"Seccion_" + seccion} style={secStyle} key={seccion}>
@@ -100,7 +103,11 @@ const SubPaginaEstructuraPDF = ({user_data, documento, estructura, obtenerTextoE
 		return (<SeccionPDFEstructurada user_data={user_data} seccion={documento.diseno.Secciones.Orden[estructura]} documento={documento} obtenerTextoEstructura={obtenerTextoEstructura}/>);
 			
 	}else if(typeof(estructura) === "object"){
-		return (<View style={estructura.style}>
+		const itemStyle = {};
+	    Object.entries(estructura.style).map(([key, val]) => itemStyle[key] = val);
+		if(itemStyle.width)
+			itemStyle.width = itemStyle.width.substring(0,itemStyle.width.length-2)+"px";
+		return (<View style={itemStyle}>
 			{estructura.Estructura? (Object.keys(estructura.Estructura).map((index) => {
 				 if(typeof(estructura.Estructura[index]) === "string")
 					return(<SeccionPDFEstructurada user_data={user_data} seccion={estructura.Estructura[index]} id={documento.datos.Secciones[estructura.Estructura[index]]} documento={documento} obtenerTextoEstructura={obtenerTextoEstructura}/>);
@@ -123,8 +130,12 @@ const PaginaPDFEstructurada = ({user_data, documento, obtenerTextoEstructura}) =
 	  if(!documento || !documento.diseno.Paginas || !documento.diseno.Paginas[0].Estructura){
 		  return (<Page><View><Text>Formato No Soportado</Text></View></Page>);
 	  }
-
-	  return (<Page style={documento.diseno.Paginas[0].style} id={"pagina_"+1}>
+	  const pageStyle = {};
+	  Object.entries(documento.diseno.Paginas[0].style).map(([key, val]) => pageStyle[key] = val);
+	  pageStyle.width = "";//(8.26*72)+"pt !important";
+	  pageStyle.height = "";//(11.69*72)+"pt !important";
+	  //size={{width: (21/2.54*72)+"pt", height: (29.7/2.54*72)+"pt"}}
+	  return (<Page style={pageStyle} id={"paginapdf_"+0} size={[(8.26*72), (11.69*72)]}>
 				<View style={{position:"absolute"}}>
 					{documento.diseno.Paginas[0].Elementos? (Object.entries(documento.diseno.Paginas[0].Elementos).forEach(([key, val]) => {
 						if(documento.diseno.Elementos[val]){
@@ -190,6 +201,8 @@ const DocumentoPDF = ({user_data, documento, tempIds, obtenerTextoEstructura}) =
 	const docuStyle = {};
 	Object.entries(documento.diseno.style).forEach(([key, value]) => {docuStyle[key] = value});
 	docuStyle.fontFamily = "Roboto"; //DEBUG
+	docuStyle.width = "";
+	docuStyle.height = "";
 	
 	let numeroDePaginas = 1;
 	return (

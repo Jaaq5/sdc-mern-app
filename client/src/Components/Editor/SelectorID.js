@@ -252,7 +252,7 @@ const SelectorID = ({user_data, ListaEditar, setListaEditar, documento, setDocum
 	useEffect(() => {});
 	
 	return (
-	<div id={"Selector_IDs"} style={{backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Math.max(Editando.pos[0]*0-300/zoom, 0)*zoom)+"px",top: (Math.max(Editando.pos[1]*0,20)*zoom)+"px", marginTop: "-10px", maxWidth: "300px"}}>
+	<div id={"Selector_IDs"} style={{pointerEvents: "auto", backgroundColor: "#303030", border:"solid 0px #333", borderRadius: "0px", position: "absolute", left: (Math.max(Editando.pos[0]*0-300/zoom, 0)*zoom)+"px",top: (Math.max(Editando.pos[1]*0,20)*zoom)+"px", marginTop: "-10px", maxWidth: "300px"}}>
 			<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)", padding: "3px", textAlign: "center"}}>
 				{item.Editable?.Titulo}
 				{Editando.Arreglo? (<div>

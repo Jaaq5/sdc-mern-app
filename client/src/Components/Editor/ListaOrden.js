@@ -14,7 +14,7 @@ const SeccionOrderEditor = ({ListaEditar, setListaEditar, documento, setDocument
 	  if(!documento)
 		  return (<></>);
 	  return (
-			<div style={{display: "block", width: "240px", backgroundColor: "#303030", textAlign: "center"}}>
+			<div style={{display: "block", width: "240px", backgroundColor: "#303030", textAlign: "center", pointerEvents: "auto"}}>
 				<div style={{color: "#fff", fontWeight: "900", fontSize: "1.2em", borderBottom: "solid 2px rgb(200,200,200)"}}>
 					Secciones<Button onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
 				</div>
@@ -66,7 +66,8 @@ const mapListaToHTML = (ListaEditar, setListaEditar, documento, setDocumento) =>
 		  display: "flex",
 		  justifyContent: "flex-start",
 		  textAlign: "left",
-		  verticalAlign: "middle"
+		  verticalAlign: "middle", 
+		  pointerEvents: "auto"
 	  };
 	const seccionIndex = {
 		  borderRadius: "25px",
@@ -137,7 +138,7 @@ const mapListaToHTML = (ListaEditar, setListaEditar, documento, setDocumento) =>
 					>
 					{documento.diseno.Secciones[seccion].Mostrar? (<VisibilityIcon />) : (<VisibilityOffIcon color="error" />)}
 				</Button>
-				{(index-1 >= 0)? (
+				{/*(index-1 >= 0)? (
 					<Button style={moveButton} 
 						onClick={(e) => {
 							documento.diseno.Secciones.Orden[index] = documento.diseno.Secciones.Orden[index-1];
@@ -162,7 +163,7 @@ const mapListaToHTML = (ListaEditar, setListaEditar, documento, setDocumento) =>
 					</Button>
 				) : (
 					<></>
-				)}
+				)*/}
 			</div>
 			<div id={"divisor_"+index} style={{width: "100%", borderBottom:"solid 2px rgba(230, 150, 0,0.2)"}}></div>
 		</div>);

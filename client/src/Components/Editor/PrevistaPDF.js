@@ -65,8 +65,10 @@ const PaginaPDFEstructurada = ({user_data, documento, obtenerTextoEstructura}) =
 	  if(!documento || !documento.diseno.Paginas || !documento.diseno.Paginas[0].Estructura){
 		  return (<Page><View><Text>Formato No Soportado</Text></View></Page>);
 	  }
-	  
-	  return (<Page style={documento.diseno.Paginas[0].style} id={"pagina_"+1}>
+	  const pageStyle = {};
+	  Object.entries(documento.diseno.Paginas[0].style).map(([key, val]) => {pageStyle[key] = val});
+	  console.log(pageStyle)
+	  return (<Page style={pageStyle} id={"paginapdf_"+1} size="A1" orientation={"landscape"}>
 				<View style={{position:"absolute"}}></View>
 				{
 					Object.entries(documento.diseno.Paginas[0].Estructura).map(([key, val]) => {

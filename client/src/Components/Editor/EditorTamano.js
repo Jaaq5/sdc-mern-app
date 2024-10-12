@@ -8,7 +8,8 @@ import OpenWithIcon from '@mui/icons-material/OpenWith';
 import PhotoSizeSelectSmallIcon from '@mui/icons-material/PhotoSizeSelectSmall';
 import ControlCameraIcon from '@mui/icons-material/ControlCamera';
 
-const celdasPagina = [595/40, 841/60]//react-pdf    [756 / 40, 1123 / 60]; //En px
+const resolucionCeldas = 100;
+const celdasPagina = [594/resolucionCeldas, 841/resolucionCeldas]//react-pdf    [756 / 40, 1123 / 60]; //En px
 const tamanoObjeto = (path, documento, setDocumento, id = "") => {
   if(!documento)
 	  return {width:0, height:0};
@@ -88,7 +89,7 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 	
 	const updatePos = (accion, myindex, posiciones, cajax) => {
 		movimiento[myindex] = origenes[myindex] === 0? movimiento[myindex] : [accion.clientX/gzoom - origenes[myindex][0], accion.clientY/gzoom - origenes[myindex][1]] ;
-		movimiento[myindex] = [movimiento[myindex][0] * mults[myindex][0], movimiento[myindex][1] * mults[myindex][1]]
+		movimiento[myindex] = [movimiento[myindex][0] * mults[myindex][0], movimiento[myindex][1] * mults[myindex][1]];
 		if(origenes[myindex] !== 0){
 			accion.target.style.transition = "none";
 			accion.target.style.transform = "translate("+movimiento[myindex][0]+"px,"+movimiento[myindex][1]+"px)";
@@ -129,6 +130,7 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 		path.forEach((campo) => item = item[campo]);
 		
 		item.Celdas = [Math.floor(t[0]/celdasPagina[0]), Math.floor(t[1]/celdasPagina[1])];
+		console.log(t)
 		t = tamanoObjeto(item, documento, setDocumento);
 		setDocumento(documento);
 		setTamano(t);
@@ -177,11 +179,11 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 		origen = origen === 0? [accion.clientX/gzoom, accion.clientY/gzoom] : [origen[0] - (ended[0] - accion.clientX/gzoom), origen[1] - (ended[1] - accion.clientY/gzoom)]
 		
 		//let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
-		let t = [accion.clientX - (scrollOrigin[0] - window.scrollX)*1 - origen[0], accion.clientY  - (scrollOrigin[1] - window.scrollY)*1 - origen[1]]//[pos[0] + movimiento[0] + (scrollOrigin[0] - window.scrollX), pos[1] + movimiento[1] + (scrollOrigin[1] - window.scrollY)];
-		const c = [Math.floor(t[0]/celdasPagina[0]),Math.floor(t[1]/celdasPagina[1])];
-		t = [c[0]*celdasPagina[0], c[1] * celdasPagina[1]];
+		//let t = [accion.clientX - (scrollOrigin[0] - window.scrollX)*1 - origen[0], accion.clientY  - (scrollOrigin[1] - window.scrollY)*1 - origen[1]]//[pos[0] + movimiento[0] + (scrollOrigin[0] - window.scrollX), pos[1] + movimiento[1] + (scrollOrigin[1] - window.scrollY)];
+		//const c = [Math.floor(t[0]/celdasPagina[0]),Math.floor(t[1]/celdasPagina[1])];
+		//t = [c[0]*celdasPagina[0], c[1] * celdasPagina[1]];
 			
-		document.getElementById("pos_celda_texto").innerHTML = c[0]+" x "+c[1];//Math.floor(t[0])+" x "+Math.floor(t[1]);
+		//document.getElementById("pos_celda_texto").innerHTML = c[0]+" x "+c[1];//Math.floor(t[0])+" x "+Math.floor(t[1]);
 		
 		accion.target.style.width = "900%";
 		accion.target.style.height = "900%";
@@ -196,7 +198,7 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 		if(dragging){
 			let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 			const c = [Math.floor(t[0]/celdasPagina[0]),Math.floor(t[1]/celdasPagina[1])];
-			t = [Math.floor(movimiento[0]/celdasPagina[0])*celdasPagina[0], Math.floor(movimiento[1]/celdasPagina[1]*celdasPagina[1])];
+			t = [Math.floor(movimiento[0]/celdasPagina[0])*celdasPagina[0], Math.floor(movimiento[1]/celdasPagina[1])*celdasPagina[1]];
 			
 			const elm = document.getElementById(id);
 			elm.style.transform = "translate("+t[0]+"px,"+t[1]+"px)"
@@ -254,18 +256,35 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 
 let gzoom = 1;
 
-function GridCSS({}){
+function OldGridCSS({}){
 	const gridStyle = {
-	  width: "100%",//(celdasPagina[0]*60)+"px",
+	  width: "100%",
 	  height: "100%",
 	  //left: Editando.pos[2]+"px",
 	  position: "absolute",
-	  backgroundImage: "linear-gradient(#fcc4 0 1px, transparent 1px 100%), linear-gradient(90deg, #ccf4 0 1px, transparent 1px 100%)",
+	  backgroundImage: "linear-gradient(#fcc3 0 1px, transparent 1px 100%), linear-gradient(90deg, #ccf3 0 1px, transparent 1px 100%)",
 	  backgroundSize: celdasPagina[0]+"px "+celdasPagina[1]+"px",
 	  zIndex: 0
 	};
 	return (<div style={gridStyle}></div>)
 }
+
+function GridCSS({offset}){
+	const off = offset? offset : [0,0];
+	const gridStyle = {
+	  width: "100%",
+	  height: "100%",
+	  //left: Editando.pos[2]+"px",
+	  position: "absolute",
+	  backgroundImage: "linear-gradient(#fcc3 0 1px, transparent 1px 100%), linear-gradient(90deg, #ccf3 0 1px, transparent 1px 100%)",
+	  backgroundSize: "28.34px 28.34px",
+	  zIndex: 0,
+	  top: offset[0]+"px",
+	  left: offset[1]+"px",
+	};
+	return (<div style={gridStyle}></div>)
+}
+
 
 const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setListaEditar, documento, setDocumento, Editando, setEditando, SeleccionarIDs, zoom}) => {
 	//<BloquesToHTML user_data={user_data} TextoEditar={TextoEditar} setTextoEditar={setTextoEditar} ListaEditar={ListaEditar} setListaEditar={setListaEditar} documento={documento} setDocumento={setDocumento} Editando={Editando} setEditando={setEditando} />
@@ -332,19 +351,19 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	
 	return (<>
 	<div id="caja_tamano" 
-		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: Editando.pos[0]+"px",top: Editando.pos[1]+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
+		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: (Editando.pos[0])+"px",top: (Editando.pos[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
 		
 		>
-		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "250px", zoom: 1/gzoom}}>
+		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "270px", zoom: 1/gzoom}}>
 			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: err? "-60px" : "-30px", width: "100%", height: "30px", transition: "all 0.5s", overflow: "hidden"}}>
 				 <WarningIcon color="warning" style={{position: "relative", top: "5px"}} />{" La caja podria ser pequeña"}
 			</div>
 			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", width: "100%", height: "30px"}}>
 				<ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
-				<span id="pos_celda_texto">{initialPos? (<span>{initialPos[0]+" "}x{" "+initialPos[1]}</span>) : (<></>)}</span> 
+				<span id="pos_celda_texto">{initialPos? (<span>{Math.floor(initialPos[0])+" "}x{" "+Math.floor(initialPos[1])}</span>) : (<></>)}</span> 
 				{"  |  "}
 				<PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" "}
-				<span id="tamano_celda_texto">{item.Celdas[0]+" "}x{" "+item.Celdas[1]}</span>
+				<span id="tamano_celda_texto">{Math.floor(item.Celdas[0])+" "}x{" "+Math.floor(item.Celdas[1])}</span>
 				<Button style={{zIndex: 200}} onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
 			</div>
 		</div>
@@ -353,4 +372,4 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	</div></>);
 };
 
-export {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, GridCSS};
+export {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, resolucionCeldas, GridCSS};
