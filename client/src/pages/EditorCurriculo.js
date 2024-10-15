@@ -10,7 +10,7 @@ import PanelSeccion from "../Components/Editor/PanelSeccion";
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
-import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, GridCSS} from "../Components/Editor/EditorTamano";
+import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, resolucionCeldas, GridCSS} from "../Components/Editor/EditorTamano";
 import Autosave from "../Components/Editor/Autosave";
 
 import "./editor.css";
@@ -113,7 +113,8 @@ function EditorCurriculo({
 	fontSize: "inherit",
 	position: "absolute",
 	right: "0px",
-	top: "0px"
+	top: "0px",
+	pointerEvents: "auto"
   };
   const seccionEditButtonIcon ={
 	  width: "20px", 
@@ -122,14 +123,17 @@ function EditorCurriculo({
   };
   const editButtonIcon ={
 	  width: "20px", 
-	  height: "20px"
+	  height: "20px",
+	  maxHeight: "1rem",
+	  pointerEvents: "auto"
   };
   const pdfCaja = {
 	  backgroundColor: "#303030",
 	  height: "1000px",
 	  width: "70%",
-	  minWidth: (celdasPagina[0]*40)+"px",
+	  minWidth: (celdasPagina[0]*resolucionCeldas)+"px",
 	  overflow: "hidden",
+	  position: "relative"
   };
   const toolBar = {
 	  backgroundColor: "#303030",
@@ -153,14 +157,16 @@ function EditorCurriculo({
   const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
   const [minMaxDoc, setMinMaxDoc] = useState([0,0,600,800]);
   const [zoom, setZoom] = useState(1);
-  const [actualizar, setActualizar] = useState(false);
-  
+  const [controles, setControles] = useState({});
+   
   //DEBUG
   const [editMode, setEditMode] = useState("Usuario");
 
   const getNameById = (id) => {
+	      if(!idiomas)
+			  return "";
           const matchedMenuItem = idiomas.find((item) => item._id === id);
-          return matchedMenuItem ? matchedMenuItem.Nombre : null;
+          return matchedMenuItem ? matchedMenuItem.Nombre : "";
         };
 		
   //Retorna el estilo
@@ -212,7 +218,7 @@ function EditorCurriculo({
 		minMaxDoc[1] = minMaxDoc[1] < t.height? minMaxDoc[1] : t.height;
 		minMaxDoc[2] = minMaxDoc[2] > t.width + tc[0]? minMaxDoc[2] : t.width + tc[0];
 		minMaxDoc[3] = minMaxDoc[3] > t.height + tc[1]? minMaxDoc[3] : t.height + tc[1];
-		setMinMaxDoc(minMaxDoc);
+		//setMinMaxDoc(minMaxDoc);
 	}
 	return estructura.style;
   };
@@ -224,6 +230,17 @@ function EditorCurriculo({
 	 return newPath;
   };
 		
+  const formatoYear = (modificador, texto) => {
+	  if(texto === "")
+		  return "Al presente"
+	  switch(modificador){
+		  case "__year":
+			return (new Date(texto)).getFullYear();
+		  default:
+			return texto;
+	  }
+  };
+  
   const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
 	let skipNext = 0;
@@ -232,7 +249,7 @@ function EditorCurriculo({
 			skipNext -= 1;
 		//Modificadores de texto, TODO
 		}else if (campo === "__year"){
-			texto += (new Date(user_data.bloques[nombreSeccion][id][estructura.Texto[index+1]])).getFullYear();
+			texto += formatoYear("__year", user_data.bloques[nombreSeccion][id][estructura.Texto[index+1]]);
 			skipNext = 1;
 		}else if (campo === "__check"){
 			texto += user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]]? estructura.Texto[index+1]+user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]] : "";
@@ -301,10 +318,39 @@ function EditorCurriculo({
 	  </div></>);
   };
   
-  const ElementoDivEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index}) => {
-	  
+  const ElementoDivEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
+	  const nid = "Div_"+nombreSeccion+"_"+path;
+	  estructura.style.position = "relative";
 	  return (<>
-	  <div id={"Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
+	  <div id={nid} style={estructura.style} key={nombreSeccion+id+path} 
+	  onMouseEnter={(e) => {document.getElementById(nid).style.borderRadius = "3px"; document.getElementById(nid).style.boxShadow = "inset 0 0 0 2px purple";}}
+	  onMouseLeave={(e) => {document.getElementById(nid).style.boxShadow = "inset 0 0 0 0px purple"}}
+	  
+	  >
+		  {estructura.Editable? (
+						<Button  
+							title={estructura.Editable.Titulo}
+							style={seccionEditButton}
+							id={"Edit_Button_Estructura_"+path}
+							onClick={(e) => {
+							setEditando(null);
+							setEditando({
+								Tipo: estructura.Editable.Tipo,
+								pos: posicionEnOverlay(nid),
+								Seccion: estructura.Editable.Seccion,
+								Campo: estructura.Editable.Campo,
+								Arreglo: estructura.Editable.Arreglo,
+								Celdas: estructura.Editable.Celdas,
+								Pos: estructura.Editable.Pos,
+								path: path,
+								id: nid,
+								});
+							}} >
+								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
+						</Button>
+					) : (
+						<></>
+			)}
 			{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
 			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
 	  </div></>);
@@ -314,20 +360,24 @@ function EditorCurriculo({
 	  const imgStyle = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
 	  imgStyle.top = 0;
 	  imgStyle.left = 0;
-	  return (<div style={estructura.style}>
-		<img id={"Imagen_"+nombreSeccion+"_"+index} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
+	  const nid = "Imagen_"+nombreSeccion+"_"+index;
+	  return (<div id={"Container_"+nid} style={estructura.style}
+			onMouseEnter={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Edit_Button_Img_"+path).style.borderRadius = "3px"; }}
+			onMouseLeave={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 0px purple"}}
+		>
+		<img id={nid} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
 		{estructura.Editable? (
 						<Button  
 							title={estructura.Editable.Titulo}
 							style={seccionEditButton}
-							id={"Edit_Button_Seccion_"+seccion}
+							id={"Edit_Button_Img_"+path}
 							onClick={(e) => {
 							setEditando(null);
 							setEditando({
 								Tipo: estructura.Editable.Tipo,
-								pos: posicionEnOverlay("Imagen_"+nombreSeccion+"_"+index),
+								pos: posicionEnOverlay(nid),
 								path: path,
-								id: "Imagen_"+nombreSeccion+"_"+index,
+								id: nid,
 								Seccion: nombreSeccion,
 								Campo: estructura.Editable.Campo,
 								Arreglo: estructura.Editable.Arreglo,
@@ -360,6 +410,7 @@ function EditorCurriculo({
 		  case "Estructura":
 		    const newPath = extenderPath(path, ["Estructura",index]);
 			const style = tamanoYPosicion(estructura);
+			style.pointerEvents = "none";
 			estructura.style = style;
 			return (<div style={style}>
 				{Object.entries(estructura.Estructura).map(([index, estr]) => 
@@ -372,12 +423,41 @@ function EditorCurriculo({
 				list.push(
 					<div style={estructura.plantillaStyle}>{Object.keys(estructura.Plantilla).map((index) => {
 						return (<>
-							<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} path={[]}/>
+							<ElementoEstructuradoHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} path={extenderPath(path,["Plantilla", index])}/>
 						</>)
 					})}</div>
 				);
 			});
-			return (<div style={estructura.style}>{list}</div>);
+			const p = extenderPath(path,[]);
+			const nid ="IDs_"+nombreSeccion+path;
+			estructura.style.pointerEvents = "none";
+			return (<div id={nid} style={estructura.style}>
+				{estructura.Editable? (
+					<Button  
+						title={estructura.Editable.Titulo}
+						style={seccionEditButton}
+						id={"Edit_Button_Estructura_"+path}
+						onClick={(e) => {
+						setEditando(null);
+						setEditando({
+							Tipo: estructura.Editable.Tipo,
+							pos: posicionEnOverlay(nid),
+							Seccion: estructura.Editable.Seccion,
+							Campo: estructura.Editable.Campo,
+							Arreglo: estructura.Editable.Arreglo,
+							Celdas: estructura.Editable.Celdas,
+							Pos: estructura.Editable.Pos,
+							path: p,
+							id: nid,
+							});
+						}} >
+							<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
+					</Button>
+				) : (
+					<></>
+				)}
+			{list}
+			</div>);
 	  };
 	  
 	  return (<></>);
@@ -411,8 +491,8 @@ function EditorCurriculo({
 	  
 	  const sec = (
 				<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion} 
-					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Seccion_" + seccion).style.transition = "all 0.5s"}}
-					onMouseLeave={(e) => { document.getElementById("Seccion_" + seccion).style.transition = ""; document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"}}
+					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Seccion_" + seccion).style.borderRadius = "3px"; }}
+					onMouseLeave={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"}}
 					>
 					{documento.diseno.Secciones[seccion].Editable? (
 						<Button  
@@ -471,9 +551,13 @@ function EditorCurriculo({
 			
 	}else if(typeof(estructura) === "object"){
 		const pindex = path.indexOf("Paginas")+1;
-		estructura.style = tamanoYPosicion(estructura, pindex, estructura);
 		const id = "Estructura_"+path;
 		const p = extenderPath(path,[]);
+		const ps = posicionEnOverlay(id);
+		if(!estructura.Pos && ps[0] !== -1){
+			estructura.Pos = [(ps[0]-ps[2]+ps[3])/celdasPagina[0], (ps[1]-ps[4]-ps[5])/celdasPagina[1]];
+		}
+		estructura.style = tamanoYPosicion(estructura, pindex, estructura);
 		return (<div id={id} style={estructura.style}>
 		     {estructura.Editable? (
 				<Button  
@@ -489,6 +573,7 @@ function EditorCurriculo({
 						Campo: estructura.Editable.Campo,
 						Arreglo: estructura.Editable.Arreglo,
 						Celdas: estructura.Editable.Celdas,
+						Pos: estructura.Editable.Pos,
 						path: p,
 						id: id,
 						});
@@ -522,7 +607,7 @@ function EditorCurriculo({
 		  return (<></>);
 	  const styled = {};
 	  Object.entries(paginaEstilo).forEach(([key, val]) => styled[key] = val);
-	  styled.top = (pindex*celdasPagina*60)+"px";
+	  styled.top = (pindex*celdasPagina[1]*100)+"px";
 	  return (<div style={styled} id={"pagina_"+pindex}>
 				<div style={{position:"absolute"}}>
 					{documento.diseno.Paginas[pindex]?.Elementos? (Object.entries(documento.diseno.Paginas[pindex].Elementos).forEach(([key, val]) => {
@@ -585,7 +670,7 @@ function EditorCurriculo({
 		tempIds[seccion] = [];
 		
 		for(let i=cantidad; i>=0; i-=1){
-			if(documento.diseno.Secciones[seccion].Editable.Arreglo)
+			if(documento.diseno.Secciones[seccion].Editable?.Arreglo)
 				if(documento.datos.Secciones[seccion].IDs[i]){
 					tempIds[seccion].push(documento.datos.Secciones[seccion].IDs[i]);
 				}else{
@@ -593,7 +678,7 @@ function EditorCurriculo({
 				}
 		}
 		for(let i=0; tempIds[seccion].length < cantidad && i < lista.length; i+=1){
-			if(documento.diseno.Secciones[seccion].Editable.Arreglo)
+			if(documento.diseno.Secciones[seccion].Editable?.Arreglo)
 				if(!documento.datos.Secciones[seccion].IDs.includes(lista[i][0]))
 					tempIds[seccion].push(lista[i][0]);
 		}
@@ -608,24 +693,31 @@ function EditorCurriculo({
 	const container = document.getElementById("contenedor_documento");
 	const editor = document.getElementById("contenedor_documentos");
 	const pag = document.getElementById("pagina_0");
+	if(!pag)
+		return [-1,-1];
 	const pagStyle = pag.currentStyle || window.getComputedStyle(pag);
 	if(!doc)
 		return [0,0];
 	
 	const elm = document.getElementById(id);
+	if(!elm)
+		return [-1,-1];
 	let parent = elm;
 	let pos = [0, 0];
+	
+	const isDiv = id.includes("Div");
 	while(true){
+	
 		if(parent.id? parent.id.includes("pagina") : false){
 			break;
 		}
 		pos[0] += parent.offsetLeft;
 		pos[1] += parent.offsetTop;
-		
 		parent = parent.parentElement;
 	}
 
-	pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft + Number(pagStyle.marginLeft.substring(0, pagStyle.marginLeft.length-2)), pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop + Number(pagStyle.marginTop.substring(0, pagStyle.marginTop.length-2))];
+	//pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft + Number(pagStyle.paddingLeft.substring(0, pagStyle.paddingLeft.length-2)), pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop + Number(pagStyle.paddingTop.substring(0, pagStyle.paddingTop.length-2))];
+	pos = [pos[0] + doc.offsetLeft*0 + container.offsetLeft - editor.scrollLeft, pos[1] +   doc.offsetTop*0 + container.offsetTop - editor.scrollTop];
 	pos = [Math.max(-10000, pos[0]), Math.max(-10000, pos[1]), container.offsetLeft, editor.scrollLeft , container.offsetTop, editor.scrollTop];
 	return pos;
   };
@@ -634,26 +726,33 @@ function EditorCurriculo({
   //HTML
   //[595.28, 841.89]
   const documentoEstilo = {
-		minHeight: "841.89px",
-		minWidth: "595.28px",
-		maxWidth: "595.28px",
+		//minHeight: "29.7cm",
+		//minWidth: "21cm",
+		//maxWidth: "21cm",
+		width: "594px",
 		backgroundColor: "#FFFFFF",
-		fontFamily: "Roboto"
+		fontFamily: "Roboto",
+		boxSizing: "border-box",
   };
   const paginaEstilo = {
 		//maxHeight: "841.89px",
-		minHeight: "841.89px",
-		minWidth: "595.28px",
-		maxWidth: "595.28px",
+		minHeight: "29.7cm",
+		minWidth: "21cm",
+		maxWidth: "21cm",
 		//height: "841.89px",
-		width: "595.28px",
-		display: "flex",
+		width: "21cm",
+		display: "inline flex",
 		backgroundColor: "#FFFFFF",
 		//gridTemplateColumns: "repeat(40, 1fr)",
 		//gridTemplateRows: "repeat(60, 1fr)",
 		flexDirection: "row",
+		alignContent: "flex-start",
 		flexWrap: "wrap",
 		//overflow: "visible"
+		paddingTop: "70px",
+		paddingLeft: "70px",
+		boxSizing: "border-box",
+		
   };
   const divisorPagina = {
 	  position: "absolute",
@@ -679,9 +778,19 @@ function EditorCurriculo({
 		//Hacer estilos un objeto editable
 		const fonts = {};
 		Object.entries(documento.diseno.Secciones).forEach(([nombreseccion, seccion]) => {
+			seccion.style = seccion.style? JSON.parse(JSON.stringify(seccion.style)) : {};
 			if(seccion.style && seccion.style.fontFamily)
 				fonts[seccion.style.fontFamily] = seccion.style.fontWeight? seccion.style.fontWeight : 400;
-				
+			const p = posicionEnOverlay("Seccion_"+nombreseccion);
+			if(!seccion.Pos && p[0] !== -1){
+				seccion.Pos = [(p[0]-p[2]+p[3])/celdasPagina[0], (p[1]-p[4]-p[5])/celdasPagina[1]];
+			}
+			if(seccion.Celdas){
+				const t = celdasAPx(seccion.Celdas);
+				seccion.style.width = t.width+"px";
+				seccion.style.height = t.height+"px";
+			}
+		
 			if(seccion.Estructura)
 				Object.entries(seccion.Estructura).forEach(([index, estr]) => {
 					let newStyle = {};
@@ -720,17 +829,18 @@ function EditorCurriculo({
 						});
 			});
 		});
+		setDocumento(documento);
 		
 		const calcDivisor = (numeroDePaginas) => {
 			let style = {};
 			Object.entries(divisorPagina).forEach(([key, value]) => {style[key] = value});
-			style.top = (numeroDePaginas * celdasPagina[1] * 60) + "px";
+			style.top = (numeroDePaginas * celdasPagina[1] * resolucionCeldas) + "px";
 			return style;
 		};
 		
 		const pagina = document.getElementById("pagina_0");
 		const height = Math.max(minMaxDoc[3], pagina? pagina.scrollHeight : 0);
-		let numeroDePaginas = pagina? Math.ceil(height/(celdasPagina[1]*60)) : 1;
+		let numeroDePaginas = pagina? Math.ceil(height/(celdasPagina[1] * resolucionCeldas)) : 1;
 		
 		const divisores = [];
 		for(let i=1; i < numeroDePaginas; i+=1)
@@ -739,8 +849,11 @@ function EditorCurriculo({
 		Object.entries(documento.diseno.Paginas[0].style).forEach(([key, value]) => {
 			paginaEstilo[key] = value;
 		});
-		//paginaEstilo.height = numeroDePaginas*(celdasPagina[1]*60)+"px";//minMaxDoc[3]+"px"
+		paginaEstilo.height = numeroDePaginas*(celdasPagina[1] * resolucionCeldas)+"px";//minMaxDoc[3]+"px"
 		documento.diseno.Paginas[0].style = paginaEstilo;
+		paginaEstilo.width = (celdasPagina[0]*resolucionCeldas)+"px"
+		paginaEstilo.minWidth = paginaEstilo.width;
+		paginaEstilo.maxWidth = paginaEstilo.width;
 		
 
 		return (
@@ -768,8 +881,35 @@ function EditorCurriculo({
     );
   };
 
+  const handleKeyDown = (e) => {
+	  if(e.ctrlKey){
+		controles.ctrl = true;
+		setControles(controles);
+  }};
+  const handleKeyUp = (e) => {
+	  if(e.ctrlKey){
+		controles.ctrl = false;
+		console.log("Falsing")
+		setControles(controles);
+  }};
+  const handleWheel = (e, zoom, setZoom) => {
+	  if(e.ctrlKey){
+		  e.preventDefault();
+		  if(!Editando){
+			  controles.zoom = Math.min(Math.max((controles.zoom? controles.zoom : 1) + (e.deltaY > 0? 0.05 : -0.05), 0.5), 2);
+			  setZoom(controles.zoom);
+		  }
+	  }
+  };
+  
   //Al inicio de carga del componente
   useEffect(() => {
+	//window.addEventListener('keydown', handleKeyDown);
+	//window.addEventListener('keyup', handleKeyUp);
+	const cont = document.getElementById("contenedor_documentos");
+	const overlay = document.getElementById("overlay");
+	cont?.addEventListener('wheel', (e) => {handleWheel(e,zoom,setZoom)});
+	  
     if (!user_data || !user_data.editando_curriculo) {
       navigate("/login");
     } else {
@@ -832,6 +972,15 @@ function EditorCurriculo({
     cargando,
   ]); //Espera a que estos existan?
 
+  const calcularTamanoPaginaPixeles = () => {
+	  //const elm = document.getElementById("pagina_medidor"); 
+	  //if(elm){
+		//const style = elm.currentStyle || window.getComputedStyle(elm);
+		//celdasPagina[0] = Number(style.width.substring(0, style.width.length-2))/resolucionCeldas;
+		//celdasPagina[1] = Number(style.height.substring(0, style.height.length-2))/resolucionCeldas;
+	  //}
+  };
+
   if (cargando) {
     return (
       <center>
@@ -842,8 +991,11 @@ function EditorCurriculo({
 
   return (
     <>
+	  <div id={"pagina_medidor"} style={{width: "594px", height: "841px", display: "none"}}>
+	  {calcularTamanoPaginaPixeles()}
+	  </div>
       <div >
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
+        <h1 style={{ color: "white", fontSize: "5rem", margin: "0" }}>
           Modificar Currículo
         </h1>
       </div>
@@ -867,12 +1019,12 @@ function EditorCurriculo({
 			/>
 		</div>
 		</div>
-		  <div style={pdfCaja}>
-		  <div style={stripeStyle}>
+		  <div id={"Editor_Caja"} style={pdfCaja}>
+		  <div id={"Titulo_Editor"} style={stripeStyle}>
 			<div style={textOverlayStyle}>
 				Editor de dator del currículo
 			</div>
-			</div>
+		  </div>
 			  <div id="Herramientas" style={toolBar}>
 				  {Editando || editMode==="Plantilla"? 
 					(<div style={{color: "#ccc"}}>...</div>) 
@@ -913,6 +1065,7 @@ function EditorCurriculo({
 					aria-label="ZoomSlider"
 					valueLabelDisplay="auto"
 					defaultValue={1}
+					value={zoom}
 					min={0.5}
 					max={2}
 					getAriaValueText={(val) => {return val+"x"}}
@@ -925,13 +1078,13 @@ function EditorCurriculo({
 				  {process.env.NODE_ENV === "development"? (
 				  <><Button style={{ color: theme.palette.yellow.main }} onClick={(e) => {
 					  const edit = editMode === "Usuario"? "Plantilla" : "Usuario"
-					  setEditMode(edit);
 					  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  doc = edit === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
 					  SeleccionarIDs(user_data, doc, categoria_curriculum, categoria_puesto);
 					  setDocumento(
 						doc
 					  );
+					  setEditMode(edit);
 				  }}
 				  >
 					Modo:{" "+editMode}
@@ -968,10 +1121,8 @@ function EditorCurriculo({
 				  (<></>)
 				  }
 			  </div>
-				  {Editando? (
-					<div id="overlay" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 99, zoom: zoom, pointerEvents: "auto" }} >
-						{(Editando.Celdas || Editando.Pos)? (<GridCSS />) : (<></>)}
-						<div id="overlay_unzoomed" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 0, zoom: (1/zoom)}} >
+			  {Editando? (
+					<div id="overlay_unzoomed" style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "#0000", zIndex: 100, zoom: (1), pointerEvents: "none"}} >
 						<ToolBoxSwitcher
 							user_data={user_data}
 							TextoEditar={TextoEditar} 
@@ -986,6 +1137,14 @@ function EditorCurriculo({
 							zoom={zoom}
 						/>
 						</div>
+				  ) 
+				  : 
+				  (<></>)
+			  }
+				  {Editando? (
+					<div id="overlay" style={{position: "absolute", width: "300%", height: "300%", backgroundColor: "#0001", zIndex: 99, zoom: zoom, pointerEvents: "auto" }} >
+						{/*(Editando.Celdas || Editando.Pos)? (<GridCSS offset={[0,0]}/>) : (<></>)*/}
+						
 						{(Editando.Celdas || Editando.Pos)? (
 							<EditorTamano 
 								user_data={user_data}
@@ -1012,6 +1171,13 @@ function EditorCurriculo({
 				  
 				  <div id="contenedor_documentos" 
 					style={{width: "100%", height: "100%", overflow: "scroll", maxHeight:"calc(100% - 60px)", position:"relative", pointerEvents: "auto", display: "flex", justifyContent: "center", zoom: zoom, transition: "all 1.2s"}}
+					onScroll={(e) => {
+						//const elm = document.getElementById("overlay");
+						//if(elm ){
+						//	elm.style.transform = "translate("+(-e.target.scrollLeft*0)+"px, "+(-e.target.scrollTop)+"px)";
+						//}
+					}}
+					tabIndex={0}
 				  >
 				    
 					<div id="contenedor_documento" style={{position: "relative", width: "50%", height: "150%", pointerEvents: "none", top: (-minMaxDoc[1])+"px", left: (-minMaxDoc[0])+"px"}}>
@@ -1020,7 +1186,7 @@ function EditorCurriculo({
 				  </div>
 		  </div>
 
-		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', zIndex: 400 }}>
+		  <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', zIndex: 100 }}>
 			<div style={stripeStyle}>
 				<div style={textOverlayStyle}>
 				Vista previa

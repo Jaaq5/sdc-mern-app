@@ -327,10 +327,6 @@ function CurriculosMenu({
         .catch((e) => {
           console.log(e);
         });
-
-      //user_data.curriculums.push(plantilla);
-      //setUserData(user_data);
-      
     }
   };
 
@@ -340,17 +336,17 @@ function CurriculosMenu({
     const bloque = user_data.curriculums[index];
     if (!bloque) return;
 
-    delete user_data.curriculums[index];
-    setUserData(user_data);
-
-    mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
+    //delete user_data.curriculums[index];
+    //setUserData(user_data);
 
     curriculum_manager.EliminarCurriculo(
       user_data,
       setUserData,
       index,
       plan_id,
-    );
+    ).then((response) => {
+		mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
+	});
   };
 
   return (
