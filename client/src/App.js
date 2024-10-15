@@ -231,7 +231,7 @@ function App() {
     },
 
     EliminarCurriculo: async (user_data, setUserData, index, curriculo_id) => {
-      axios
+      return axios
         .delete(
           apiUrl +
             "/api/users/eliminar-usuario-curr/" +
@@ -249,14 +249,15 @@ function App() {
           if (!response.data.success) {
             console.error("Error a eliminar el currículo");
           } else {
-            delete user_data.curriculums[index]; //Eliminar bloque
+            user_data.curriculums.splice(index,1); //Eliminar bloque
             setUserData(user_data); //Actualizar variable de sesion
+			return true;
           }
         })
         .catch((err) => {
           console.log(err);
         });
-      return;
+      return null;
     },
 
     ObtenerPlantillas: async (filtros) => {

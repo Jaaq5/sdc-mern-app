@@ -346,7 +346,7 @@
           },
           "Celdas": [
             78,
-            13
+            25
           ],
           "Editable": {
             "Titulo": "Cambiar Lista de Títulos",
@@ -437,7 +437,7 @@
           },
           "Celdas": [
             78,
-            13
+            25
           ],
           "Editable": {
             "Titulo": "Cambiar Lista de Certificaciones",
@@ -485,7 +485,8 @@
                 "border": "0pt",
                 "borderBottom": "2pt",
                 "borderColor": "#ddd",
-                "borderStyle": "solid"
+                "borderStyle": "solid",
+				"position" : "relative"
               },
               "Plantilla": [
                 {
@@ -505,8 +506,9 @@
                     "width": "148.75px",
                     "height": "70.08333333333334px",
                     "fontFamily": "Roboto",
-                    "fontWeight": 400
-                  },
+                    "fontWeight": 400,
+					"position" : "relative"
+                   },
                   "Celdas": [
                     10,
                     5
@@ -526,7 +528,8 @@
                     "width": "163.625px",
                     "height": "70.08333333333334px",
                     "fontFamily": "Roboto",
-                    "fontWeight": 400
+                    "fontWeight": 400,
+					"position" : "relative"
                   },
                   "Celdas": [
                     11,
@@ -642,7 +645,7 @@
           },
           "Celdas": [
             78,
-            13
+            25
           ],
           "Editable": {
             "Titulo": "Cambiar Lista de Idiomas",
@@ -724,7 +727,7 @@
           },
           "Celdas": [
             78,
-            13
+            25
           ],
           "Editable": {
             "Titulo": "Cambiar Lista de Proyectos",
@@ -815,7 +818,7 @@
           },
           "Celdas": [
             78,
-            13
+            25
           ],
           "Editable": {
             "Titulo": "Cambiar Lista de Publicaciones",
@@ -915,7 +918,7 @@
           },
           "Celdas": [
             78,
-            13
+            25
           ],
           "Editable": {
             "Titulo": "Cambiar Lista de Referencias",

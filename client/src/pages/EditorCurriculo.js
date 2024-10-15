@@ -113,7 +113,8 @@ function EditorCurriculo({
 	fontSize: "inherit",
 	position: "absolute",
 	right: "0px",
-	top: "0px"
+	top: "0px",
+	pointerEvents: "auto"
   };
   const seccionEditButtonIcon ={
 	  width: "20px", 
@@ -122,7 +123,9 @@ function EditorCurriculo({
   };
   const editButtonIcon ={
 	  width: "20px", 
-	  height: "20px"
+	  height: "20px",
+	  maxHeight: "1rem",
+	  pointerEvents: "auto"
   };
   const pdfCaja = {
 	  backgroundColor: "#303030",
@@ -160,8 +163,10 @@ function EditorCurriculo({
   const [editMode, setEditMode] = useState("Usuario");
 
   const getNameById = (id) => {
+	      if(!idiomas)
+			  return "";
           const matchedMenuItem = idiomas.find((item) => item._id === id);
-          return matchedMenuItem ? matchedMenuItem.Nombre : null;
+          return matchedMenuItem ? matchedMenuItem.Nombre : "";
         };
 		
   //Retorna el estilo
@@ -225,6 +230,17 @@ function EditorCurriculo({
 	 return newPath;
   };
 		
+  const formatoYear = (modificador, texto) => {
+	  if(texto === "")
+		  return "Al presente"
+	  switch(modificador){
+		  case "__year":
+			return (new Date(texto)).getFullYear();
+		  default:
+			return texto;
+	  }
+  };
+  
   const obtenerTextoEstructura = (user_data, nombreSeccion, seccion, id, estructura, index) => {
 	let texto = "";
 	let skipNext = 0;
@@ -233,7 +249,7 @@ function EditorCurriculo({
 			skipNext -= 1;
 		//Modificadores de texto, TODO
 		}else if (campo === "__year"){
-			texto += (new Date(user_data.bloques[nombreSeccion][id][estructura.Texto[index+1]])).getFullYear();
+			texto += formatoYear("__year", user_data.bloques[nombreSeccion][id][estructura.Texto[index+1]]);
 			skipNext = 1;
 		}else if (campo === "__check"){
 			texto += user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]]? estructura.Texto[index+1]+user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]] : "";
@@ -306,7 +322,11 @@ function EditorCurriculo({
 	  const nid = "Div_"+nombreSeccion+"_"+path;
 	  estructura.style.position = "relative";
 	  return (<>
-	  <div id={nid} style={estructura.style} key={nombreSeccion+id+path} >
+	  <div id={nid} style={estructura.style} key={nombreSeccion+id+path} 
+	  onMouseEnter={(e) => {document.getElementById(nid).style.borderRadius = "3px"; document.getElementById(nid).style.boxShadow = "inset 0 0 0 2px purple";}}
+	  onMouseLeave={(e) => {document.getElementById(nid).style.boxShadow = "inset 0 0 0 0px purple"}}
+	  
+	  >
 		  {estructura.Editable? (
 						<Button  
 							title={estructura.Editable.Titulo}
@@ -340,20 +360,24 @@ function EditorCurriculo({
 	  const imgStyle = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
 	  imgStyle.top = 0;
 	  imgStyle.left = 0;
-	  return (<div style={estructura.style}>
-		<img id={"Imagen_"+nombreSeccion+"_"+index} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
+	  const nid = "Imagen_"+nombreSeccion+"_"+index;
+	  return (<div id={"Container_"+nid} style={estructura.style}
+			onMouseEnter={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Edit_Button_Img_"+path).style.borderRadius = "3px"; }}
+			onMouseLeave={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 0px purple"}}
+		>
+		<img id={nid} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
 		{estructura.Editable? (
 						<Button  
 							title={estructura.Editable.Titulo}
 							style={seccionEditButton}
-							id={"Edit_Button_Seccion_"+seccion}
+							id={"Edit_Button_Img_"+path}
 							onClick={(e) => {
 							setEditando(null);
 							setEditando({
 								Tipo: estructura.Editable.Tipo,
-								pos: posicionEnOverlay("Imagen_"+nombreSeccion+"_"+index),
+								pos: posicionEnOverlay(nid),
 								path: path,
-								id: "Imagen_"+nombreSeccion+"_"+index,
+								id: nid,
 								Seccion: nombreSeccion,
 								Campo: estructura.Editable.Campo,
 								Arreglo: estructura.Editable.Arreglo,
@@ -386,6 +410,7 @@ function EditorCurriculo({
 		  case "Estructura":
 		    const newPath = extenderPath(path, ["Estructura",index]);
 			const style = tamanoYPosicion(estructura);
+			style.pointerEvents = "none";
 			estructura.style = style;
 			return (<div style={style}>
 				{Object.entries(estructura.Estructura).map(([index, estr]) => 
@@ -405,6 +430,7 @@ function EditorCurriculo({
 			});
 			const p = extenderPath(path,[]);
 			const nid ="IDs_"+nombreSeccion+path;
+			estructura.style.pointerEvents = "none";
 			return (<div id={nid} style={estructura.style}>
 				{estructura.Editable? (
 					<Button  
@@ -465,8 +491,8 @@ function EditorCurriculo({
 	  
 	  const sec = (
 				<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion} 
-					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Seccion_" + seccion).style.transition = "all 0.5s"}}
-					onMouseLeave={(e) => { document.getElementById("Seccion_" + seccion).style.transition = ""; document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"}}
+					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Seccion_" + seccion).style.borderRadius = "3px"; }}
+					onMouseLeave={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"}}
 					>
 					{documento.diseno.Secciones[seccion].Editable? (
 						<Button  
@@ -869,8 +895,10 @@ function EditorCurriculo({
   const handleWheel = (e, zoom, setZoom) => {
 	  if(e.ctrlKey){
 		  e.preventDefault();
-		  controles.zoom = Math.min(Math.max((controles.zoom? controles.zoom : 1) + (e.deltaY > 0? 0.1 : -0.1), 0.5), 2);
-		  setZoom(controles.zoom);
+		  if(!Editando){
+			  controles.zoom = Math.min(Math.max((controles.zoom? controles.zoom : 1) + (e.deltaY > 0? 0.05 : -0.05), 0.5), 2);
+			  setZoom(controles.zoom);
+		  }
 	  }
   };
   
@@ -879,6 +907,7 @@ function EditorCurriculo({
 	//window.addEventListener('keydown', handleKeyDown);
 	//window.addEventListener('keyup', handleKeyUp);
 	const cont = document.getElementById("contenedor_documentos");
+	const overlay = document.getElementById("overlay");
 	cont?.addEventListener('wheel', (e) => {handleWheel(e,zoom,setZoom)});
 	  
     if (!user_data || !user_data.editando_curriculo) {
@@ -918,7 +947,7 @@ function EditorCurriculo({
 	  
 	  //DEBUG
 	  let doc = user_data.curriculums[user_data.editando_curriculo].Documento?.diseno?.__Comment? user_data.curriculums[user_data.editando_curriculo].Documento : curriculum_manager.CopiarPlantilla("simple").Documento;
-	  doc = editMode === "Usuarios"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
+	  doc = editMode === "Usuario"? doc : curriculum_manager.CopiarPlantilla("simple").Documento;
       setDocumento(
 		doc
       );

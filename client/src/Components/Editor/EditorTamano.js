@@ -171,12 +171,14 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	let origen = 0;
 	let dragging = false;
 	let buttonm = null;
+	let direction = [true,true];
 	
 	
 	const drag = (accion, index) => {
 		//movimiento = origen === 0? movimiento : [accion.clientX - origen[0] - movimiento[0], accion.clientY - origen[1] - movimiento[1]] ;
 		scrollOrigin = origen === 0? [window.scrollX/gzoom, window.scrollY/gzoom] : scrollOrigin;
-		origen = origen === 0? [accion.clientX/gzoom, accion.clientY/gzoom] : [origen[0] - (ended[0] - accion.clientX/gzoom), origen[1] - (ended[1] - accion.clientY/gzoom)]
+		origen = origen === 0? [accion.clientX/gzoom, accion.clientY/gzoom] : [origen[0] - (ended[0] - accion.clientX/gzoom), origen[1] - (ended[1] - accion.clientY/gzoom)];
+		direction = [true,true];
 		
 		//let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 		//let t = [accion.clientX - (scrollOrigin[0] - window.scrollX)*1 - origen[0], accion.clientY  - (scrollOrigin[1] - window.scrollY)*1 - origen[1]]//[pos[0] + movimiento[0] + (scrollOrigin[0] - window.scrollX), pos[1] + movimiento[1] + (scrollOrigin[1] - window.scrollY)];
@@ -195,6 +197,12 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	
 	const updatePos = (accion, id) => {
 		movimiento = !dragging? movimiento : [accion.clientX/gzoom - (scrollOrigin[0] - window.scrollX/gzoom)*1 - origen[0], accion.clientY/gzoom  - (scrollOrigin[1] - window.scrollY/gzoom)*1 - origen[1]] ;
+		//Bloquear direccion de movimiento
+		if(accion.shiftKey && direction[0] && direction[1] && Math.abs(movimiento[0]*movimiento[1]) > 15 ){
+			direction = Math.abs(movimiento[0]) > Math.abs(movimiento[1])? [true,false] : [false,true];
+		}
+		movimiento[0] = direction[0]? movimiento[0] : 0;
+		movimiento[1] = direction[1]? movimiento[1] : 0;
 		if(dragging){
 			let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 			const c = [Math.floor(t[0]/celdasPagina[0]),Math.floor(t[1]/celdasPagina[1])];
@@ -215,6 +223,11 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	};
 	
 	const end = (accion, path, documento, setDocumento, id) => {
+		movimiento = !dragging? movimiento : [accion.clientX/gzoom - (scrollOrigin[0] - window.scrollX/gzoom)*1 - origen[0], accion.clientY/gzoom  - (scrollOrigin[1] - window.scrollY/gzoom)*1 - origen[1]] ;
+
+		movimiento[0] = direction[0]? movimiento[0] : 0;
+		movimiento[1] = direction[1]? movimiento[1] : 0;
+		
 		let t = [pos[0] + movimiento[0], pos[1] + movimiento[1]];
 		let item = documento;
 		path.forEach((campo) => item = item[campo]);
@@ -236,7 +249,10 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 		accion.target.style.top = "0";
 		accion.target.style.left = "0";
 		
+		
+		
 		ended = [accion.clientX/gzoom, accion.clientY/gzoom];
+		direction = [true,true];
 		
 		dragging = false;
 		//calcularBotonMovimiento(tamano, t, docPos, setBotonMovimiento, path, documento, setDocumento, setPos, id);
@@ -293,6 +309,7 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	const [err, setErr] = useState(null);
 	const [pos, setPos] = useState(null);
 	const [botonMovimiento, setBotonMovimiento] = useState(null);
+	const [xy, setXY] = useState(Editando.pos)
 	
 	gzoom = zoom;
 	
@@ -338,20 +355,10 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	
 	if(!botonMovimiento)
 		calcularBotonMovimiento(...dataMov);
-
-	const gridStyle = {
-	  width: "100%",//(celdasPagina[0]*60)+"px",
-	  height: "100%",
-	  //left: Editando.pos[2]+"px",
-	  position: "absolute",
-	  backgroundImage: "linear-gradient(#fcc4 0 1px, transparent 1px 100%), linear-gradient(90deg, #ccf4 0 1px, transparent 1px 100%)",
-	  backgroundSize: celdasPagina[0]+"px "+celdasPagina[1]+"px",
-	  zIndex: -5
-	}
 	
 	return (<>
 	<div id="caja_tamano" 
-		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: (Editando.pos[0])+"px",top: (Editando.pos[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
+		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: (xy[0])+"px",top: (xy[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
 		
 		>
 		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "270px", zoom: 1/gzoom}}>
