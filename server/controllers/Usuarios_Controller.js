@@ -43,6 +43,7 @@ const Crear_Usuario = async (req, res) => {
         Idiomas: {},
         Proyectos: {},
         Publicaciones: {},
+        Conferencias: {},
         Referencias: {},
 
         Informacion_Personal_NID: 1,
@@ -53,6 +54,7 @@ const Crear_Usuario = async (req, res) => {
         Idiomas_NID: 1,
         Proyectos_NID: 1,
         Publicaciones_NID: 1,
+        Conferencias_NID: 1,
         Referencias_NID: 1,
       },
     });
