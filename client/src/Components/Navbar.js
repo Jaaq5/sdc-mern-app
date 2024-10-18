@@ -239,17 +239,6 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
                     <Button
                       variant="contained"
-                      style={location.pathname === "/conferencias" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/conferencias"
-                      onClick={(e) => setPath("/conferencias")}
-                    >
-                      Conferencias
-                    </Button>
-
-                    <Button
-                      variant="contained"
                       style={location.pathname === "/referencias" ? disabledNavButton : navbutton}
                       color="success"
                       component={Link}

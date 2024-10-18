@@ -13,7 +13,6 @@ import Referencias from "./pages/Referencias";
 import Proyectos from "./pages/Proyectos";
 import Habilidades from "./pages/Habilidades";
 import Lenguajes from "./pages/Lenguajes";
-import Conferencias from "./pages/Conferencias";
 
 import CurriculosMenu from "./pages/CurriculosMenu";
 import EditorCurriculo from "./pages/EditorCurriculo";
@@ -496,21 +495,6 @@ function App() {
                 <Navigate to="/login" />
               ) : (
                 <Publicaciones
-                  user_data={user_data}
-                  setUserData={setUserData}
-                  manager_bloques={manager_bloques}
-                  category_manager={category_manager}
-                />
-              )
-            }
-          />
-          <Route
-            path="/conferencias"
-            element={
-              !isLoggedIn ? (
-                <Navigate to="/login" />
-              ) : (
-                <Conferencias
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
