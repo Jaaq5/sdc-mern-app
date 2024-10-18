@@ -158,7 +158,8 @@
 						"Titulo": "Editar Nombre",
 						"Campo" : "TituloSeccion",
 						"Label": "Nombre",
-						"Placeholder": "Tu nombre"
+						"Placeholder": "Tu nombre",
+						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true}
 					  },
 					  "style": {
 						"fontWeight": 900,
@@ -939,7 +940,8 @@
 				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
-                "Placeholder": "Titulo de Referencias"
+                "Placeholder": "Titulo de Referencias",
+				"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true}
               },
               "style": {
                 "fontWeight": 900,

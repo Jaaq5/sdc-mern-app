@@ -1,10 +1,3 @@
-import ComicSans from "../../fonts/Comic Sans MS.ttf"
-import RobotoBold from "../../fonts/Roboto-Bold.ttf"
-import RobotoRegular from "../../fonts/Roboto-Regular.ttf"
-import RobotoLight from "../../fonts/Roboto-Light.ttf"
-import RobotoThin from "../../fonts/Roboto-Thin.ttf"
-
-
 const ElementoTextoEstructuradoHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
   return (<>
   <p id={"HTML_Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
