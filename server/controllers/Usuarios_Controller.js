@@ -44,6 +44,7 @@ const Crear_Usuario = async (req, res) => {
         Proyectos: {},
         Publicaciones: {},
         Referencias: {},
+        Conferencias: {},
 
         Informacion_Personal_NID: 1,
         Educacion_Formal_NID: 1,
@@ -54,6 +55,7 @@ const Crear_Usuario = async (req, res) => {
         Proyectos_NID: 1,
         Publicaciones_NID: 1,
         Referencias_NID: 1,
+        Conferencias_NID: 1,
       },
     });
     await Bloque.save();
