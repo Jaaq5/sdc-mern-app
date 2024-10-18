@@ -180,7 +180,7 @@ function App() {
     CrearCurriculo: async (user_data, setUserData, plantilla) => {
       if (!plantilla) return null;
 
-      axios
+      return axios
         .post(apiUrl + "/api/users/crear-curriculum", {
           usuario_id: user_data.usuario_id,
           documento: JSON.stringify(plantilla.Documento),
@@ -189,8 +189,9 @@ function App() {
         })
         .then((response) => {
           if (response.data.success) {
-            //user_data.curriculums.push(plantilla);
-            //setUserData(user_data);
+			plantilla._id = response.data.curriculum_id;
+            user_data.curriculums.push(plantilla);
+            setUserData(user_data);
             return user_data.curriculums.length - 1;
           }
         })
@@ -230,7 +231,7 @@ function App() {
     },
 
     EliminarCurriculo: async (user_data, setUserData, index, curriculo_id) => {
-      axios
+      return axios
         .delete(
           apiUrl +
             "/api/users/eliminar-usuario-curr/" +
@@ -248,14 +249,15 @@ function App() {
           if (!response.data.success) {
             console.error("Error a eliminar el currículo");
           } else {
-            delete user_data.curriculums[index]; //Eliminar bloque
+            user_data.curriculums.splice(index,1); //Eliminar bloque
             setUserData(user_data); //Actualizar variable de sesion
+			return true;
           }
         })
         .catch((err) => {
           console.log(err);
         });
-      return;
+      return null;
     },
 
     ObtenerPlantillas: async (filtros) => {
@@ -279,16 +281,14 @@ function App() {
     },
 
     CopiarPlantilla: (plantilla_id) => {
+	  let plantilla = plantillas[plantilla_id]? plantillas[plantilla_id] : plantillas.find((plnt) => plnt._id === plantilla_id);
+
       if (
         plantilla_id !== "simple" &&
-        plantilla_id !== "laboral" &&
-        plantilla_id !== "academico" &&
-        plantilla_id !== "harvard" &&
-        !plantillas[plantilla_id]
+        !plantilla
       )
         return null;
 
-      let plantilla = null;
       if (plantilla_id === "simple") {
         plantilla = JSON.parse(JSON.stringify(plantilla_simple));
       } else if (plantilla_id === "laboral") {
@@ -298,13 +298,12 @@ function App() {
       } else if (plantilla_id === "harvard") {
         plantilla = JSON.parse(JSON.stringify(plantilla_harvard));
       } else {
-        plantilla = JSON.parse(JSON.stringify(plantillas[plantilla_id]));
+        plantilla = JSON.parse(JSON.stringify(plantilla));
       }
 
       if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
-        plantilla.Documento.datos.Secciones.Informacion_Personal = Object.keys(
-          user_data.bloques.Informacion_Personal,
-        )[0]; //TODO, Filtrar por categorias
+        const infoPersonalBloques = user_data.bloques.Informacion_Personal;
+        plantilla.Documento.datos.Secciones.Informacion_Personal = infoPersonalBloques ? Object.keys(infoPersonalBloques)[0] : null;
 		
 		plantilla.ID_Categoria_Curriculum =
 			  listas_categorias.categorias_curriculum.find(

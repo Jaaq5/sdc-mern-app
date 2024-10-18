@@ -16,7 +16,7 @@
     "lint": "concurrently \"cd client/src && npx eslint .\" \"cd server && npx eslint .\"",
     "lint:fix": "concurrently \"cd client/src && npx eslint --fix .\" \"cd server && npx eslint --fix .\"",
     "build": "cd client && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified 2\" && exit 1"
   },
   "keywords": [],
   "author": "",

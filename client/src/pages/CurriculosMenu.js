@@ -305,9 +305,11 @@ function CurriculosMenu({
   };
 
   const manejarDatos = (curriculo_id, nuevo) => {
-    if (Object.keys(user_data.bloques.Informacion_Personal).length == 0) {
+    if (Object.keys(user_data.bloques.Informacion_Personal).length === 0) {
       //TODO
       //Mostrar mensaje de error, no de enviar al editor
+	  window.alert("Necesita registrar la Informacion Personal para empezar");
+	  navigate("/informacionPersonal");
 	  return;
     }
 
@@ -319,14 +321,12 @@ function CurriculosMenu({
       const plantilla = curriculum_manager.CopiarPlantilla(plantilla_id);
       curriculum_manager
         .CrearCurriculo(user_data, setUserData, plantilla)
-        .then((response) => {})
+        .then((response) => {
+			editarCurriculo(response);
+		})
         .catch((e) => {
           console.log(e);
         });
-
-      user_data.curriculums.push(plantilla);
-      setUserData(user_data);
-      editarCurriculo(user_data.curriculums.length - 1);
     }
   };
 
@@ -336,17 +336,17 @@ function CurriculosMenu({
     const bloque = user_data.curriculums[index];
     if (!bloque) return;
 
-    delete user_data.curriculums[index];
-    setUserData(user_data);
-
-    mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
+    //delete user_data.curriculums[index];
+    //setUserData(user_data);
 
     curriculum_manager.EliminarCurriculo(
       user_data,
       setUserData,
       index,
       plan_id,
-    );
+    ).then((response) => {
+		mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
+	});
   };
 
   return (

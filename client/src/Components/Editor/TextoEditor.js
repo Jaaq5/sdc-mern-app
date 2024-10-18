@@ -6,10 +6,11 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 	  if(!documento)
 		  return (<></>);
 	  setTimeout(function(){document.getElementById("Editor_Texto_Input")?.focus()},200);
+	  console.log(Editando.path)
 	  return (<div style={{position: "absolute", left: (Editando.pos[0]*zoom)+"px",top: (Editando.pos[1]*zoom)+"px", marginTop: "-10px"}}>
 			<form><TextField
 				id="Editor_Texto_Input"
-				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100, marginTop: documento.diseno.Secciones[Editando.Seccion].style.marginTop || documento.diseno.Secciones[Editando.Seccion].style.margin}}
+				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100}}
 				InputProps = {{style: {color: "#000"}}}
 				variant="standard"
 				size="small"

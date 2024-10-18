@@ -5,7 +5,7 @@ const Idiomas = require("./models/Idiomas_Model") ;
 const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
 //const plantilla_simple = require("./Plantillas/simple.json");
-const plantilla_cuadrados = require("./Plantillas/cuadrados.json");
+const plantilla_cuadrados = require("./plantillas/cuadrados.json");
 
 const populateData = async () => {
   const catCurriculumData = [
@@ -117,10 +117,19 @@ const populateData = async () => {
     for (const item of Plantillas) {;
 	  
       await Curriculums_Templates.updateOne(
-        { Nombre: item.name, Documento: JSON.stringify(item.documento), ID_Categoria_Curriculum: item.categoria_curriculo, ID_Categoria_Puesto: item.categoria_puesto },
+        { Nombre: item.name, ID_Categoria_Curriculum: item.categoria_curriculo, ID_Categoria_Puesto: item.categoria_puesto },
         { $set: item },
         { upsert: true },
       );
+	  await Curriculums_Templates.updateOne(
+        { Nombre: item.name },
+        { $set: {
+			Documento: JSON.stringify(item.documento)
+			}
+		},
+      );
+	  
+	  
     }
     console.log("Collection populated with Plantillas values");
   } catch (err) {
