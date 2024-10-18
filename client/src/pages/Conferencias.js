@@ -286,7 +286,7 @@ function Conferencias({
                     fullWidth
                     id="descripcion"
                     type="text"
-                    label="Descripción"
+                    label="Descripcion"
                     placeholder="Descripción breve de su participación"
                     name="descripcion"
                     required
