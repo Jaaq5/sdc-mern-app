@@ -486,11 +486,7 @@ function EditorCurriculo({
 	  let crearContenedor = false;
 	  let posStyle = {position: "relative", pointerEvents: "none", width: "100%"};
 	  if(documento.diseno.Secciones[seccion].Pos){
-		  //crearContenedor = true;
 		  posStyle.height = documento.diseno.Secciones[seccion].style.top;
-		  //documento.diseno.Secciones[seccion].style.top = "0px"
-		  //documento.diseno.Secciones[seccion].style.position = "relative";
-		  //documento.diseno.Secciones[seccion].style.pointerEvents = "auto";
 	  }
 	  
 	  const sec = (
@@ -833,8 +829,6 @@ function EditorCurriculo({
 						});
 			});
 		});
-		setDocumento(documento);
-		
 		const calcDivisor = (numeroDePaginas) => {
 			let style = {};
 			Object.entries(divisorPagina).forEach(([key, value]) => {style[key] = value});

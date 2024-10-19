@@ -1,0 +1,8 @@
+{
+	"fonts" : [
+		{"name" : "Arial",  		 "fontFamily" : "Arial",  	   	 "importAvailability" : ["Regular", "Italic", "Bold"]},
+		{"name" : "Roboto", 		 "fontFamily" : "Roboto", 		 "importAvailability" : ["Regular", "Italic", "Bold"]},
+		{"name" : "Tahoma", 		 "fontFamily" : "Tahoma", 		 "importAvailability" : ["Regular", "Bold"]},
+		{"name" : "Times New Roman", "fontFamily" : "TimesNewRoman", "importAvailability" : ["Regular", "Italic", "Bold"]}
+	]
+}

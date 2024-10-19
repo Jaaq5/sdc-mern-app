@@ -1,8 +1,9 @@
 import { Font, Page, Text, Image, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import fontsData from "../../fonts/0_fontlist";
 
 
 
-import RobotoRegular from "../../fonts/Roboto.ttf"
+/*import RobotoRegular from "../../fonts/Roboto.ttf"
 import RobotoBold from "../../fonts/Roboto_Bold.ttf"
 import RobotoLight from "../../fonts/Roboto_Light.ttf"
 
@@ -16,7 +17,7 @@ import TimesNewRomanBold from "../../fonts/TimesNewRoman_Bold.ttf"
 
 import TahomaRegular from "../../fonts/Tahoma.ttf"
 import TahomaBold from "../../fonts/Tahoma_Bold.ttf"
-
+*/
 
 const ElementoTextoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
   return (<>
@@ -165,150 +166,44 @@ const PaginaPDFEstructurada = ({user_data, documento, obtenerTextoEstructura}) =
 			  </Page>);
   };
 
+const ImportedFonts = {};
 
 const DocumentoPDF = ({user_data, documento, tempIds, obtenerTextoEstructura}) => {
 
     if (!documento) 
 		return (<></>);
-	Font.register({
-		family: "Roboto",
-		fonts: [
-			{
-			  src: RobotoLight,
-			  fontWeight: 300,
-			},
-			{
-			  src: RobotoLight,
-			  fontWeight: 400,
-			},
-			{
-			  src: RobotoRegular,
-			  fontWeight: 500,
-			},
-			{
-			  src: RobotoRegular,
-			  fontWeight: 600,
-			},
-			{
-			  src: RobotoRegular,
-			  fontWeight: 700,
-			},
-			{
-			  src: RobotoBold,
-			  fontWeight: 900,
-			},
-			{
-			  src: RobotoBold,
-			  fontWeight: 1000,
-			}
-		]
+	const fontStyles = [["", "normal"], ["Italic", "italic"]];
+	const fontWeights = [["Regular",400], ["Bold", 700]];
+	
+	//Auto registrar fuentes segun configuracion
+	fontsData.fonts.forEach((font) => {
+		fontWeights.forEach((weight) => {
+			fontStyles.forEach((style) => {
+				if((!ImportedFonts[font.fontFamily+weight[0]+style[0]]) && font.importAvailability?.includes(weight[0]) && (font.importAvailability?.includes(style[0]) || style[0] === "")){
+					import("../../fonts/"+font.fontFamily+"_"+weight[0]+style[0]+".ttf").then(
+						(response) => {
+							if(response){
+								ImportedFonts[font.fontFamily+weight[0]+style[0]] = response.default;
+								Font.register({
+									family: font.fontFamily,
+									fontStyle: style[1],
+									fontWeight: weight[1],
+									src: ImportedFonts[font.fontFamily+weight[0]+style[0]]
+								});
+							}
+					});
+				}
+			});
+		});
 	});
-	Font.register({
-		family: "Arial",
-		fonts: [
-			{
-			  src: ArialLight,
-			  fontWeight: 300,
-			},
-			{
-			  src: ArialLight,
-			  fontWeight: 400,
-			},
-			{
-			  src: ArialRegular,
-			  fontWeight: 500,
-			},
-			{
-			  src: ArialRegular,
-			  fontWeight: 600,
-			},
-			{
-			  src: ArialRegular,
-			  fontWeight: 700,
-			},
-			{
-			  src: ArialBold,
-			  fontWeight: 900,
-			},
-			{
-			  src: ArialBold,
-			  fontWeight: 1000,
-			}
-		]
-	});
-	Font.register({
-		family: "TimesNewRoman",
-		fonts: [
-			{
-			  src: TimesNewRomanRegular,
-			  fontWeight: 300,
-			},
-			{
-			  src: TimesNewRomanRegular,
-			  fontWeight: 400,
-			},
-			{
-			  src: TimesNewRomanRegular,
-			  fontWeight: 500,
-			},
-			{
-			  src: TimesNewRomanRegular,
-			  fontWeight: 600,
-			},
-			{
-			  src: TimesNewRomanRegular,
-			  fontWeight: 700,
-			},
-			{
-			  src: TimesNewRomanBold,
-			  fontWeight: 900,
-			},
-			{
-			  src: TimesNewRomanBold,
-			  fontWeight: 1000,
-			}
-		]
-	});
-	Font.register({
-		family: "Tahoma",
-		fonts: [
-			{
-			  src: TahomaRegular,
-			  fontWeight: 300,
-			},
-			{
-			  src: TahomaRegular,
-			  fontWeight: 400,
-			},
-			{
-			  src: TahomaRegular,
-			  fontWeight: 500,
-			},
-			{
-			  src: TahomaRegular,	 
-			  fontWeight: 600,
-			},
-			{
-			  src: TahomaRegular,
-			  fontWeight: 700,
-			},
-			{
-			  src: TahomaBold,
-			  fontWeight: 900,
-			},
-			{
-			  src: TahomaBold,
-			  fontWeight: 1000,
-			}
-		]
-	});
+	
+	
 	Font.registerHyphenationCallback(word => (
 	  [word]
 	));
 	
 	const docuStyle = {};
 	Object.entries(documento.diseno.style).forEach(([key, value]) => {docuStyle[key] = value});
-	docuStyle.fontFamily = "Roboto"; //DEBUG
 	docuStyle.width = "";
 	docuStyle.height = "";
 	

@@ -159,7 +159,7 @@
 						"Campo" : "TituloSeccion",
 						"Label": "Nombre",
 						"Placeholder": "Tu nombre",
-						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true}
+						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true}
 					  },
 					  "style": {
 						"fontWeight": 900,
