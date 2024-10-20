@@ -21,6 +21,7 @@ const BloquesListTexto = {
 	Habilidades: [["Nombre"], ["Descripcion"]],
 	Proyectos: [["Proyecto"], ["Institucion"]],
 	Publicaciones: [["Titulo"], ["Publicadora"]],
+	Conferencias: [["Titulo"], ["Lugar"]],
 	Referencias: [["Nombre"], ["Email"]]
 };
 
