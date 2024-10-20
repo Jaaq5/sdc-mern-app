@@ -34,6 +34,10 @@
           "Cantidad": 1,
           "IDs": []
         },
+		"Conferencias": {
+          "Cantidad": 2,
+          "IDs": []
+        },
         "Referencias": {
           "Cantidad": 3,
           "IDs": []
@@ -72,6 +76,7 @@
           "Idiomas",
           "Proyectos",
           "Publicaciones",
+		  "Conferencias",
           "Referencias"
         ],
 		
@@ -370,6 +375,43 @@
 						{
 							"Tipo" : "Texto",
 							"Texto" : ["Abstract"],
+							"style" : {"dsiplay": "flex"}
+						}
+					]
+				}
+			]
+        },
+		"Conferencias": {
+          "Mostrar": false,
+          "TituloSeccion": "Conferencias",
+		  "style": {"textAlign" : "left"},
+		  "Celdas" : [22,13],
+		  "Editable" : {"Titulo" : "Cambiar Lista de Conferencias", "Campo" : "IDs", "Tipo": "IDs", "Arreglo": true, "Celdas" : true},
+		  
+		  "Estructura": [
+				{
+					"Tipo" : "Texto",
+					"Texto" : ["TituloSeccion"],
+					"Editable" : {"Tipo": "Texto", "Titulo" : "Editar titulo", "Campo": "TituloSeccion", "Label": "Titulo", "Placeholder" : "Titulo de Conferencias"},
+					"style" : {"fontWeight" : 900, "fontSize" : "20px"}
+				},
+				{
+					"Tipo" : "IDs",
+					"style" : {"dsiplay": "flex", "border" : "0pt", "borderTop" : "4pt", "borderColor" : "#ccc", "borderStyle" : "solid"},
+					"Plantilla" : [
+						{
+							"Tipo" : "Texto",
+							"Texto" : ["Fecha_Conferencia", " - ", "Titulo"],
+							"style" : {"dsiplay": "flex"}
+						},
+						{
+							"Tipo" : "Texto",
+							"Texto" : ["Lugar"],
+							"style" : {"dsiplay": "flex"}
+						},
+						{
+							"Tipo" : "Texto",
+							"Texto" : ["Descripcion"],
 							"style" : {"dsiplay": "flex"}
 						}
 					]

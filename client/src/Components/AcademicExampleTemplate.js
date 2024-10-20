@@ -122,6 +122,17 @@ const AcademicExampleTemplate = () => {
             )}
           </ul>
           <br />
+          <strong>Conferencias:</strong>
+          <ul>
+            {Secciones.Conferencias.IDs.length > 0 ? (
+              Secciones.Conferencias.IDs.map((id, index) => (
+                <li key={index}>Conferencia ID: {id}</li>
+              ))
+            ) : (
+              <li>No hay información disponible.</li>
+            )}
+          </ul>
+          <br />
           <strong>Referencias:</strong>
           <ul>
             {Secciones.Referencias.IDs.length > 0 ? (
