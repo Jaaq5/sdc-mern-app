@@ -1,27 +1,20 @@
 import { Font, Page, Text, Image, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import fontsData from "../../fonts/0_fontlist";
 
-
-
-/*import RobotoRegular from "../../fonts/Roboto.ttf"
-import RobotoBold from "../../fonts/Roboto_Bold.ttf"
-import RobotoLight from "../../fonts/Roboto_Light.ttf"
-
-//Monotype Type Drawing Office - Robin Nicholas, Patricia Saunders 1982
-import ArialRegular from "../../fonts/Arial.ttf"
-import ArialBold from "../../fonts/Arial_Bold.ttf"
-import ArialLight from "../../fonts/Arial_Light.ttf"
-
-import TimesNewRomanRegular from "../../fonts/TimesNewRoman.ttf"
-import TimesNewRomanBold from "../../fonts/TimesNewRoman_Bold.ttf"
-
-import TahomaRegular from "../../fonts/Tahoma.ttf"
-import TahomaBold from "../../fonts/Tahoma_Bold.ttf"
-*/
+function procesarEstilo(estilo){
+	const style = {};
+	Object.entries(estilo).forEach(([k, v]) => style[k] = v);
+	if(style.borderColor){
+		style.paddingLeft = style.borderLeftWidth;
+		style.paddingTop = style.borderTopWidth;
+	}
+	return style;
+}
 
 const ElementoTextoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
+  const estilo = procesarEstilo(estructura.style);
   return (<>
-  <Text id={"PDF_Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
+  <Text id={"PDF_Texto_"+nombreSeccion+"_"+index} style={estilo} key={nombreSeccion+id+index} >
 		{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
   </Text></>);
 };
@@ -173,7 +166,7 @@ const DocumentoPDF = ({user_data, documento, tempIds, obtenerTextoEstructura}) =
     if (!documento) 
 		return (<></>);
 	const fontStyles = [["", "normal"], ["Italic", "italic"]];
-	const fontWeights = [["Regular",400], ["Bold", 700]];
+	const fontWeights = [["Light",300], ["Regular",400], ["Bold", 700]];
 	
 	//Auto registrar fuentes segun configuracion
 	fontsData.fonts.forEach((font) => {

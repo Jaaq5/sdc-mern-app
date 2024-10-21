@@ -302,12 +302,45 @@ function EditorCurriculo({
 	  );
   };
   
+  const ElementoEstiloEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
+	  const newPath = extenderPath(path, [estructura.Editable.Campo]);
+	  return (Editando? 
+		(<></>)
+		:
+		(<Button
+			title={estructura.Editable.Titulo}
+			style={editButton}
+			id={"Edit_Button_Estilo_"+nombreSeccion+"_"+index}
+			onClick={(e) => {
+				setTextoEditar(seccion.TituloSeccion);
+				setEditando(null);
+				setEditando({
+					Tipo: "Estilo",
+					pos: posicionEnOverlay("Estilo_"+nombreSeccion+"_"+index+path),
+					Seccion: nombreSeccion,
+					Campo: estructura.Editable.Campo,
+					label: estructura.Editable.Label,
+					placeholder: estructura.Editable.Placeholder,
+					path : newPath,
+					id: "Texto_"+nombreSeccion+"_"+index+path,
+					
+					Fuentes : estructura.Editable.Fuentes,
+				});
+			}}
+			>
+			<BorderColorIcon style={editButtonIcon} />
+		</Button>)
+	  );
+  };
+  
   const ElementoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
 	  if((!estructura) || !estructura.Editable)
 		  return (<></>);
 	  switch(estructura.Editable.Tipo){
 		  case "Texto":
 			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} /></>);
+		  case "Estilo":
+			return (<><ElementoEstiloEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} /></>);
 	  };
 	  return (<></>);
   };
@@ -749,8 +782,8 @@ function EditorCurriculo({
 		alignContent: "flex-start",
 		flexWrap: "wrap",
 		//overflow: "visible"
-		paddingTop: "70px",
-		paddingLeft: "70px",
+		//paddingTop: "70px",
+		//paddingLeft: "70px",
 		boxSizing: "border-box",
 		
   };
@@ -894,7 +927,7 @@ function EditorCurriculo({
 	  if(e.ctrlKey){
 		  e.preventDefault();
 		  if(!Editando){
-			  controles.zoom = Math.min(Math.max((controles.zoom? controles.zoom : 1) + (e.deltaY > 0? 0.05 : -0.05), 0.5), 2);
+			  controles.zoom = Math.min(Math.max((controles.zoom? controles.zoom : 1) + (e.deltaY > 0? -0.05 : 0.05), 0.5), 2);
 			  setZoom(controles.zoom);
 		  }
 	  }
