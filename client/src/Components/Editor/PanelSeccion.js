@@ -7,6 +7,7 @@ import Referencias from "../../pages/Referencias";
 import Proyectos from "../../pages/Proyectos";
 import Habilidades from "../../pages/Habilidades";
 import Lenguajes from "../../pages/Lenguajes";
+import Conferencias from "../../pages/Conferencias";
 
 function PanelSeccion({
 				user_data,
@@ -34,6 +35,8 @@ function PanelSeccion({
 				return (<Proyectos user_data={user_data} setUserData={setUserData} manager_bloques={manager_bloques} category_manager={category_manager}/>)
 			case "Publicaciones":
 				return (<Publicaciones user_data={user_data} setUserData={setUserData} manager_bloques={manager_bloques} category_manager={category_manager}/>)
+			case "Conferencias":
+				return (<Conferencias user_data={user_data} setUserData={setUserData} manager_bloques={manager_bloques} category_manager={category_manager}/>)
 			case "Referencias":
 				return (<Referencias user_data={user_data} setUserData={setUserData} manager_bloques={manager_bloques} category_manager={category_manager}/>)
 			

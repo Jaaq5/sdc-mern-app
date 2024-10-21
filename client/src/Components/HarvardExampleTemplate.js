@@ -103,6 +103,12 @@ const HarvardExampleTemplate = () => {
               <li key={index}>Publicación ID: {id}</li>
             ))}
           </ul>
+          <strong>Conferencias:</strong>
+          <ul>
+            {Secciones.Conferencias.IDs.map((id, index) => (
+              <li key={index}>Conferencia ID: {id}</li>
+            ))}
+          </ul>
           <strong>Referencias:</strong>
           <ul>
             {Secciones.Referencias.IDs.map((id, index) => (
