@@ -1,15 +1,20 @@
 import { Font, Page, Text, Image, View, Document, StyleSheet, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import fontsData from "../../fonts/0_fontlist";
 
-import ComicSans from "../../fonts/Comic Sans MS.ttf"
-import RobotoBold from "../../fonts/Roboto-Bold.ttf"
-import RobotoRegular from "../../fonts/Roboto-Regular.ttf"
-import RobotoLight from "../../fonts/Roboto-Light.ttf"
-import RobotoThin from "../../fonts/Roboto-Thin.ttf"
-
+function procesarEstilo(estilo){
+	const style = {};
+	Object.entries(estilo).forEach(([k, v]) => style[k] = v);
+	if(style.borderColor){
+		style.paddingLeft = style.borderLeftWidth;
+		style.paddingTop = style.borderTopWidth;
+	}
+	return style;
+}
 
 const ElementoTextoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
+  const estilo = procesarEstilo(estructura.style);
   return (<>
-  <Text id={"PDF_Texto_"+nombreSeccion+"_"+index} style={estructura.style} key={nombreSeccion+id+index} >
+  <Text id={"PDF_Texto_"+nombreSeccion+"_"+index} style={estilo} key={nombreSeccion+id+index} >
 		{obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index)}
   </Text></>);
 };
@@ -154,53 +159,44 @@ const PaginaPDFEstructurada = ({user_data, documento, obtenerTextoEstructura}) =
 			  </Page>);
   };
 
+const ImportedFonts = {};
 
 const DocumentoPDF = ({user_data, documento, tempIds, obtenerTextoEstructura}) => {
 
     if (!documento) 
 		return (<></>);
-
-	Font.register({
-		family: "ComicSans",
-		fonts: [
-			{
-			  src: ComicSans,
-			  fontWeight: 400,
-			},
-			{
-			  src: ComicSans,
-			  fontWeight: 700,
-			},
-			{
-			  src: ComicSans,
-			  fontWeight: 900,
-			}
-		]
+	const fontStyles = [["", "normal"], ["Italic", "italic"]];
+	const fontWeights = [["Light",300], ["Regular",400], ["Bold", 700]];
+	
+	//Auto registrar fuentes segun configuracion
+	fontsData.fonts.forEach((font) => {
+		fontWeights.forEach((weight) => {
+			fontStyles.forEach((style) => {
+				if((!ImportedFonts[font.fontFamily+weight[0]+style[0]]) && font.importAvailability?.includes(weight[0]) && (font.importAvailability?.includes(style[0]) || style[0] === "")){
+					import("../../fonts/"+font.fontFamily+"_"+weight[0]+style[0]+".ttf").then(
+						(response) => {
+							if(response){
+								ImportedFonts[font.fontFamily+weight[0]+style[0]] = response.default;
+								Font.register({
+									family: font.fontFamily,
+									fontStyle: style[1],
+									fontWeight: weight[1],
+									src: ImportedFonts[font.fontFamily+weight[0]+style[0]]
+								});
+							}
+					});
+				}
+			});
+		});
 	});
-	Font.register({
-		family: "Roboto",
-		fonts: [
-			{
-			  src: RobotoLight,
-			  fontWeight: 400,
-			},
-			{
-			  src: RobotoRegular,
-			  fontWeight: 700,
-			},
-			{
-			  src: RobotoBold,
-			  fontWeight: 900,
-			}
-		]
-	});
+	
+	
 	Font.registerHyphenationCallback(word => (
 	  [word]
 	));
 	
 	const docuStyle = {};
 	Object.entries(documento.diseno.style).forEach(([key, value]) => {docuStyle[key] = value});
-	docuStyle.fontFamily = "Roboto"; //DEBUG
 	docuStyle.width = "";
 	docuStyle.height = "";
 	

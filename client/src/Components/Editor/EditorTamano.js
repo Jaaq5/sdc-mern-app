@@ -130,7 +130,6 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 		path.forEach((campo) => item = item[campo]);
 		
 		item.Celdas = [Math.floor(t[0]/celdasPagina[0]), Math.floor(t[1]/celdasPagina[1])];
-		console.log(t)
 		t = tamanoObjeto(item, documento, setDocumento);
 		setDocumento(documento);
 		setTamano(t);
