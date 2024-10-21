@@ -85,8 +85,8 @@ function EditorCurriculo({
     border: "0px",
     borderRadius: "5px",
 	width: "10%",
-	maxHeight: "1rem",
-	minWidth: "1rem",
+	maxHeight: "2rem",
+	minWidth: "2rem",
 	minHeight: "1rem",
     cursor: "pointer",
     color: "#000",
@@ -94,9 +94,9 @@ function EditorCurriculo({
 	padding: "0px",
 	display: "inline",
 	fontSize: "inherit",
-	position: "relative",
-	left: "0%",
-	top: "-5px"
+	position: "absolute",
+	right: "0%",
+	top: "2px"
   };
   const seccionEditButton = {
     backgroundColor: "#fff0",
@@ -156,7 +156,7 @@ function EditorCurriculo({
   const [ListaEditar, setListaEditar] = useState([]);
   const [tempIds, setTempIds] = useState({}); //Ids calculadas automaticamente y son las que se dibujan
   const [opcionesPanel, setOpcionesPanel] = useState({}); //Opciones pasadas al selector de panel de edicion para las secciones externamente
-  const [minMaxDoc, setMinMaxDoc] = useState([0,0,600,800]);
+  const [minMaxDoc, setMinMaxDoc] = useState([-600,-600,600,800]);
   const [zoom, setZoom] = useState(1);
   const [controles, setControles] = useState({});
    
@@ -178,6 +178,7 @@ function EditorCurriculo({
 		estructura = JSON.parse(JSON.stringify(estructura? estructura : {}));
 		estructura.style = JSON.parse(JSON.stringify(estructura.style? estructura.style : {}));
 	}
+	estructura.style.position = "relative";
 	const tc = [0,0];
 	if(estructura.Celdas){
 		const t = celdasAPx(estructura.Celdas);

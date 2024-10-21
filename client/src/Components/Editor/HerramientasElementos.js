@@ -162,7 +162,6 @@ function manejarBorde(estado, data){
 	}
 	estado.borderColor = estado.borderColor? estado.borderColor : "#000";
 	estado.borderStyle = estado.borderStyle? estado.borderStyle : "solid";
-	estado.boxSizing = "border-box";
 	return estado;
 }
 
