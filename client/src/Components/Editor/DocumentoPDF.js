@@ -8,6 +8,9 @@ function procesarEstilo(estilo){
 		style.paddingLeft = style.borderLeftWidth;
 		style.paddingTop = style.borderTopWidth;
 	}
+	style.flex = 1;
+	style.flexWrap = "wrap";
+	style.overflow = "hidden";
 	return style;
 }
 
