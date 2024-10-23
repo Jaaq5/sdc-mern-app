@@ -7,11 +7,14 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import PhotoSizeSelectSmallIcon from '@mui/icons-material/PhotoSizeSelectSmall';
 import ControlCameraIcon from '@mui/icons-material/ControlCamera';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const resolucionCeldas = 100;
 const celdasPagina = [594/resolucionCeldas, 841/resolucionCeldas]//react-pdf    [756 / 40, 1123 / 60]; //En px
 const tamanoObjeto = (path, documento, setDocumento, id = "") => {
-  if(!documento)
+  if(!documento || !path)
 	  return {width:0, height:0};
 
   let item = documento;
@@ -130,7 +133,6 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 		path.forEach((campo) => item = item[campo]);
 		
 		item.Celdas = [Math.floor(t[0]/celdasPagina[0]), Math.floor(t[1]/celdasPagina[1])];
-		console.log(t)
 		t = tamanoObjeto(item, documento, setDocumento);
 		setDocumento(documento);
 		setTamano(t);
@@ -270,6 +272,37 @@ const calcularBotonMovimiento = (tamano, pos, docPos, setBotonMovimiento, path, 
 	setBotonMovimiento(buttonm);
 };
 
+function manejarBorrarSeccion(Editando, documento, setDocumento){
+	if(Editando.Seccion){
+		const index = documento.diseno.Paginas[0].Estructura.indexOf(Editando.Seccion);
+		documento.diseno.Paginas[0].Estructura.splice(index, 1); //Eliminar seccion
+		delete documento.diseno.Secciones[Editando.Seccion];
+		setDocumento(documento);
+	}
+}
+
+function manejarOrdenCapa(dir, Editando, documento, setDocumento){
+	const elm = document.getElementById(Editando.id);
+	elm.style.zIndex = elm.style.zIndex? elm.style.zIndex : 0;
+	
+	
+	let index = documento.diseno.Paginas[0].Estructura.indexOf(Editando.Seccion);
+	const item = documento.diseno.Paginas[0].Estructura[index];
+	if(dir === "up" && index < documento.diseno.Paginas[0].Estructura.length-1){
+		documento.diseno.Paginas[0].Estructura[index] = documento.diseno.Paginas[0].Estructura[index+1];
+		documento.diseno.Paginas[0].Estructura[index+1] = item 
+		elm.style.zIndex = Math.max(Math.min(Number(elm.style.zIndex) + 11, 900), 1);
+		index += 1;
+	}else if(dir === "down" && index > 0){
+		documento.diseno.Paginas[0].Estructura[index] = documento.diseno.Paginas[0].Estructura[index-1];
+		documento.diseno.Paginas[0].Estructura[index-1] = item;
+		elm.style.zIndex = Math.max(Math.min(Number(elm.style.zIndex) - 11, 900), 1);
+		index -= 1;
+	}
+	
+	document.getElementById("zIndex_layer").innerHTML = index
+}
+
 let gzoom = 1;
 
 function OldGridCSS({}){
@@ -338,6 +371,8 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 		Math.floor((Editando.pos[0] - Number(m.marginLeft.substring(0, m.marginLeft.length-2)) - Editando.pos[2]   + Editando.pos[3]*1 + Number(doc.style.left.substring(0, doc.style.left.length-2)) - Number(doc.style.left.substring(0, doc.style.left.length-2))*0)/celdasPagina[0]),
 		Math.floor((Editando.pos[1] - Number(m.marginTop.substring(0, m.marginTop.length-2))   + Editando.pos[4]*0 + Editando.pos[5]*1 - Number(doc.style.top.substring(0, doc.style.top.length-2)))/celdasPagina[1])
 	];
+	if(!item)
+		item = {Pos: [0,0], Celdas: [0,0]};
 	let initialPos = item.Pos? item.Pos : [
 		offset[0],
 		offset[1]
@@ -358,7 +393,7 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	
 	return (<>
 	<div id="caja_tamano" 
-		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: (xy[0])+"px",top: (xy[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s"}}
+		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: (xy[0])+"px",top: (xy[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s", zIndex: 1000}}
 		
 		>
 		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "270px", zoom: 1/gzoom}}>
@@ -366,12 +401,18 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 				 <WarningIcon color="warning" style={{position: "relative", top: "5px"}} />{" La caja podria ser pequeña"}
 			</div>
 			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", width: "100%", height: "30px"}}>
-				<ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
-				<span id="pos_celda_texto">{initialPos? (<span>{Math.floor(initialPos[0])+" "}x{" "+Math.floor(initialPos[1])}</span>) : (<></>)}</span> 
-				{"  |  "}
-				<PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" "}
+				{Editando.Pos? (<><ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
+				<span id="pos_celda_texto">{initialPos? (<span>{Math.floor(initialPos[0])+" "}x{" "+Math.floor(initialPos[1])}</span>) : (<></>)}</span>		
+				{"  |  "}</>) : (<></>)}		
+				<PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" Z"+cajax.style.zIndex+" "}
 				<span id="tamano_celda_texto">{Math.floor(item.Celdas[0])+" "}x{" "+Math.floor(item.Celdas[1])}</span>
-				<Button style={{zIndex: 200}} onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
+				<Button style={{maxWidth: "50px", minWidth: "30px", padding: "0px", paddingBottom: "5px", zIndex: 200}} onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
+			</div>
+			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", left: "100%", width: "30px", height: "auto"}}>
+				<Button style={{maxWidth: "50px", minWidth: "30px", padding: "0px", paddingBottom: "5px", zIndex: 200}} onClick={(e) => {manejarOrdenCapa('up', Editando, documento, setDocumento)}}><KeyboardArrowUpIcon color = "primary" /> </Button>
+				<span id="zIndex_layer">{documento.diseno.Paginas[0].Estructura.indexOf(Editando.Seccion)}</span>
+				<Button style={{maxWidth: "50px", minWidth: "30px", padding: "0px", paddingBottom: "5px", zIndex: 200}} onClick={(e) => {manejarOrdenCapa('down', Editando, documento, setDocumento)}}><KeyboardArrowDownIcon color = "primary" /> </Button>
+				{Editando.Borrar?  (<Button style={{maxWidth: "50px", minWidth: "30px", padding: "0px", paddingBottom: "5px", zIndex: 200}} onClick={(e) => {manejarBorrarSeccion(Editando, documento, setDocumento); setEditando(null)}}><DeleteForeverIcon color = "red" /> </Button>) : (<></>)}
 			</div>
 		</div>
 		{Editando.Pos? (<>{botonMovimiento}</>) : (<></>)}

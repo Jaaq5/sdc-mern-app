@@ -52,7 +52,7 @@
         "maxWidth": "595.28px",
         "backgroundColor": "#FFFFFF",
         "fontFamily": "Roboto",
-        "dsiplay": "flex"
+        "display": "flex"
       },
       "Paginas": [
         {
@@ -70,17 +70,15 @@
           "Elementos": [],
           "Estructura": [
 			"Informacion_Personal",
-			0,
-			1,
-			2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10
+			"Experiencias_Laborales",
+			"Educacion_Formal",
+			"Educacion_Tecnica",
+			"Habilidades",
+			"Idiomas",
+			"Proyectos",
+			"Publicaciones",
+			"Conferencias",
+			"Referencias"
           ]
         }
       ],
@@ -151,7 +149,11 @@
             },
 			{
 				"Tipo" : "Estructura",
-				"style" : {"flexGrow" : 1},
+				"style" : {},
+				"Celdas" : [58,30],
+				"Editable" : {
+					"Celdas" : true
+				},
 				"Estructura" : [
 					{
 					  "Tipo": "Texto",
@@ -163,7 +165,8 @@
 						"Titulo": "Editar Nombre",
 						"Campo" : "TituloSeccion",
 						"Label": "Nombre",
-						"Placeholder": "Tu nombre"
+						"Placeholder": "Tu nombre",
+						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true, "backgroundColor": true, "border" : true}
 					  },
 					  "style": {
 						"fontWeight": 900,
@@ -179,7 +182,7 @@
 						"Sobre_Mi"
 					  ],
 					  "style": {
-						"dsiplay": "flex",
+						"display": "flex",
 						"border": "0pt",
 						"borderTop": "1pt",
 						"borderBottom": "1pt",
@@ -189,6 +192,14 @@
 						"fontSize": "16px",
 						"fontFamily": "Roboto",
 						"fontWeight": 400
+					  },
+					  "Editable": {
+						"Tipo": "Estilo",
+						"Titulo": "Editar Parrafo",
+						"Campo" : "A",
+						"Label": "Parrafo",
+						"Placeholder": "Sobre mi",
+						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true, "backgroundColor": true, "border" : true}
 					  }
 					},
 					{
@@ -197,7 +208,7 @@
 						"Puesto"
 					  ],
 					  "style": {
-						"dsiplay": "flex",
+						"display": "flex",
 						"fontWeight": 400,
 						"fontFamily": "Roboto"
 					  }
@@ -208,7 +219,7 @@
 						"Contactos: "
 					  ],
 					  "style": {
-						"dsiplay": "flex",
+						"display": "flex",
 						"fontFamily": "Roboto",
 						"fontWeight": 400
 					  }
@@ -219,7 +230,7 @@
 						"Telefono"
 					  ],
 					  "style": {
-						"dsiplay": "flex",
+						"display": "flex",
 						"fontFamily": "Roboto",
 						"fontWeight": 400
 					  }
@@ -230,7 +241,7 @@
 						"Correo"
 					  ],
 					  "style": {
-						"dsiplay": "flex",
+						"display": "flex",
 						"fontFamily": "Roboto",
 						"fontWeight": 400
 					  }
@@ -309,7 +320,7 @@
                     "Fecha_Final"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontWeight": 700,
                     "fontSize": "14px",
                     "fontFamily": "Roboto"
@@ -329,7 +340,7 @@
                     "Organizacion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -383,7 +394,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "border": "0pt",
                 "borderTop": "4pt",
                 "borderColor": "#ccc",
@@ -407,7 +418,7 @@
                     "Fecha_Final"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontWeight": 700,
                     "fontSize": "14px",
                     "fontFamily": "Roboto"
@@ -421,7 +432,7 @@
                     "Institucion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -474,7 +485,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "flexDirection": "column",
                 "border": "0pt",
                 "borderTop": "4pt",
@@ -502,7 +513,7 @@
                     "Institucion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "border": "0pt",
                     "borderRight": "2pt",
                     "borderColor": "#ddd",
@@ -528,7 +539,7 @@
                     "Descripcion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontSize": "16px",
                     "width": "163.625px",
                     "height": "70.08333333333334px",
@@ -597,7 +608,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "fontFamily": "Roboto",
                 "fontWeight": 400
               },
@@ -617,7 +628,7 @@
                     "Nombre"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -628,7 +639,7 @@
                     "Descripcion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontSize": "14px",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
@@ -682,7 +693,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "border": "0pt",
                 "borderTop": "4pt",
                 "borderColor": "#ccc",
@@ -699,7 +710,7 @@
                     "Nivel"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -711,7 +722,7 @@
                     "Certificacion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -764,7 +775,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "border": "0pt",
                 "borderTop": "4pt",
                 "borderColor": "#ccc",
@@ -789,7 +800,7 @@
                     "Fecha_Final"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -802,7 +813,7 @@
                     "Institucion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -855,7 +866,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "border": "0pt",
                 "borderTop": "4pt",
                 "borderColor": "#ccc",
@@ -880,7 +891,7 @@
                     "Titulo"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -891,7 +902,7 @@
                     "Publicadora"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -900,6 +911,106 @@
                   "Tipo": "Texto",
                   "Texto": [
                     "Abstract"
+                  ],
+                  "style": {
+                    "display": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "Conferencias": {
+          "Mostrar": true,
+          "TituloSeccion": "Conferencias",
+          "style": {
+            "textAlign": "left",
+            "position": "relative",
+            "width": "595px",
+            "height": "182.21666666666667px",
+            "overflow": "hidden"
+          },
+          "Celdas": [
+            78,
+            25
+          ],
+          "Editable": {
+            "Titulo": "Cambiar Lista de Conferencias",
+            "Campo": "IDs",
+            "Tipo": "IDs",
+            "Arreglo": true,
+            "Celdas": true,
+			"Pos": true
+          },
+          "Estructura": [
+            {
+              "Tipo": "Texto",
+              "Texto": [
+                "TituloSeccion"
+              ],
+              "Editable": {
+                "Tipo": "Texto",
+				"Campo": "TituloSeccion",
+                "Titulo": "Editar titulo",
+                "Label": "Titulo",
+                "Placeholder": "Titulo de Conferencias"
+              },
+              "style": {
+                "fontWeight": 900,
+                "fontSize": "20px",
+                "fontFamily": "Roboto"
+              }
+            },
+            {
+              "Tipo": "IDs",
+              "style": {
+                "dsiplay": "flex",
+                "border": "0pt",
+                "borderTop": "4pt",
+                "borderColor": "#ccc",
+                "borderStyle": "solid",
+                "fontFamily": "Roboto",
+                "fontWeight": 400
+              },
+              "plantillaStyle": {
+                "display": "flex",
+                "flexDirection": "row",
+                "border": "0pt",
+                "borderBottom": "2pt",
+                "borderColor": "#ddd",
+                "borderStyle": "solid"
+              },
+              "Plantilla": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": [
+                    "Fecha_Conferencia",
+                    " - ",
+                    "Titulo"
+                  ],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": [
+                    "Lugar"
+                  ],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": [
+                    "Descripcion"
                   ],
                   "style": {
                     "dsiplay": "flex",
@@ -1044,7 +1155,8 @@
 				"Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
-                "Placeholder": "Titulo de Referencias"
+                "Placeholder": "Titulo de Referencias",
+				"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true}
               },
               "style": {
                 "fontWeight": 900,
@@ -1055,7 +1167,7 @@
             {
               "Tipo": "IDs",
               "style": {
-                "dsiplay": "flex",
+                "display": "flex",
                 "border": "0pt",
                 "borderTop": "4pt",
                 "borderColor": "#ccc",
@@ -1080,7 +1192,7 @@
                     "Organizacion"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
@@ -1094,7 +1206,7 @@
                     "Telefono"
                   ],
                   "style": {
-                    "dsiplay": "flex",
+                    "display": "flex",
                     "fontFamily": "Roboto",
                     "fontWeight": 400
                   }
