@@ -70,17 +70,15 @@
           "Elementos": [],
           "Estructura": [
 			"Informacion_Personal",
-			0,
-			1,
-			2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10
+			"Experiencias_Laborales",
+			"Educacion_Formal",
+			"Educacion_Tecnica",
+			"Habilidades",
+			"Idiomas",
+			"Proyectos",
+			"Publicaciones",
+			"Conferencias",
+			"Referencias"
           ]
         }
       ],
@@ -151,7 +149,11 @@
             },
 			{
 				"Tipo" : "Estructura",
-				"style" : {"flexGrow" : 1},
+				"style" : {},
+				"Celdas" : [58,30],
+				"Editable" : {
+					"Celdas" : true
+				},
 				"Estructura" : [
 					{
 					  "Tipo": "Texto",

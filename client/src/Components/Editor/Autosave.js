@@ -7,6 +7,8 @@ function Autosave({user_data, setUserData, curriculum_manager, documento, styles
 	const curriculo_id = user_data.editando_curriculo;
 	
 	const saveFunc = (documento) => {
+		if(!curriculo_id || !user_data || !user_data.curriculums || !user_data.curriculums[curriculo_id])
+			return () => {};
 		return window.setTimeout(function(){
 					setGuardando(true)
 					window.setTimeout(function(){

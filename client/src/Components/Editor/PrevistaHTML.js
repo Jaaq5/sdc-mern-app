@@ -71,6 +71,8 @@ const SeccionHTMLEstructurada = ({user_data, seccion, documento, id, obtenerText
   };
   
 const SubPaginaEstructuraHTML = ({user_data, documento, estructura, obtenerTextoEstructura}) => {
+	if(!estructura)
+		return (<></>);
     if(documento.diseno.Secciones[estructura]){
 		return (<SeccionHTMLEstructurada user_data={user_data} seccion={estructura} documento={documento} id={documento.datos.Secciones[estructura]} obtenerTextoEstructura={obtenerTextoEstructura} />);
 		
