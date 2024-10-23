@@ -3,15 +3,15 @@ import fontsData from "../../fonts/0_fontlist";
 
 function procesarEstilo(estilo){
 	const style = {};
-	Object.entries(estilo).forEach(([k, v]) => style[k] = v);
+	Object.entries(estilo || {}).forEach(([k, v]) => style[k] = v);
 	if(style.borderColor){
-		style.paddingLeft = style.borderLeftWidth;
-		style.paddingTop = style.borderTopWidth;
+		style.paddingLeft = style.borderLeftWidth? style.borderLeftWidth : "0pt";
+		style.paddingTop = style.borderTopWidth? style.borderTopWidth : "0pt";
 	}
-	style.flex = 1;
+	//style.flex = 1;
 	style.flexWrap = "wrap";
 	style.overflow = "hidden";
-	return style;
+	return estilo;
 }
 
 const ElementoTextoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, obtenerTextoEstructura}) => {
@@ -41,17 +41,18 @@ const ElementoEstructuradoPDF = ({user_data, documento, nombreSeccion, seccion, 
 	  case "Imagen":
 		return (<ElementoImagenEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />);
 	  case "Estructura":
-			return (<div style={estructura.style}>
+			const estilo = procesarEstilo(estructura.style);
+			return (<div style={estilo}>
 				{Object.entries(estructura.Estructura).map(([index, estr]) => 
 					(<ElementoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estr} id={id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />)
 				)}
 			</div>)
 	  case "IDs":
 		let list = [];
-		
+		const estiloP = procesarEstilo(estructura.plantillaStyle);
 		documento.datos.tempIds[nombreSeccion]?.forEach((bloque_id, index) => {
 			list.push(
-				<View style={estructura.plantillaStyle}>{Object.keys(estructura.Plantilla).map((index) => {
+				<View style={estiloP}>{Object.keys(estructura.Plantilla).map((index) => {
 					return (
 						<ElementoEstructuradoPDF user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura.Plantilla[index]} id={bloque_id} index={index} obtenerTextoEstructura={obtenerTextoEstructura} />
 					)

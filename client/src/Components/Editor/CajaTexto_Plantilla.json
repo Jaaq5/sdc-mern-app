@@ -1,0 +1,53 @@
+{
+	"Nombre" : "CajaTexto<num>",
+	"__comment" : "<num> es para tener un ID unico. Estructura es igual a una seccion de una plantilla, se incluira en la estructura de la pagina y en Documento.diseno.Secciones",
+	"Estructura" : {
+		"Mostrar": true,
+		"TextoInterno": "",
+		
+		"style": {
+			"position": "absolute",
+			"textAlign": "left",
+			"overflow": "hidden",
+			"textWrap" : "wrap"
+			
+		},
+		"Celdas": [40,30],
+		"Pos" : [0,0],
+		"Editable": {
+			"Titulo": "Modifcar caja de texto",
+			"Celdas": true,
+			"Pos": true,
+			"Fuentes" : {"backgroundColor": true, "border" : true},
+			"Borrar" : true
+		},
+		"Estructura": [
+			{
+				"Tipo" : "Estructura",
+				"style" : {"flexGrow" : 1, "width" : "100%", "height": "100%"},
+				"Estructura" : [
+					{
+					  "Tipo": "Texto",
+					  "Texto": [
+						"TextoInterno"
+					  ],
+					  "Editable": {
+						"Tipo": "Texto",
+						"Titulo": "Editar Texto",
+						"Campo" : "TextoInterno",
+						"Label": "",
+						"Placeholder": "",
+						"multiline" : true,
+						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true}
+					  },
+					  "style": {
+						"fontWeight": 400,
+						"fontSize": "12px",
+						"fontFamily": "Arial"
+					  }
+					}
+				]
+			}
+		]
+	}
+}

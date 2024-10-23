@@ -59,8 +59,10 @@ function obtenerOpcionesDeEstilos(documento, path){
 	
 	let item = documento;
 	path.forEach((p) => {item = item[p]? item[p] : item});
+	if(!item)
+		return opciones;
 	
-	Object.entries(item.style).forEach(([k, v]) => opciones[k] = v);
+	Object.entries(item.style? item.style : {}).forEach(([k, v]) => opciones[k] = v);
 	opciones.fontSize = opciones.fontSize? opciones.fontSize : "10px";
 	opciones.fSize = Number(opciones.fontSize.substring(0, opciones.fontSize.length-2));
 	opciones.fontFamily = opciones.fontFamily? opciones.fontFamily : "Arial";
@@ -171,8 +173,8 @@ function manejarExpandirOpciones(id, width, height){
 	expandingOptionsIds[id] = true;
 	Object.keys(expandingOptionsIds).forEach((ids) => {
 		const swatcher = document.getElementById(ids);
-		const toggle = swatcher.style.maxWidth === "0px" && ids === id;
 		if(swatcher){
+			const toggle = swatcher.style.maxWidth === "0px" && ids === id;
 			//swatcher.style.width = toggle? width : "0px";
 			swatcher.style.height = toggle? height : "0px";
 			swatcher.style.maxHeight = toggle? height : "0px";
@@ -189,6 +191,11 @@ function actualizarDocumento(documento, setDocumento, path, estado, Editando, se
 	setDocumento(documento);
 	const elm = document.getElementById(Editando.id);
 	estado.transition = "all 0.1s";
+	
+	estado.textAlign = "center";
+	estado.verticalAlign = "middle";
+	estado.boxSizing = "border-box";
+	
 	Object.entries(estado).forEach(([k, v]) => elm.style[k] = v);
 }
 
@@ -280,7 +287,7 @@ function HerramientasElementos({opciones, documento, setDocumento, Editando, set
 	let fsize = estadoOpciones.fSize || 10;
 	
 	return (<>
-	<div id={"HerramientasElementos"} style={{position: "absolute", left: (0)+"px",top: (0)+"px", justifyContent: "center",display: "flex", flexDirection: "row", width: "100%", maxWidth: "calc(100%-300px)", height: "35px", backgroundColor: "#fffe", pointerEvents: "auto"}}>
+	<div id={"HerramientasElementos"} style={{position: "absolute", left: (0)+"px",top: (0)+"px", justifyContent: "center",display: "flex", flexDirection: "row", width: "100%", maxWidth: "calc(100%-300px)", height: "35px", backgroundColor: "#fffe", pointerEvents: "auto", zIndex: 1000}}>
 		<div style={ToolElmStyle}><Button style={{zIndex: 200}} onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button></div>
 		{Editando.Fuentes["color"]? (<div style={ToolElmStyle}>
 			<Button id={"font_edit_color_button"} style={ToolButtonStyle} 
@@ -491,6 +498,7 @@ function HerramientasElementos({opciones, documento, setDocumento, Editando, set
 			  defaultValue={estadoOpciones.fSize}
 			  onChange={(event) => {fsize = event.target.value; setEstadoOpciones(manejarFontSize(estadoOpciones, event.target.value)); upd();}} />
 		</div>):(<></>)}
+		{Editando.Fuentes["fontFamily"]? (
 		<div style={ToolElmStyle}>
 			<TextFieldsIcon style={ToolIconStyle} />
 			<FormControl style={{ width: "120px", marginTop: "0px", maxHeight: "100%", display: "flex", backgroundColor: "#fff", boxShadow: "inset 0 0 0 1px #03f3", paddingLeft: "5px"}}>
@@ -517,7 +525,7 @@ function HerramientasElementos({opciones, documento, setDocumento, Editando, set
 				</NativeSelect>
 				
 			</FormControl>
-		</div>
+		</div>):(<></>)}
 	</div>
 	</>);
 }
