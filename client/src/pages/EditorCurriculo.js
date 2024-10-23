@@ -832,7 +832,10 @@ function EditorCurriculo({
 		//Hacer estilos un objeto editable
 		const fonts = {};
 		const cont = document.getElementById("contenedor_documentos")
+		const prev = [0,0];
 		if(cont){
+			prev[0] = cont.scrollLeft;
+			prev[1] = cont.scrollTop;
 			cont.scrollLeft = 0;
 			cont.scrollTop = 0;
 		}
@@ -873,6 +876,12 @@ function EditorCurriculo({
 						});
 			});
 		});
+		
+		if(cont){
+			cont.scrollLeft = prev[0];
+			cont.scrollTop = prev[1];
+		}
+		
 		const calcDivisor = (numeroDePaginas) => {
 			let style = {};
 			Object.entries(divisorPagina).forEach(([key, value]) => {style[key] = value});
