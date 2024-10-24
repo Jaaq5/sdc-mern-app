@@ -39,6 +39,10 @@ function Repositorios({ user_data, setUserData, manager_bloques }) {
   const [urlRepo, setUrlRepo] = useState("");
   const [descripcionRepo, setDescripcionRepo] = useState("");
 
+  // Datos adicionales que no están en el formulario
+  const ID_Categoria_Puesto = user_data?.ID_Categoria_Puesto || "";
+  const ID_Categoria_Curriculum = user_data?.ID_Categoria_Curriculum || "";
+
   // Validar URL con regex
   // Ejemplo: https://github.com/miusuario
   const validarUrl = (url) => {
@@ -82,8 +86,8 @@ function Repositorios({ user_data, setUserData, manager_bloques }) {
           onClick={() => editarDatos(repo_id)}
         >
           <ListItemText
-            primary={`Repo: ${bloque.NombreRepo}`}
-            secondary={`URL: ${bloque.UrlRepo} - Descripción: ${bloque.DescripcionRepo}`}
+            primary={`Repo: ${bloque.Nombre}`}
+            secondary={`URL: ${bloque.Url} - Descripción: ${bloque.Descripcion}`}
           />
           <Button style={deleteButton} onClick={(e) => eliminarRepo(repo_id)}>
             <DeleteForever style={deleteForeverStyle} />
@@ -128,9 +132,9 @@ function Repositorios({ user_data, setUserData, manager_bloques }) {
     if (!bloque) return;
 
     setRepoId(repo_id);
-    setNombreRepo(bloque.NombreRepo);
-    setUrlRepo(bloque.UrlRepo);
-    setDescripcionRepo(bloque.DescripcionRepo);
+    setNombreRepo(bloque.Nombre);
+    setUrlRepo(bloque.Url);
+    setDescripcionRepo(bloque.Descripcion);
   };
 
   const manejarDatos = (e) => {
@@ -143,9 +147,11 @@ function Repositorios({ user_data, setUserData, manager_bloques }) {
     }
 
     const datosRepo = {
-      NombreRepo: nombreRepo,
-      UrlRepo: urlRepo,
-      DescripcionRepo: descripcionRepo,
+      Nombre: nombreRepo,
+      Url: urlRepo,
+      Descripcion: descripcionRepo,
+      ID_Categoria_Puesto: ID_Categoria_Puesto,
+      ID_Categoria_Curriculum: ID_Categoria_Curriculum,
     };
 
     if (repoId !== true) {
