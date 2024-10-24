@@ -223,7 +223,7 @@ function actualizarDocumento(documento, setDocumento, path, estado, Editando, se
 		const area = document.getElementById("Editor_Texto_Input");
 		Object.entries(estado).forEach(([k, v]) => area.style[k] = v);
 	}
-	
+	elm.style = elm.style || {};
 	Object.entries(estado).forEach(([k, v]) => elm.style[k] = v);
 }
 
