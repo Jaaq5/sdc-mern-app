@@ -11,6 +11,7 @@ import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrde
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
 import {EditorTamano, celdasAPx, celdasPagina, resolucionCeldas, GridCSS} from "../Components/Editor/EditorTamano";
+import BotonEditable from "../Components/Editor/BotonEditable";
 import Autosave from "../Components/Editor/Autosave";
 import HerramientasElementos from "../Components/Editor/HerramientasElementos";
 import CajaTextoCreador from "../Components/Editor/CajaTextoCreador";
@@ -281,68 +282,20 @@ function EditorCurriculo({
   
   const ElementoTextoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
 	  const newPath = extenderPath(path, [estructura.Editable.Campo]);
-	  return (<>
-	  {Editando? 
-		(<></>)
-		:
-		(<Button
-			title={estructura.Editable.Titulo}
-			style={editButton}
-			id={"Edit_Button_Texto_"+nombreSeccion+"_"+index}
-			onClick={(e) => {
-				setTextoEditar(seccion[estructura.Editable.Campo]);
-				setEditando(null);
-				setEditando({
-					Tipo: "Texto",
-					pos: posicionEnOverlay("Texto_"+nombreSeccion+"_"+index+path),
-					Seccion: nombreSeccion,
-					Campo: estructura.Editable.Campo,
-					label: estructura.Editable.Label,
-					placeholder: estructura.Editable.Placeholder,
-					path : newPath,
-					id: "Texto_"+nombreSeccion+"_"+index+path,
-					Fuentes : estructura.Editable.Fuentes,
-					Borrar: estructura.Editable.Borrar,
-					multiline: estructura.Editable.multiline,
-				});
-			}}
-			>
-			<BorderColorIcon style={editButtonIcon} />
-		</Button>)}
-		</>
-	  );
-  };
-  
-  const ElementoEstiloEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
-	  const newPath = extenderPath(path, [estructura.Editable.Campo]);
-	  return (Editando? 
-		(<></>)
-		:
-		(<Button
-			title={estructura.Editable.Titulo}
-			style={editButton}
-			id={"Edit_Button_Estilo_"+nombreSeccion+"_"+index}
-			onClick={(e) => {
-				setTextoEditar(seccion.TituloSeccion);
-				setEditando(null);
-				setEditando({
-					Tipo: "Estilo",
-					pos: posicionEnOverlay("Estilo_"+nombreSeccion+"_"+index+path),
-					Seccion: nombreSeccion,
-					Campo: estructura.Editable.Campo,
-					label: estructura.Editable.Label,
-					placeholder: estructura.Editable.Placeholder,
-					path : newPath,
-					id: "Texto_"+nombreSeccion+"_"+index+path,
-					
-					Fuentes : estructura.Editable.Fuentes,
-					Borrar: estructura.Editable.Borrar,
-				});
-			}}
-			>
-			<BorderColorIcon style={editButtonIcon} />
-		</Button>)
-	  );
+	  return (<BotonEditable 
+		estructura={estructura} 
+		seccion={seccion} 
+		nombreSeccion={nombreSeccion} 
+		setEditando={setEditando} 
+		path={path} 
+		nid={"Texto_"+nombreSeccion+"_"+index+path} 
+		style={editButton} 
+		Icon={BorderColorIcon} 
+		iconStyle={editButtonIcon} 
+		posicionEnOverlay={posicionEnOverlay} 
+		setTextoEditar={setTextoEditar}
+		texto={seccion[estructura.Editable.Campo]}
+		/>);
   };
   
   const ElementoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
@@ -350,9 +303,8 @@ function EditorCurriculo({
 		  return (<></>);
 	  switch(estructura.Editable.Tipo){
 		  case "Texto":
-			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} /></>);
 		  case "Estilo":
-			return (<><ElementoEstiloEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} /></>);
+			return (<><ElementoTextoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} path={path} /></>);
 	  };
 	  return (<></>);
   };
@@ -376,34 +328,23 @@ function EditorCurriculo({
 	  onMouseLeave={(e) => {document.getElementById(nid).style.boxShadow = "inset 0 0 0 0px purple"}}
 	  
 	  >
-		  {estructura.Editable? (
-						<Button  
-							title={estructura.Editable.Titulo}
-							style={seccionEditButton}
-							id={"Edit_Button_Estructura_"+path}
-							onClick={(e) => {
-							setEditando(null);
-							setEditando({
-								Tipo: estructura.Editable.Tipo,
-								pos: posicionEnOverlay(nid),
-								Seccion: estructura.Editable.Seccion,
-								Campo: estructura.Editable.Campo,
-								Arreglo: estructura.Editable.Arreglo,
-								Celdas: estructura.Editable.Celdas,
-								Pos: estructura.Editable.Pos,
-								path: path,
-								id: nid,
-								Fuentes : estructura.Editable.Fuentes,
-								Borrar: estructura.Editable.Borrar,
-								});
-							}} >
-								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
-						</Button>
-					) : (
-						<></>
-			)}
-			{textoMultilinea(obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index))}
-			<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
+		<BotonEditable 
+			estructura={estructura} 
+			seccion={seccion} 
+			nombreSeccion={nombreSeccion} 
+			setEditando={setEditando} 
+			path={path} 
+			nid={nid} 
+			style={editButton} 
+			Icon={SwapHorizontalCircleIcon} 
+			iconStyle={seccionEditButtonIcon} 
+			posicionEnOverlay={posicionEnOverlay} 
+			setTextoEditar={setTextoEditar}
+			texto={""}
+		/>
+
+		{textoMultilinea(obtenerTextoEstructura(user_data,nombreSeccion, seccion, id, estructura, index))}
+		<ElementoEditableHTML user_data={user_data} documento={documento} nombreSeccion={nombreSeccion} seccion={seccion} estructura={estructura} id={id} index={index} />
 	  </div></>);
   };
   
@@ -413,39 +354,24 @@ function EditorCurriculo({
 	  imgStyle.left = 0;
 	  const nid = "Imagen_"+nombreSeccion+"_"+index;
 	  return (<div id={"Container_"+nid} style={estructura.style}
-			onMouseEnter={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 2px purple"; }}
-			onMouseLeave={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 0px purple"; }}
+			onMouseEnter={(e) => {document.getElementById("Container_"+nid).style.boxShadow = "inset 0 0 0 2px purple"; }}
+			onMouseLeave={(e) => {document.getElementById("Container_"+nid).style.boxShadow = "inset 0 0 0 0px purple"; }}
 		>
 		<img id={nid} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
-		{estructura.Editable? (
-						<Button  
-							title={estructura.Editable.Titulo}
-							style={seccionEditButton}
-							id={"Edit_Button_Img_"+path}
-							onClick={(e) => {
-							setEditando(null);
-							setEditando({
-								Tipo: estructura.Editable.Tipo,
-								pos: posicionEnOverlay(nid),
-								path: path,
-								id: nid,
-								Seccion: nombreSeccion,
-								Campo: estructura.Editable.Campo,
-								Arreglo: estructura.Editable.Arreglo,
-								Celdas: estructura.Editable.Celdas,
-								Pos: estructura.Editable.Pos,
-								Fuentes : estructura.Editable.Fuentes,
-								Borrar: estructura.Editable.Borrar,
-							});
-							//setOpcionesPanel(
-							//	{Seccion: seccion}
-							//);
-							}} >
-								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
-						</Button>
-					) : (
-						<></>
-					)}
+		<BotonEditable 
+			estructura={estructura} 
+			seccion={seccion} 
+			nombreSeccion={nombreSeccion} 
+			setEditando={setEditando} 
+			path={path} 
+			nid={nid} 
+			style={editButton} 
+			Icon={SwapHorizontalCircleIcon} 
+			iconStyle={seccionEditButtonIcon} 
+			posicionEnOverlay={posicionEnOverlay} 
+			setTextoEditar={setTextoEditar}
+			texto={""}
+		/>
 	  </div>);
   };
 	
@@ -485,32 +411,20 @@ function EditorCurriculo({
 			const nid ="IDs_"+nombreSeccion+path;
 			estructura.style.pointerEvents = "none";
 			return (<div id={nid} style={estructura.style}>
-				{estructura.Editable? (
-					<Button  
-						title={estructura.Editable.Titulo}
-						style={seccionEditButton}
-						id={"Edit_Button_Estructura_"+path}
-						onClick={(e) => {
-						setEditando(null);
-						setEditando({
-							Tipo: estructura.Editable.Tipo,
-							pos: posicionEnOverlay(nid),
-							Seccion: estructura.Editable.Seccion,
-							Campo: estructura.Editable.Campo,
-							Arreglo: estructura.Editable.Arreglo,
-							Celdas: estructura.Editable.Celdas,
-							Pos: estructura.Editable.Pos,
-							path: p,
-							id: nid,
-							Fuentes : estructura.Editable.Fuentes,
-							Borrar: estructura.Editable.Borrar,
-							});
-						}} >
-							<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
-					</Button>
-				) : (
-					<></>
-				)}
+				<BotonEditable 
+					estructura={estructura} 
+					seccion={seccion} 
+					nombreSeccion={nombreSeccion} 
+					setEditando={setEditando} 
+					path={p} 
+					nid={nid} 
+					style={editButton} 
+					Icon={SwapHorizontalCircleIcon} 
+					iconStyle={seccionEditButtonIcon} 
+					posicionEnOverlay={posicionEnOverlay} 
+					setTextoEditar={setTextoEditar}
+					texto={""}
+				/>
 			{list}
 			</div>);
 	  };
@@ -544,41 +458,20 @@ function EditorCurriculo({
 					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple";}}
 					onMouseLeave={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"; }}
 					>
-					{documento.diseno.Secciones[seccion].Editable? (
-						<Button  
-							title={documento.diseno.Secciones[seccion].Editable.Titulo}
-							style={seccionEditButton}
-							id={"Edit_Button_Seccion_"+seccion}
-							onClick={(e) => {
-							setEditando(null);
-							setTimeout(function(){
-								setEditando({
-									Tipo: documento.diseno.Secciones[seccion].Editable.Tipo,
-									pos: posicionEnOverlay("Seccion_"+seccion),
-									path: path,
-									id: "Seccion_" + seccion,
-									Seccion: seccion,
-									Campo: documento.diseno.Secciones[seccion].Editable.Campo,
-									Arreglo: documento.diseno.Secciones[seccion].Editable.Arreglo,
-									Lista: tempIds[seccion],
-									Celdas: documento.diseno.Secciones[seccion].Editable.Celdas,
-									Pos: documento.diseno.Secciones[seccion].Editable.Pos,
-									ID_Categoria_Curriculum: categoria_curriculum,
-									ID_Categoria_Puesto: categoria_puesto,
-									Fuentes : documento.diseno.Secciones[seccion].Editable.Fuentes,
-									Borrar: documento.diseno.Secciones[seccion].Editable.Borrar,
-								});
-							}, 15)
-							
-							//setOpcionesPanel(
-							//	{Seccion: seccion}
-							//);
-							}} >
-								<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
-						</Button>
-					) : (
-						<></>
-					)}
+					<BotonEditable 
+						estructura={documento.diseno.Secciones[seccion]} 
+						seccion={documento.diseno.Secciones[seccion]} 
+						nombreSeccion={seccion} 
+						setEditando={setEditando} 
+						path={path} 
+						nid={"Seccion_"+seccion} 
+						style={editButton} 
+						Icon={SwapHorizontalCircleIcon} 
+						iconStyle={seccionEditButtonIcon} 
+						posicionEnOverlay={posicionEnOverlay} 
+						setTextoEditar={setTextoEditar}
+						texto={""}
+					/>
 					{Object.entries(documento.diseno.Secciones[seccion].Estructura).map(([index, estructura]) => {
 						const newPath = extenderPath(path, ["Estructura",index]);
 						return (<>
@@ -613,32 +506,20 @@ function EditorCurriculo({
 		}
 		estructura.style = tamanoYPosicion(estructura, pindex, estructura);
 		return (<div id={id} style={estructura.style}>
-		     {estructura.Editable? (
-				<Button  
-					title={estructura.Editable.Titulo}
-					style={seccionEditButton}
-					id={"Edit_Button_Estructura_"+path}
-					onClick={(e) => {
-					setEditando(null);
-					setEditando({
-						Tipo: estructura.Editable.Tipo,
-						pos: posicionEnOverlay(id),
-						Seccion: estructura.Editable.Seccion,
-						Campo: estructura.Editable.Campo,
-						Arreglo: estructura.Editable.Arreglo,
-						Celdas: estructura.Editable.Celdas,
-						Pos: estructura.Editable.Pos,
-						path: p,
-						id: id,
-						Fuentes : estructura.Editable.Fuentes,
-						Borrar: estructura.Editable.Borrar,
-						});
-					}} >
-						<SwapHorizontalCircleIcon style={seccionEditButtonIcon}/>
-				</Button>
-			) : (
-				<></>
-			)}
+			<BotonEditable 
+				estructura={estructura} 
+				seccion={null} 
+				nombreSeccion={""} 
+				setEditando={setEditando} 
+				path={p} 
+				nid={id} 
+				style={editButton} 
+				Icon={SwapHorizontalCircleIcon} 
+				iconStyle={seccionEditButtonIcon} 
+				posicionEnOverlay={posicionEnOverlay} 
+				setTextoEditar={setTextoEditar}
+				texto={""}
+			 />
 			{estructura.Estructura? (Object.keys(estructura.Estructura).map((index) => {
 				 if(typeof(estructura.Estructura[index]) === "string")
 					return(<SeccionHTMLEstructurada user_data={user_data} seccion={estructura.Estructura[index]} id={documento.datos.Secciones[estructura.Estructura[index]]} documento={documento} path={["diseno","Secciones",estructura.Estructura[index]]}/>);

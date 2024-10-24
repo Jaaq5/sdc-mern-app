@@ -85,7 +85,7 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 		movimiento.push([0,0]);
 		origenes.push(0);
 	}
-	const size = 15;
+	const size = 10;
 	let buttons = [];
 	
 	
@@ -104,7 +104,7 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 			accion.target.style.margin = (-size*50)+"px 0px 0px "+(-size*50)+"px"
 			
 
-			let t = [Math.min(Math.max(tamano.width + movimiento[myindex][0], 20),2756), Math.min(Math.max(tamano.height + movimiento[myindex][1],20), 21123)];
+			let t = [Math.min(Math.max(tamano.width + movimiento[myindex][0], 5),2756), Math.min(Math.max(tamano.height + movimiento[myindex][1],5), 21123)];
 			const c = [Math.floor(t[0]/celdasPagina[0]),Math.floor(t[1]/celdasPagina[1])];
 			t = [c[0]*celdasPagina[0], c[1] * celdasPagina[1]];
 			
@@ -131,7 +131,7 @@ const calcularBotones = (tamano, setBotones, path, documento, setDocumento, setT
 	};
 	
 	const end = (accion, index, path, documento, setDocumento, cajax) => {
-		let t = [Math.min(Math.max(tamano.width + movimiento[index][0], 20),2756), Math.min(Math.max(tamano.height + movimiento[index][1],20), 21123)];
+		let t = [Math.min(Math.max(tamano.width + movimiento[index][0], celdasPagina[0]),2756), Math.min(Math.max(tamano.height + movimiento[index][1],celdasPagina[1]), 21123)];
 		let item = documento;
 		path.forEach((campo) => item = item[campo]);
 		
@@ -295,15 +295,14 @@ function manejarOrdenCapa(dir, Editando, documento, setDocumento){
 		documento.diseno.Paginas[0].Estructura[index] = documento.diseno.Paginas[0].Estructura[index+1];
 		documento.diseno.Paginas[0].Estructura[index+1] = item;
 		index += 1;
-		elm.style.zIndex = Math.max(Math.min(index * 5 + 1, 900), 1);
+		elm.style.zIndex = Math.max(Math.min((index+1) * 5 + 1, 900), 1);
 
-		
 	}else if(dir === "down" && index > 0){
 		documento.diseno.Paginas[0].Estructura[index] = documento.diseno.Paginas[0].Estructura[index-1];
 		documento.diseno.Paginas[0].Estructura[index-1] = item;
 		index -= 1;
-		elm.style.zIndex = Math.max(Math.min(index * 5 - 1, 900), 1);
-		
+		elm.style.zIndex = Math.max(Math.min((index+1) * 5 - 1, 900), 1);
+
 	}
 	
 	document.getElementById("zIndex_layer").innerHTML = index

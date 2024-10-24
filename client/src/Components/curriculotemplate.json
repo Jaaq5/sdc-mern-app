@@ -297,11 +297,21 @@
               "style": {
                 "backgroundColor": "#0000",
                 "border": "0pt",
-                "borderTop": "4pt",
+                "borderTopWidth": "4pt",
                 "borderColor": "#ccc",
                 "borderStyle": "solid",
                 "fontFamily": "Roboto",
                 "fontWeight": 400
+              },
+			  "Editable": {
+                "Tipo": "Tamano",
+                "Titulo": "",
+                "Label": "",
+                "Campo": "",
+                "Placeholder": "",
+                "Celdas": false,
+                "Pos": false,
+				"Fuentes" : {"border" : true}
               },
               "plantillaStyle": {
                 "backgroundColor": "#0ff0",
@@ -323,10 +333,20 @@
                     "fontFamily": "Roboto"
                   },
                   "Editable": {
-                    "Tipo": "Fuentes",
+                    "Tipo": "Estilo",
                     "Titulo": "Editar fuentes",
                     "Label": "Fuentes",
-                    "Placeholder": "Fuentes"
+                    "Placeholder": "Fuentes",
+					"Fuentes": {
+                      "fontFamily": true,
+                      "color": true,
+                      "fontSize": true,
+                      "fontWeight": true,
+                      "fontStyle": true,
+                      "textDecoration": true,
+                      "backgroundColor": true,
+                      "border": true
+                    }
                   }
                 },
                 {

@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import {
   TextField,
 } from "@mui/material";
 
 const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Editando, setEditando, zoom}) => {
+	const [texto, setTexto] = useState(TextoEditar);
 	  if(!documento)
 		  return (<></>);
 	  
@@ -37,7 +39,7 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 				multiline
 				maxRows = {Editando.multiline? 10 : 1}
 				required
-				value={TextoEditar}
+				value={texto}
 				autoComplete="none"
 				onChange={(e) => {
 				  let val = e.target.value? e.target.value : "";
@@ -52,7 +54,7 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 				  let item = documento.diseno.Secciones[Editando.Seccion];
 				  item[Editando.Campo] = val;
 				  
-				  setTextoEditar(val);
+				  setTexto(val);
 				}}
 				
 				onKeyDown={(e) => {if((!Editando.multiline || e.ctrlKey) && e.keyCode === 13 && e.target.value !== "") setEditando(null)}}
