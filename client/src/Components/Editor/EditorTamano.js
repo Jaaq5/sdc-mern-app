@@ -13,10 +13,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const resolucionCeldas = 100;
 const celdasPagina = [594/resolucionCeldas, 841/resolucionCeldas]//react-pdf    [756 / 40, 1123 / 60]; //En px
+
 const tamanoObjeto = (path, documento, setDocumento, id = "") => {
   if(!documento || !path)
 	  return {width:0, height:0};
-
   let item = documento;
   if(path.Celdas)
 	item = path;
@@ -46,15 +46,18 @@ const tamanoObjeto = (path, documento, setDocumento, id = "") => {
 };
 
 const celdasAPx = (Celdas) => {
+  const c = {width:0, height:0};
   if(!Celdas)
-	  return {width:0, height:0};
+	  return c;
 
   if(Celdas){
-	  return {width: Celdas[0] * celdasPagina[0], height: Celdas[1] * celdasPagina[1],};
+	  
   }else{
 	  Celdas = [10,10];
-	  return {width: 10 * celdasPagina[0], height: 10 * celdasPagina[1],};
   }
+  c.width = Celdas[0] * celdasPagina[0];
+  c.height = Celdas[1] * celdasPagina[1];
+  return c;
 };
 
 const posicionObjeto = (Pos) => {
@@ -393,7 +396,7 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 	
 	return (<>
 	<div id="caja_tamano" 
-		style={{pointerEvents: "auto", width: tamano.width + "px", height: tamano.height + "px", backgroundColor: "#e495e820", border:"solid 2px #e495e8", borderRadius: "0px", position: "absolute", left: (xy[0])+"px",top: (xy[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s", zIndex: 1000}}
+		style={{pointerEvents: "auto", width: cajax.clientWidth, height: cajax.clientHeight, backgroundColor: "#e495e800", border:"solid 3px #e495e8", borderRadius: "0px", position: "absolute", left: (xy[0])+"px",top: (xy[1])+"px", margin: "-2px", display:"flex", justifyContent: "center", textAlign: "center", transitionProperty: "height, width, transform", transitionDuration: "0.1s", zIndex: 1000}}
 		
 		>
 		<div style={{position: "absolute", top: (Editando.pos[1]<0? (-Editando.pos[1])+"px" : ("0px")), width: "100%", minWidth: "270px", zoom: 1/gzoom}}>
@@ -404,8 +407,9 @@ const EditorTamano = ({user_data, TextoEditar, setTextoEditar, ListaEditar, setL
 				{Editando.Pos? (<><ControlCameraIcon style={{position:"relative", top: "5px"}} />{" "}
 				<span id="pos_celda_texto">{initialPos? (<span>{Math.floor(initialPos[0])+" "}x{" "+Math.floor(initialPos[1])}</span>) : (<></>)}</span>		
 				{"  |  "}</>) : (<></>)}		
-				<PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" Z"+cajax.style.zIndex+" "}
+				{Editando.Celdas? (<><PhotoSizeSelectSmallIcon style={{position:"relative", top: "5px"}} />{" "}
 				<span id="tamano_celda_texto">{Math.floor(item.Celdas[0])+" "}x{" "+Math.floor(item.Celdas[1])}</span>
+				</>) : (<></>)}
 				<Button style={{maxWidth: "50px", minWidth: "30px", padding: "0px", paddingBottom: "5px", zIndex: 200}} onClick={(e) => {setEditando(null)}}><CheckCircleIcon color = "success" /> </Button>
 			</div>
 			<div style={{backgroundColor: "#fff", border:"solid 0px #000", position: "absolute", top: "-30px", left: "100%", width: "30px", height: "auto"}}>

@@ -22,15 +22,15 @@ const TextoEditor = ({TextoEditar, setTextoEditar, documento, setDocumento, Edit
 	  setTimeout(function(){document.getElementById("Editor_Texto_Input")?.focus()},200);
 	  const elm = document.getElementById(Editando.id);
 	  const elmStyle = elm.currentStyle || window.getComputedStyle(elm);
-	  
-	  return (<div style={{position: "absolute", left: (Editando.pos[0]*zoom)+"px",top: (Math.max(Editando.pos[1], 60)*zoom)+"px", marginTop: "-10px", zIndex: 1000}}>
+	  const copiedStyle = {textAlign: elmStyle.textAlign, justifyContent: elmStyle.justifyContent, textJustify: elmStyle.textJustify, color: elmStyle.color || "#000", textDecoration: elmStyle.textDecoration, fontStyle: elmStyle.fontStyle || "normal", textAlign: elmStyle, fontWeight: elmStyle.fontWeight, fontSize: elmStyle.fontSize, fontFamily: elmStyle.fontFamily, margin: "0px"}
+	  return (<div style={{position: "absolute", left: (Editando.pos[0]*zoom)+"px",top: (Math.max(Editando.pos[1], 60)*zoom)+"px", marginTop: "-3px", zIndex: 1000}}>
 			<form><TextField
 				id="Editor_Texto_Input"
-				style={{display: "flex", backgroundColor: "#FFFFFF00", zIndex: 100, maxWidth: elmStyle.width}}
-				InputProps = {{style: {color: "#0000"}}}
+				style={{display: "flex", backgroundColor: "#FFFFFF", zIndex: 100, minWidth: elmStyle.width, minHeight: elmStyle.height}}
+				InputProps = {{style: copiedStyle}}
 				variant="standard"
 				size="small"
-				sx={{ label: { fontWeight: "700", fontSize: "1.0rem"} }}
+				sx={{ label: { marginTop: "-10px"} }}
 				type="text"
 				label={Editando.label}
 				placeholder={Editando.placeholder}
