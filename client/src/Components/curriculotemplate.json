@@ -38,6 +38,14 @@
           "Cantidad": 3,
           "IDs": []
         },
+        "Premios": {
+          "Cantidad": 1,
+          "IDs": []
+        },
+        "Repositorios": {
+          "Cantidad": 1,
+          "IDs": []
+        },
         "Referencias": {
           "Cantidad": 3,
           "IDs": []
@@ -69,16 +77,16 @@
           },
           "Elementos": [],
           "Estructura": [
-			"Informacion_Personal",
-			"Experiencias_Laborales",
-			"Educacion_Formal",
-			"Educacion_Tecnica",
-			"Habilidades",
-			"Idiomas",
-			"Proyectos",
-			"Publicaciones",
-			"Conferencias",
-			"Referencias"
+            "Informacion_Personal",
+            "Experiencias_Laborales",
+            "Educacion_Formal",
+            "Educacion_Tecnica",
+            "Habilidades",
+            "Idiomas",
+            "Proyectos",
+            "Publicaciones",
+            "Conferencias",
+            "Referencias"
           ]
         }
       ],
@@ -105,38 +113,30 @@
             "overflow": "visible",
             "width": "446.25px",
             "height": "224.26666666666668px",
-			
-			"display" : "flex",
-			"flexDirection" : "row"
+
+            "display": "flex",
+            "flexDirection": "row"
           },
-          "Celdas": [
-            78,
-            30
-          ],
+          "Celdas": [78, 30],
           "Editable": {
             "Titulo": "Cambiar Informacion Personal",
             "Tipo": "IDs",
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Imagen",
-              "Fuente": [
-                "Foto"
-              ],
-              "Celdas": [
-                20,
-                15
-              ],
+              "Fuente": ["Foto"],
+              "Celdas": [20, 15],
               "Editable": {
                 "Tipo": "Tamano",
                 "Titulo": "Foto",
                 "Label": "Foto",
-				"Campo" : "Foto",
+                "Campo": "Foto",
                 "Placeholder": "Foto",
                 "Celdas": true,
-				"Pos": true
+                "Pos": true
               },
               "style": {
                 "position": "relative",
@@ -147,107 +147,113 @@
                 "fontWeight": 400
               }
             },
-			{
-				"Tipo" : "Estructura",
-				"style" : {},
-				"Celdas" : [58,30],
-				"Editable" : {
-					"Celdas" : true
-				},
-				"Estructura" : [
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"TituloSeccion"
-					  ],
-					  "Editable": {
-						"Tipo": "Texto",
-						"Titulo": "Editar Nombre",
-						"Campo" : "TituloSeccion",
-						"Label": "Nombre",
-						"Placeholder": "Tu nombre",
-						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true, "backgroundColor": true, "border" : true}
-					  },
-					  "style": {
-						"fontWeight": 900,
-						"fontSize": "26px",
-						"marginBottom": "10px",
-						"display": "flex",
-						"fontFamily": "Roboto"
-					  }
-					},
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"Sobre_Mi"
-					  ],
-					  "style": {
-						"display": "flex",
-						"border": "0pt",
-						"borderTop": "1pt",
-						"borderBottom": "1pt",
-						"borderColor": "#ccc",
-						"borderStyle": "solid",
-						"marginBottom": "10px",
-						"fontSize": "16px",
-						"fontFamily": "Roboto",
-						"fontWeight": 400
-					  },
-					  "Editable": {
-						"Tipo": "Estilo",
-						"Titulo": "Editar Parrafo",
-						"Campo" : "A",
-						"Label": "Parrafo",
-						"Placeholder": "Sobre mi",
-						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true, "backgroundColor": true, "border" : true}
-					  }
-					},
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"Puesto"
-					  ],
-					  "style": {
-						"display": "flex",
-						"fontWeight": 400,
-						"fontFamily": "Roboto"
-					  }
-					},
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"Contactos: "
-					  ],
-					  "style": {
-						"display": "flex",
-						"fontFamily": "Roboto",
-						"fontWeight": 400
-					  }
-					},
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"Telefono"
-					  ],
-					  "style": {
-						"display": "flex",
-						"fontFamily": "Roboto",
-						"fontWeight": 400
-					  }
-					},
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"Correo"
-					  ],
-					  "style": {
-						"display": "flex",
-						"fontFamily": "Roboto",
-						"fontWeight": 400
-					  }
-					}
-				]
-			}
+            {
+              "Tipo": "Estructura",
+              "style": {},
+              "Celdas": [58, 30],
+              "Editable": {
+                "Celdas": true
+              },
+              "Estructura": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["TituloSeccion"],
+                  "Editable": {
+                    "Tipo": "Texto",
+                    "Titulo": "Editar Nombre",
+                    "Campo": "TituloSeccion",
+                    "Label": "Nombre",
+                    "Placeholder": "Tu nombre",
+                    "Fuentes": {
+                      "fontFamily": true,
+                      "color": true,
+                      "fontSize": true,
+                      "fontWeight": true,
+                      "fontStyle": true,
+                      "textDecoration": true,
+                      "backgroundColor": true,
+                      "border": true
+                    }
+                  },
+                  "style": {
+                    "fontWeight": 900,
+                    "fontSize": "26px",
+                    "marginBottom": "10px",
+                    "display": "flex",
+                    "fontFamily": "Roboto"
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Sobre_Mi"],
+                  "style": {
+                    "display": "flex",
+                    "border": "0pt",
+                    "borderTop": "1pt",
+                    "borderBottom": "1pt",
+                    "borderColor": "#ccc",
+                    "borderStyle": "solid",
+                    "marginBottom": "10px",
+                    "fontSize": "16px",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  },
+                  "Editable": {
+                    "Tipo": "Estilo",
+                    "Titulo": "Editar Parrafo",
+                    "Campo": "A",
+                    "Label": "Parrafo",
+                    "Placeholder": "Sobre mi",
+                    "Fuentes": {
+                      "fontFamily": true,
+                      "color": true,
+                      "fontSize": true,
+                      "fontWeight": true,
+                      "fontStyle": true,
+                      "textDecoration": true,
+                      "backgroundColor": true,
+                      "border": true
+                    }
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Puesto"],
+                  "style": {
+                    "display": "flex",
+                    "fontWeight": 400,
+                    "fontFamily": "Roboto"
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Contactos: "],
+                  "style": {
+                    "display": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Telefono"],
+                  "style": {
+                    "display": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Correo"],
+                  "style": {
+                    "display": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
           ]
         },
         "Experiencias_Laborales": {
@@ -260,27 +266,22 @@
             "height": "210.25px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            40
-          ],
+          "Celdas": [78, 40],
           "Editable": {
             "Titulo": "Cambiar Lista de Trabajos",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de trabajos"
@@ -314,31 +315,23 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Inicio",
-                    " - ",
-                    "Fecha_Final"
-                  ],
+                  "Texto": ["Fecha_Inicio", " - ", "Fecha_Final"],
                   "style": {
                     "display": "flex",
                     "fontWeight": 700,
                     "fontSize": "14px",
                     "fontFamily": "Roboto"
                   },
-				  "Editable": {
-					"Tipo": "Fuentes",
-					"Titulo": "Editar fuentes",
-					"Label": "Fuentes",
-					"Placeholder": "Fuentes"
-				  }
+                  "Editable": {
+                    "Tipo": "Fuentes",
+                    "Titulo": "Editar fuentes",
+                    "Label": "Fuentes",
+                    "Placeholder": "Fuentes"
+                  }
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Puesto",
-                    " en ",
-                    "Organizacion"
-                  ],
+                  "Texto": ["Puesto", " en ", "Organizacion"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -360,27 +353,22 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Títulos",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Eduacion Formal"
@@ -412,11 +400,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Inicio",
-                    " - ",
-                    "Fecha_Final"
-                  ],
+                  "Texto": ["Fecha_Inicio", " - ", "Fecha_Final"],
                   "style": {
                     "display": "flex",
                     "fontWeight": 700,
@@ -426,11 +410,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Programa",
-                    " en ",
-                    "Institucion"
-                  ],
+                  "Texto": ["Programa", " en ", "Institucion"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -451,27 +431,22 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Certificaciones",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Certificaciones"
@@ -493,7 +468,7 @@
                 "borderStyle": "solid",
                 "fontFamily": "Roboto",
                 "fontWeight": 400,
-				"position": "relative"
+                "position": "relative"
               },
               "plantillaStyle": {
                 "display": "flex",
@@ -502,16 +477,12 @@
                 "borderBottom": "2pt",
                 "borderColor": "#ddd",
                 "borderStyle": "solid",
-				"position" : "relative"
+                "position": "relative"
               },
               "Plantilla": [
                 {
                   "Tipo": "Div",
-                  "Texto": [
-                    "Programa",
-                    " en ",
-                    "Institucion"
-                  ],
+                  "Texto": ["Programa", " en ", "Institucion"],
                   "style": {
                     "display": "flex",
                     "border": "0pt",
@@ -523,21 +494,16 @@
                     "height": "70.08333333333334px",
                     "fontFamily": "Roboto",
                     "fontWeight": 400,
-					"position" : "relative"
-                   },
-                  "Celdas": [
-                    10,
-                    5
-                  ],
-				  "Editable": {
-					"Celdas": true
-				  }
+                    "position": "relative"
+                  },
+                  "Celdas": [10, 5],
+                  "Editable": {
+                    "Celdas": true
+                  }
                 },
                 {
                   "Tipo": "Div",
-                  "Texto": [
-                    "Descripcion"
-                  ],
+                  "Texto": ["Descripcion"],
                   "style": {
                     "display": "flex",
                     "fontSize": "16px",
@@ -545,15 +511,12 @@
                     "height": "70.08333333333334px",
                     "fontFamily": "Roboto",
                     "fontWeight": 400,
-					"position" : "relative"
+                    "position": "relative"
                   },
-                  "Celdas": [
-                    11,
-                    5
-                  ],
-				  "Editable": {
-					"Celdas": true
-				  }
+                  "Celdas": [11, 5],
+                  "Editable": {
+                    "Celdas": true
+                  }
                 }
               ]
             }
@@ -570,27 +533,22 @@
             "height": "210.25px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            15
-          ],
+          "Celdas": [78, 15],
           "Editable": {
             "Titulo": "Cambiar Lista de Habilidades",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Habilidades"
@@ -623,10 +581,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "• ",
-                    "Nombre"
-                  ],
+                  "Texto": ["• ", "Nombre"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -635,9 +590,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Descripcion"
-                  ],
+                  "Texto": ["Descripcion"],
                   "style": {
                     "display": "flex",
                     "fontSize": "14px",
@@ -659,27 +612,22 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Idiomas",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Idiomas"
@@ -704,11 +652,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Id",
-                    " - ",
-                    "Nivel"
-                  ],
+                  "Texto": ["Id", " - ", "Nivel"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -717,10 +661,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Cert.: ",
-                    "Certificacion"
-                  ],
+                  "Texto": ["Cert.: ", "Certificacion"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -741,27 +682,22 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Proyectos",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Proyectos"
@@ -794,11 +730,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Inicio",
-                    " - ",
-                    "Fecha_Final"
-                  ],
+                  "Texto": ["Fecha_Inicio", " - ", "Fecha_Final"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -837,27 +769,22 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Publicaciones",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Publicaciones"
@@ -890,11 +817,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Publicacion",
-                    " - ",
-                    "Titulo"
-                  ],
+                  "Texto": ["Fecha_Publicacion", " - ", "Titulo"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -903,9 +826,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Publicadora"
-                  ],
+                  "Texto": ["Publicadora"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -914,9 +835,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Abstract"
-                  ],
+                  "Texto": ["Abstract"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -937,27 +856,22 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Conferencias",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Conferencias"
@@ -990,11 +904,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Conferencia",
-                    " - ",
-                    "Titulo"
-                  ],
+                  "Texto": ["Fecha_Conferencia", " - ", "Titulo"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1003,9 +913,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Lugar"
-                  ],
+                  "Texto": ["Lugar"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1014,9 +922,172 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Descripcion"
-                  ],
+                  "Texto": ["Descripcion"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "Premios": {
+          "Mostrar": true,
+          "TituloSeccion": "Premios",
+          "style": {
+            "textAlign": "left",
+            "position": "relative",
+            "width": "595px",
+            "height": "182.21666666666667px",
+            "overflow": "hidden"
+          },
+          "Celdas": [78, 25],
+          "Editable": {
+            "Titulo": "Cambiar Lista de Premios",
+            "Campo": "IDs",
+            "Tipo": "IDs",
+            "Arreglo": true,
+            "Celdas": true,
+            "Pos": true
+          },
+          "Estructura": [
+            {
+              "Tipo": "Texto",
+              "Texto": ["TituloSeccion"],
+              "Editable": {
+                "Tipo": "Texto",
+                "Campo": "TituloSeccion",
+                "Titulo": "Editar titulo",
+                "Label": "Titulo",
+                "Placeholder": "Titulo de Premios"
+              },
+              "style": {
+                "fontWeight": 900,
+                "fontSize": "20px",
+                "fontFamily": "Roboto"
+              }
+            },
+            {
+              "Tipo": "IDs",
+              "style": {
+                "dsiplay": "flex",
+                "border": "0pt",
+                "borderTop": "4pt",
+                "borderColor": "#ccc",
+                "borderStyle": "solid",
+                "fontFamily": "Roboto",
+                "fontWeight": 400
+              },
+              "plantillaStyle": {
+                "display": "flex",
+                "flexDirection": "row",
+                "border": "0pt",
+                "borderBottom": "2pt",
+                "borderColor": "#ddd",
+                "borderStyle": "solid"
+              },
+              "Plantilla": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Fecha", " - ", "Nombre"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Institucion"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "Repositorios": {
+          "Mostrar": true,
+          "TituloSeccion": "Conferencias",
+          "style": {
+            "textAlign": "left",
+            "position": "relative",
+            "width": "595px",
+            "height": "182.21666666666667px",
+            "overflow": "hidden"
+          },
+          "Celdas": [78, 25],
+          "Editable": {
+            "Titulo": "Cambiar Lista de Repositorios",
+            "Campo": "IDs",
+            "Tipo": "IDs",
+            "Arreglo": true,
+            "Celdas": true,
+            "Pos": true
+          },
+          "Estructura": [
+            {
+              "Tipo": "Texto",
+              "Texto": ["TituloSeccion"],
+              "Editable": {
+                "Tipo": "Texto",
+                "Campo": "TituloSeccion",
+                "Titulo": "Editar titulo",
+                "Label": "Titulo",
+                "Placeholder": "Titulo de Repositorios"
+              },
+              "style": {
+                "fontWeight": 900,
+                "fontSize": "20px",
+                "fontFamily": "Roboto"
+              }
+            },
+            {
+              "Tipo": "IDs",
+              "style": {
+                "dsiplay": "flex",
+                "border": "0pt",
+                "borderTop": "4pt",
+                "borderColor": "#ccc",
+                "borderStyle": "solid",
+                "fontFamily": "Roboto",
+                "fontWeight": 400
+              },
+              "plantillaStyle": {
+                "display": "flex",
+                "flexDirection": "row",
+                "border": "0pt",
+                "borderBottom": "2pt",
+                "borderColor": "#ddd",
+                "borderStyle": "solid"
+              },
+              "Plantilla": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Nombre"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Url"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Descripcion"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1137,31 +1208,31 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
             "Titulo": "Cambiar Lista de Referencias",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Referencias",
-				"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true}
+                "Fuentes": {
+                  "fontFamily": true,
+                  "color": true,
+                  "fontSize": true,
+                  "fontWeight": true
+                }
               },
               "style": {
                 "fontWeight": 900,
@@ -1191,11 +1262,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Nombre",
-                    " de ",
-                    "Organizacion"
-                  ],
+                  "Texto": ["Nombre", " de ", "Organizacion"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -1204,12 +1271,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Contacto: ",
-                    "Email",
-                    ", ",
-                    "Telefono"
-                  ],
+                  "Texto": ["Contacto: ", "Email", ", ", "Telefono"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
