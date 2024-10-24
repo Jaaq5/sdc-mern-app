@@ -297,13 +297,12 @@ function manejarOrdenCapa(dir, Editando, documento, setDocumento){
 		index += 1;
 		elm.style.zIndex = Math.max(Math.min((index+1) * 5 + 1, 900), 1);
 
-		
 	}else if(dir === "down" && index > 0){
 		documento.diseno.Paginas[0].Estructura[index] = documento.diseno.Paginas[0].Estructura[index-1];
 		documento.diseno.Paginas[0].Estructura[index-1] = item;
 		index -= 1;
 		elm.style.zIndex = Math.max(Math.min((index+1) * 5 - 1, 900), 1);
-		
+
 	}
 	
 	document.getElementById("zIndex_layer").innerHTML = index
