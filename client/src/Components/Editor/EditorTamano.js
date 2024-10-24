@@ -296,6 +296,7 @@ function manejarOrdenCapa(dir, Editando, documento, setDocumento){
 		documento.diseno.Paginas[0].Estructura[index+1] = item;
 		index += 1;
 		elm.style.zIndex = Math.max(Math.min(index * 5 + 1, 900), 1);
+
 		
 	}else if(dir === "down" && index > 0){
 		documento.diseno.Paginas[0].Estructura[index] = documento.diseno.Paginas[0].Estructura[index-1];
