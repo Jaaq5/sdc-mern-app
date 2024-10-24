@@ -342,7 +342,10 @@
 								" en ",
 								"Proyecto",
 								" para ",
-								"Institucion"
+								"Institucion",
+								" (",
+								"Estado",
+								")"
 							  ],
 							"style" : {"dsiplay": "flex"}
 						}

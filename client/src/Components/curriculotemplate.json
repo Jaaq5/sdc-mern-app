@@ -812,7 +812,10 @@
                     " en ",
                     "Proyecto",
                     " para ",
-                    "Institucion"
+                    "Institucion",
+                    " (",
+                    "Estado",
+                    ")"
                   ],
                   "style": {
                     "display": "flex",

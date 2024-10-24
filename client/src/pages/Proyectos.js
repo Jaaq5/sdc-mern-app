@@ -46,6 +46,7 @@ function Proyectos({
   const [proyectos, setProyectos] = useState([]);
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
+  const [cats_estadoP, setCatsEstadoP] = useState([]);
 
   //Form
   const [bloque_id, setBloqueId] = useState(true);
@@ -55,9 +56,11 @@ function Proyectos({
   const [nombreProyecto, setProyecto] = useState("");
   const [institucion, setOrganizacion] = useState("");
   const [rol, setRol] = useState("");
+  const [estado, setEstado] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [categoria_curriculum, setCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
+  const [categoria_estadoP, setCatEstadoP] = useState("");
 
   const mapToHTML = (bloques) => {
     if (!bloques) return;
@@ -79,9 +82,11 @@ function Proyectos({
               bloque.Fecha_Inicio +
               "-" +
               bloque.Fecha_Final +
-              "Rol: " +
+              " Rol: " +
               bloque.Rol +
-              ": " +
+              " Estado: " +
+              bloque.Estado+
+              " " +
               bloque.Descripcion.substring(0, 30)
             }
           />
@@ -132,6 +137,13 @@ function Proyectos({
         })
         .catch((e) => {});
 
+      category_manager
+        .ObtenerCategoriasEstadoP()
+        .then((response) => {
+          mapDBListToHTML(setCatsEstadoP, response);
+        })
+        .catch((e) => {});
+
       //Mapear lista de datos a HTML
       mapToHTML(user_data.bloques.Proyectos);
 
@@ -144,6 +156,7 @@ function Proyectos({
     navigate,
     setCatCurr,
     setCatPuesto,
+    setCatEstadoP,
     loading,
   ]); //Espera a que estos existan?
 
@@ -165,6 +178,7 @@ function Proyectos({
     setDescripcion("");
     setCurriculum("");
     setCatPuesto("");
+    setCatEstadoP("");
   };
 
   const editarDatos = (plan_id) => {
@@ -183,6 +197,7 @@ function Proyectos({
       bloque.ID_Categoria_Curriculum ? bloque.ID_Categoria_Curriculum : "",
     );
     setCatPuesto(bloque.ID_Categoria_Puesto ? bloque.ID_Categoria_Puesto : "");
+    setCatEstadoP(bloque.ID_Categoria_EstadoP ? bloque.ID_Categoria_EstadoP : "");
   };
 
   //To-Do -> Agregar categorias y diferencias entre crear y editar
@@ -201,9 +216,11 @@ function Proyectos({
           Proyecto: nombreProyecto,
           Institucion: institucion,
           Rol: rol,
+          Estado: category_manager.IdANombreEstadoP(categoria_estadoP),
           Descripcion: descripcion,
           ID_Categoria_Curriculum: categoria_curriculum,
           ID_Categoria_Puesto: categoria_puesto,
+          ID_Categoria_EstadoP: categoria_estadoP,
         },
       );
     } else {
@@ -218,9 +235,11 @@ function Proyectos({
           Proyecto: nombreProyecto,
           Institucion: institucion,
           Rol: rol,
+          Estado: category_manager.IdANombreEstadoP(categoria_estadoP),
           Descripcion: descripcion,
           ID_Categoria_Curriculum: categoria_curriculum,
           ID_Categoria_Puesto: categoria_puesto,
+          ID_Categoria_EstadoP: categoria_estadoP,
         },
       );
 
@@ -422,6 +441,19 @@ function Proyectos({
                     }
                   />
 
+                  <FormControl style={{ width: "80%", marginTop: "20px" }}>
+                    <InputLabel id="id-estadoP-select-label">Estado</InputLabel>
+                    <Select
+                      labelId="id-estadoP-select-label"
+                      id="id-estadoP-simple-select"
+                      defaultValue={""}
+                      value={categoria_estadoP}
+                      label="Estado"
+                      onChange={(e) => setCatEstadoP(e.target.value)}
+                    >
+                      {cats_estadoP}
+                    </Select>
+                  </FormControl>
                   <FormControl style={{ width: "81%", marginTop: "20px" }}>
                     <InputLabel id="id-curriculum-select-label">
                       Tipo de CV
