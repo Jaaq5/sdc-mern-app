@@ -5,14 +5,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Logout from "./Logout";
 import { theme } from "../theme";
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link } from "react-router-dom";
 
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Slide from "@mui/material/Slide";
 import { navbutton, burger_button, disabledNavButton } from "../style";
 
 export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
-  
   const color_gray = { color: "#ccf" };
   const [path, setPath] = useState("/");
   const pathToDisplay = {
@@ -23,6 +22,10 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     "/proyectos": "Proyectos",
     "/publicaciones": "Publicaciones",
     "/habilidades": "Habilidades y Herramientas",
+    "/premios": "Premios y Reconocimientos",
+    "/repositorios": "Repositorios",
+    "/conferencias": "Conferencias",
+    "/lenguajes": "Lenguajes",
     "/referencias": "Referencias",
     "/curriculo-menu": "Currículos",
     "/editor-curriculo": "Currículos",
@@ -74,196 +77,278 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             )}
           </Typography>
           {!isLoggedIn ? (
-                <>
-                  <Button
-                    variant="contained"
-                    style={navbutton}
-                    color="error"
-                    component={Link}
-                    to="/login"
-                  >
-                    Login
-                  </Button>
+            <>
+              <Button
+                variant="contained"
+                style={navbutton}
+                color="error"
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
 
+              <Button
+                variant="contained"
+                style={navbutton}
+                color="success"
+                component={Link}
+                to="/signup"
+              >
+                Signup
+              </Button>
+            </>
+          ) : (
+            //User Ribbon
+            <></>
+          )}
+        </Toolbar>
+        {isLoggedIn ? (
+          <>
+            <Toolbar
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                paddingLeft: "0px",
+              }}
+            >
+              {/* Left-side container for the Burger button and Logout button */}
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {/* Burger button */}
+                <Button
+                  variant="contained"
+                  style={burger_button}
+                  onClick={(e) => setExpanded(!expanded)}
+                >
+                  {expanded ? "X" : "|||"}
+                </Button>
+
+                {/* Logout button or invisible placeholder */}
+                {expanded ? (
                   <Button
                     variant="contained"
                     style={navbutton}
-                    color="success"
-                    component={Link}
-                    to="/signup"
+                    color="warning"
+                    onClick={(e) => setIsLoggedIn(false)}
                   >
-                    Signup
+                    Logout
                   </Button>
-                </>
-              ) : (
-                //User Ribbon
-                <>
-                  
-                </>
-              )}
+                ) : (
+                  <Button
+                    variant="contained"
+                    style={{ ...navbutton, visibility: "hidden" }}
+                  >
+                    Logout
+                  </Button>
+                )}
+              </div>
+
+              {/* Right-side container for navigation buttons, aligned to the right */}
+              <div style={{ marginLeft: "auto", display: "flex" }}>
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/curriculo-menu"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/curriculo-menu"
+                  onClick={(e) => setPath("/curriculo-menu")}
+                >
+                  Currículos
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/informacionPersonal"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/informacionPersonal"
+                  onClick={(e) => setPath("/informacionPersonal")}
+                >
+                  Informacion Personal
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/educacionformal"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/educacionformal"
+                  onClick={(e) => setPath("/educacionformal")}
+                >
+                  Educacion Formal
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/educaciontecnica"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/educaciontecnica"
+                  onClick={(e) => setPath("/educaciontecnica")}
+                >
+                  Educacion Técnica
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/experiencialaboral"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/experiencialaboral"
+                  onClick={(e) => setPath("/experiencialaboral")}
+                >
+                  Experiencia Laboral
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/proyectos"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/proyectos"
+                  onClick={(e) => setPath("/proyectos")}
+                >
+                  Proyectos
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/habilidades"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/habilidades"
+                  onClick={(e) => setPath("/habilidades")}
+                >
+                  Habilidades
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/publicaciones"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/publicaciones"
+                  onClick={(e) => setPath("/publicaciones")}
+                >
+                  Publicaciones
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/lenguajes"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/lenguajes"
+                  onClick={(e) => setPath("/lenguajes")}
+                >
+                  Lenguajes
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/conferencias"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/conferencias"
+                  onClick={(e) => setPath("/conferencias")}
+                >
+                  Conferencias
+                </Button>
+
+                {/* Inicio boton para el premios y reconocimientos */}
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/premios"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/premios"
+                  onClick={(e) => setPath("/premios")}
+                >
+                  Premios
+                </Button>
+                {/* Fin boton para el premios y reconocimientos */}
+
+                {/* Inicio boton para el repositorios */}
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/repositorios"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/repositorios"
+                  onClick={(e) => setPath("/repositorios")}
+                >
+                  Repositorios
+                </Button>
+                {/* Fin boton para el repositorios */}
+
+                <Button
+                  variant="contained"
+                  style={
+                    location.pathname === "/referencias"
+                      ? disabledNavButton
+                      : navbutton
+                  }
+                  color="success"
+                  component={Link}
+                  to="/referencias"
+                  onClick={(e) => setPath("/referencias")}
+                >
+                  Referencias
+                </Button>
+              </div>
             </Toolbar>
-            {isLoggedIn ? (
-              <>
-                <Toolbar style={{ display: "flex", justifyContent: "space-between", paddingLeft: "0px" }}>
-                  {/* Left-side container for the Burger button and Logout button */}
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    {/* Burger button */}
-                    <Button
-                      variant="contained"
-                      style={burger_button}
-                      onClick={(e) => setExpanded(!expanded)}
-                    >
-                      {expanded ? "X" : "|||"}
-                    </Button>
-
-                    {/* Logout button or invisible placeholder */}
-                    {expanded ? (
-                      <Button
-                        variant="contained"
-                        style={navbutton}
-                        color="warning"
-                        onClick={(e) => setIsLoggedIn(false)}
-                      >
-                        Logout
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        style={{ ...navbutton, visibility: "hidden" }}
-                      >
-                        Logout
-                      </Button>
-                    )}
-                  </div>
-
-                  {/* Right-side container for navigation buttons, aligned to the right */}
-                  <div style={{ marginLeft: "auto", display: "flex" }}>
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/curriculo-menu" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/curriculo-menu"
-                      onClick={(e) => setPath("/curriculo-menu")}
-                    >
-                      Currículos
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/informacionPersonal" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/informacionPersonal"
-                      onClick={(e) => setPath("/informacionPersonal")}
-                    >
-                      Informacion Personal
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/educacionformal" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/educacionformal"
-                      onClick={(e) => setPath("/educacionformal")}
-                    >
-                      Educacion Formal
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/educaciontecnica" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/educaciontecnica"
-                      onClick={(e) => setPath("/educaciontecnica")}
-                    >
-                      Educacion Técnica
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/experiencialaboral" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/experiencialaboral"
-                      onClick={(e) => setPath("/experiencialaboral")}
-                    >
-                      Experiencia Laboral
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/proyectos" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/proyectos"
-                      onClick={(e) => setPath("/proyectos")}
-                    >
-                      Proyectos
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/habilidades" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/habilidades"
-                      onClick={(e) => setPath("/habilidades")}
-                    >
-                      Habilidades
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/publicaciones" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/publicaciones"
-                      onClick={(e) => setPath("/publicaciones")}
-                    >
-                      Publicaciones
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/lenguajes" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/lenguajes"
-                      onClick={(e) => setPath("/lenguajes")}
-                    >
-                      Lenguajes
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/conferencias" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/conferencias"
-                      onClick={(e) => setPath("/conferencias")}
-                    >
-                      Conferencias
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      style={location.pathname === "/referencias" ? disabledNavButton : navbutton}
-                      color="success"
-                      component={Link}
-                      to="/referencias"
-                      onClick={(e) => setPath("/referencias")}
-                    >
-                      Referencias
-                    </Button>
-                  </div>
-                </Toolbar>
-              </>
-            ) : (
-              <></>
-            )}
+          </>
+        ) : (
+          <></>
+        )}
       </AppBar>
     </HideOnScroll>
   );
