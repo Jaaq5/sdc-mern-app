@@ -46,6 +46,7 @@ function Proyectos({
   const [proyectos, setProyectos] = useState([]);
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatsPuesto] = useState([]);
+  const [cats_estadoP, setCatsEstadoP] = useState([]);
 
   //Form
   const [bloque_id, setBloqueId] = useState(true);
@@ -53,10 +54,13 @@ function Proyectos({
   const [fecha_inicio, setFechaInicio] = useState("");
   const [fecha_final, setFechaFinal] = useState("");
   const [nombreProyecto, setProyecto] = useState("");
-  const [intitucion, setOrganizacion] = useState("");
+  const [institucion, setOrganizacion] = useState("");
+  const [rol, setRol] = useState("");
+  const [estado, setEstado] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [categoria_curriculum, setCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
+  const [categoria_estadoP, setCatEstadoP] = useState("");
 
   const mapToHTML = (bloques) => {
     if (!bloques) return;
@@ -73,12 +77,16 @@ function Proyectos({
           onClick={(e) => editarDatos(plan_id)}
         >
           <ListItemText
-            primary={bloque.Proyecto + " en " + bloque.Intitucion + ""}
+            primary={bloque.Proyecto + " en " + bloque.Institucion + ""}
             secondary={
               bloque.Fecha_Inicio +
               "-" +
               bloque.Fecha_Final +
-              ": " +
+              " Rol: " +
+              bloque.Rol +
+              " Estado: " +
+              bloque.Estado+
+              " " +
               bloque.Descripcion.substring(0, 30)
             }
           />
@@ -129,6 +137,13 @@ function Proyectos({
         })
         .catch((e) => {});
 
+      category_manager
+        .ObtenerCategoriasEstadoP()
+        .then((response) => {
+          mapDBListToHTML(setCatsEstadoP, response);
+        })
+        .catch((e) => {});
+
       //Mapear lista de datos a HTML
       mapToHTML(user_data.bloques.Proyectos);
 
@@ -141,6 +156,7 @@ function Proyectos({
     navigate,
     setCatCurr,
     setCatPuesto,
+    setCatEstadoP,
     loading,
   ]); //Espera a que estos existan?
 
@@ -162,6 +178,7 @@ function Proyectos({
     setDescripcion("");
     setCurriculum("");
     setCatPuesto("");
+    setCatEstadoP("");
   };
 
   const editarDatos = (plan_id) => {
@@ -173,12 +190,14 @@ function Proyectos({
     setFechaInicio(bloque.Fecha_Inicio);
     setFechaFinal(bloque.Fecha_Final);
     setProyecto(bloque.Proyecto);
-    setOrganizacion(bloque.Intitucion);
+    setOrganizacion(bloque.Institucion);
+    setRol(bloque.Rol);
     setDescripcion(bloque.Descripcion);
     setCurriculum(
       bloque.ID_Categoria_Curriculum ? bloque.ID_Categoria_Curriculum : "",
     );
     setCatPuesto(bloque.ID_Categoria_Puesto ? bloque.ID_Categoria_Puesto : "");
+    setCatEstadoP(bloque.ID_Categoria_EstadoP ? bloque.ID_Categoria_EstadoP : "");
   };
 
   //To-Do -> Agregar categorias y diferencias entre crear y editar
@@ -195,10 +214,13 @@ function Proyectos({
           Fecha_Inicio: fecha_inicio,
           Fecha_Final: fecha_final,
           Proyecto: nombreProyecto,
-          Intitucion: intitucion,
+          Institucion: institucion,
+          Rol: rol,
+          Estado: category_manager.IdANombreEstadoP(categoria_estadoP),
           Descripcion: descripcion,
           ID_Categoria_Curriculum: categoria_curriculum,
           ID_Categoria_Puesto: categoria_puesto,
+          ID_Categoria_EstadoP: categoria_estadoP,
         },
       );
     } else {
@@ -211,10 +233,13 @@ function Proyectos({
           Fecha_Inicio: fecha_inicio,
           Fecha_Final: fecha_final,
           Proyecto: nombreProyecto,
-          Intitucion: intitucion,
+          Institucion: institucion,
+          Rol: rol,
+          Estado: category_manager.IdANombreEstadoP(categoria_estadoP),
           Descripcion: descripcion,
           ID_Categoria_Curriculum: categoria_curriculum,
           ID_Categoria_Puesto: categoria_puesto,
+          ID_Categoria_EstadoP: categoria_estadoP,
         },
       );
 
@@ -358,13 +383,13 @@ function Proyectos({
                     style={row}
                     sx={{ label: { fontWeight: "700", fontSize: "1.3rem" } }}
                     fullWidth
-                    id="intitucion"
-                    label="Intitucion"
+                    id="institucion"
+                    label="Institucion"
                     variant="outlined"
                     placeholder="Nombre de la intitución"
-                    name="intitucion"
+                    name="institucion"
                     required
-                    value={intitucion}
+                    value={institucion}
                     onChange={(e) => {
                       setOrganizacion(e.target.value);
                       e.target.setCustomValidity("");
@@ -372,6 +397,27 @@ function Proyectos({
                     onInvalid={(e) =>
                       e.target.setCustomValidity(
                         "Llenar el nombre de la Institución",
+                      )
+                    }
+                  />
+                  <TextField
+                    style={row}
+                    sx={{ label: { fontWeight: "700", fontSize: "1.3rem" } }}
+                    fullWidth
+                    id="rol"
+                    label="Rol"
+                    variant="outlined"
+                    placeholder="Rol que tuvo en el proyecto"
+                    name="rol"
+                    required
+                    value={rol}
+                    onChange={(e) => {
+                      setRol(e.target.value);
+                      e.target.setCustomValidity("");
+                    }}
+                    onInvalid={(e) =>
+                      e.target.setCustomValidity(
+                        "Llenar el rol",
                       )
                     }
                   />
@@ -395,6 +441,19 @@ function Proyectos({
                     }
                   />
 
+                  <FormControl style={{ width: "80%", marginTop: "20px" }}>
+                    <InputLabel id="id-estadoP-select-label">Estado</InputLabel>
+                    <Select
+                      labelId="id-estadoP-select-label"
+                      id="id-estadoP-simple-select"
+                      defaultValue={""}
+                      value={categoria_estadoP}
+                      label="Estado"
+                      onChange={(e) => setCatEstadoP(e.target.value)}
+                    >
+                      {cats_estadoP}
+                    </Select>
+                  </FormControl>
                   <FormControl style={{ width: "81%", marginTop: "20px" }}>
                     <InputLabel id="id-curriculum-select-label">
                       Tipo de CV

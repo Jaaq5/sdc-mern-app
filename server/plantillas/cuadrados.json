@@ -517,6 +517,7 @@
         "Proyectos": {
           "Mostrar": true,
           "TituloSeccion": "Proyectos",
+
           "style": { "textAlign": "left" },
           "Celdas": [22, 13],
           "Editable": {
@@ -557,7 +558,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": ["Proyecto", " para ", "Institucion"],
+                  "Texto": ["Rol"," en ","Proyecto"," para ","Institucion"," (","Estado",")"],
                   "style": { "dsiplay": "flex" }
                 }
               ]

@@ -685,7 +685,18 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": ["Proyecto", " para ", "Institucion"],
+
+                  "Texto": [
+                    "Rol",
+                    " en ",
+                    "Proyecto",
+                    " para ",
+                    "Institucion",
+                    " (",
+                    "Estado",
+                    ")"
+                  ],
+
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
