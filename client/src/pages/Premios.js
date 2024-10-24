@@ -37,6 +37,10 @@ function Premios({ user_data, setUserData, manager_bloques }) {
   const [institucion, setInstitucion] = useState("");
   const [fechaPremio, setFechaPremio] = useState("");
 
+  // Datos adicionales que no están en el formulario
+  const ID_Categoria_Puesto = user_data?.ID_Categoria_Puesto || "";
+  const ID_Categoria_Curriculum = user_data?.ID_Categoria_Curriculum || "";
+
   // Cargar premios y mapeo a HTML
   const mapToHTML = (bloques) => {
     if (!bloques) return;
@@ -52,8 +56,8 @@ function Premios({ user_data, setUserData, manager_bloques }) {
             onClick={() => editarDatos(premio_id)}
           >
             <ListItemText
-              primary={`Premio: ${bloque.NombrePremio}`}
-              secondary={`Institución: ${bloque.Institucion} - Fecha: ${bloque.FechaPremio}`}
+              primary={`Premio: ${bloque.Nombre}`}
+              secondary={`Institución: ${bloque.Institucion} - Fecha: ${bloque.Fecha}`}
             />
             <Button
               style={deleteButton}
@@ -103,18 +107,20 @@ function Premios({ user_data, setUserData, manager_bloques }) {
     if (!bloque) return;
 
     setBloqueId(premio_id);
-    setNombrePremio(bloque.NombrePremio);
+    setNombrePremio(bloque.Nombre);
     setInstitucion(bloque.Institucion);
-    setFechaPremio(bloque.FechaPremio);
+    setFechaPremio(bloque.Fecha);
   };
 
   const manejarDatos = (e) => {
     e.preventDefault();
 
     const datosBloque = {
-      NombrePremio: nombrePremio,
+      Nombre: nombrePremio,
       Institucion: institucion,
-      FechaPremio: fechaPremio,
+      Fecha: fechaPremio,
+      ID_Categoria_Puesto: ID_Categoria_Puesto,
+      ID_Categoria_Curriculum: ID_Categoria_Curriculum,
     };
 
     if (bloque_id !== true) {
