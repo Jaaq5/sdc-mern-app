@@ -739,7 +739,16 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": ["Proyecto", " para ", "Institucion"],
+                  "Texto": [
+                    "Rol",
+                    " en ",
+                    "Proyecto",
+                    " para ",
+                    "Institucion",
+                    " (",
+                    "Estado",
+                    ")"
+                  ],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -1079,6 +1088,106 @@
                 {
                   "Tipo": "Texto",
                   "Texto": ["Descripcion"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "Conferencias": {
+          "Mostrar": true,
+          "TituloSeccion": "Conferencias",
+          "style": {
+            "textAlign": "left",
+            "position": "relative",
+            "width": "595px",
+            "height": "182.21666666666667px",
+            "overflow": "hidden"
+          },
+          "Celdas": [
+            78,
+            25
+          ],
+          "Editable": {
+            "Titulo": "Cambiar Lista de Conferencias",
+            "Campo": "IDs",
+            "Tipo": "IDs",
+            "Arreglo": true,
+            "Celdas": true,
+			"Pos": true
+          },
+          "Estructura": [
+            {
+              "Tipo": "Texto",
+              "Texto": [
+                "TituloSeccion"
+              ],
+              "Editable": {
+                "Tipo": "Texto",
+				"Campo": "TituloSeccion",
+                "Titulo": "Editar titulo",
+                "Label": "Titulo",
+                "Placeholder": "Titulo de Conferencias"
+              },
+              "style": {
+                "fontWeight": 900,
+                "fontSize": "20px",
+                "fontFamily": "Roboto"
+              }
+            },
+            {
+              "Tipo": "IDs",
+              "style": {
+                "dsiplay": "flex",
+                "border": "0pt",
+                "borderTop": "4pt",
+                "borderColor": "#ccc",
+                "borderStyle": "solid",
+                "fontFamily": "Roboto",
+                "fontWeight": 400
+              },
+              "plantillaStyle": {
+                "display": "flex",
+                "flexDirection": "row",
+                "border": "0pt",
+                "borderBottom": "2pt",
+                "borderColor": "#ddd",
+                "borderStyle": "solid"
+              },
+              "Plantilla": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": [
+                    "Fecha_Conferencia",
+                    " - ",
+                    "Titulo"
+                  ],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": [
+                    "Lugar"
+                  ],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": [
+                    "Descripcion"
+                  ],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",

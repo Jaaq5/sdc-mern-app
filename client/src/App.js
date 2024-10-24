@@ -125,6 +125,25 @@ function App() {
       return categorias.result;
     },
 
+    ObtenerCategoriasEstadoP: async () => {
+      if (listas_categorias.categorias_estadoP)
+        return listas_categorias.categorias_estadoP;
+      var categorias = [];
+      axios
+        .get(apiUrl + "/api/cat-state/obtener-categorias-estadoP")
+        .then((response) => {
+          if (response.data.categorias_estadoP) {
+            categorias = response.data.categorias_estadoP;
+            listas_categorias.categorias_estadoP = categorias;
+            setListas(listas_categorias);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias.result;
+    },
+
     ObtenerCategoriasHabilidad: async () => {
       if (listas_categorias.categorias_habilidad)
         return listas_categorias.categorias_habilidad;
@@ -169,6 +188,12 @@ function App() {
     },
     IdANombrePuesto: (cat_id) => {
       const cat = listas_categorias.categorias_puesto.find(
+        (cat) => cat._id === cat_id,
+      );
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
+    IdANombreEstadoP: (cat_id) => {
+      const cat = listas_categorias.categorias_estadoP.find(
         (cat) => cat._id === cat_id,
       );
       return cat && cat.Nombre ? cat.Nombre : "-";
@@ -328,6 +353,7 @@ function App() {
     //Load DB lists into cache
     category_manager.ObtenerCategoriasCurriculum();
     category_manager.ObtenerCategoriasPuesto();
+    category_manager.ObtenerCategoriasEstadoP();
     category_manager.ObtenerCategoriasHabilidad();
     category_manager.ObtenerIdiomas();
     curriculum_manager.ObtenerPlantillas();

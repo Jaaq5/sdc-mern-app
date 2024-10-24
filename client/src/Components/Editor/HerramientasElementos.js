@@ -35,6 +35,15 @@ import BorderBottomIcon from '@mui/icons-material/BorderBottom';
 import BorderLeftIcon from '@mui/icons-material/BorderLeft';
 import BorderRightIcon from '@mui/icons-material/BorderRight';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
+import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
+import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter';
+import SubjectIcon from '@mui/icons-material/Subject';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
@@ -168,6 +177,23 @@ function manejarBorde(estado, data){
 	return estado;
 }
 
+function manejarHAlaign(estado, dir){
+	estado.justifyContent = dir;
+	estado.textAlign = dir;
+	return estado;
+}
+
+function manejarVAlaign(estado, dir){
+	estado.alignItems = dir;
+	return estado;
+}
+
+function manejarJustify(estado, opt){
+	estado.textAlign = opt === "none"? "left" : "justify";
+	estado.textJustify = opt;
+	return estado;
+}
+
 const expandingOptionsIds = {};
 function manejarExpandirOpciones(id, width, height){
 	expandingOptionsIds[id] = true;
@@ -191,10 +217,12 @@ function actualizarDocumento(documento, setDocumento, path, estado, Editando, se
 	setDocumento(documento);
 	const elm = document.getElementById(Editando.id);
 	estado.transition = "all 0.1s";
-	
-	estado.textAlign = "center";
-	estado.verticalAlign = "middle";
 	estado.boxSizing = "border-box";
+	
+	if(Editando.Tipo === "Texto"){
+		const area = document.getElementById("Editor_Texto_Input");
+		Object.entries(estado).forEach(([k, v]) => area.style[k] = v);
+	}
 	
 	Object.entries(estado).forEach(([k, v]) => elm.style[k] = v);
 }
@@ -468,7 +496,7 @@ function HerramientasElementos({opciones, documento, setDocumento, Editando, set
 			</Button>
 		</div>):(<></>)}
 		{fontsData.fonts[fontIndex].importAvailability.includes("Italic") && Editando.Fuentes["fontStyle"]? (<div style={ToolElmStyle}>
-			<Button id={"font_edit_italic_button"} style={estadoOpciones.fontStyle !== 'Italic'? ToolButtonStyle : ToolButtonActiveStyle} 
+			<Button id={"font_edit_italic_button"} style={estadoOpciones.fontStyle !== 'italic'? ToolButtonStyle : ToolButtonActiveStyle} 
 					onClick={(e) => {
 						const res = manejarFontStyle(estadoOpciones);
 						actualizarBoton("font_edit_italic_button", res, "fontStyle", "normal"); 
@@ -525,6 +553,116 @@ function HerramientasElementos({opciones, documento, setDocumento, Editando, set
 				</NativeSelect>
 				
 			</FormControl>
+		</div>):(<></>)}
+		{Editando.Fuentes["justifyContent"] || Editando.Fuentes["alignItems"] || Editando.Fuentes["textJustify"]? (<div style={ToolElmStyle}>
+			<Button id={"text_align_options_button"} style={ToolButtonStyle} 
+					onClick={(e) => {
+						manejarExpandirOpciones("align_options", "350px", "350px");
+						}}>
+				<EditNoteIcon style={ToolIconStyle} />
+			</Button>
+			<div id={"align_options"} style={{overflow: "hidden", display: "inline", position: "absolute", top: "35px", maxWidth: "0px", maxHeight: "0px", transition: "all 0.2s"}}>
+				{/*Horizontal align*/}
+				{Editando.Fuentes["justifyContent"]?
+					(<div style={{display: "flex", flexDirection: "row", height: ToolButtonStyle.maxWidth}}>
+						<div style={ToolElmStyle}>
+							<Button id={"left_align_button"} style={ToolButtonStyle} 
+									onClick={(e) => {
+										const res = manejarHAlaign(estadoOpciones, "left");
+										setEstadoOpciones(res); 
+										upd();
+										}}>
+								<FormatAlignLeftIcon style={ToolIconStyle} />
+							</Button>
+						</div>
+						<div style={ToolElmStyle}>
+							<Button id={"center_align_button"} style={ToolButtonStyle} 
+									onClick={(e) => {
+										const res = manejarHAlaign(estadoOpciones, "center");
+										setEstadoOpciones(res); 
+										upd();
+										}}>
+								<FormatAlignCenterIcon style={ToolIconStyle} />
+							</Button>
+						</div>
+						<div style={ToolElmStyle}>
+							<Button id={"right_align_button"} style={ToolButtonStyle} 
+									onClick={(e) => {
+										const res = manejarHAlaign(estadoOpciones, "right");
+										setEstadoOpciones(res); 
+										upd();
+										}}>
+								<FormatAlignRightIcon style={ToolIconStyle} />
+							</Button>
+						</div>
+					</div>) 
+					: 
+					(<></>)
+				}
+				{/*Vertical align*/}
+				{Editando.Fuentes["alignItems"]? 
+				(<div style={{display: "flex", flexDirection: "row", height: ToolButtonStyle.maxWidth}}>
+					<div style={ToolElmStyle}>
+						<Button id={"start_valign_button"} style={ToolButtonStyle} 
+								onClick={(e) => {
+									const res = manejarVAlaign(estadoOpciones, "start");
+									setEstadoOpciones(res); 
+									upd();
+									}}>
+							<VerticalAlignTopIcon style={ToolIconStyle} />
+						</Button>
+					</div>
+					<div style={ToolElmStyle}>
+						<Button id={"center_valign_button"} style={ToolButtonStyle} 
+								onClick={(e) => {
+									const res = manejarVAlaign(estadoOpciones, "center");
+									setEstadoOpciones(res); 
+									upd();
+									}}>
+							<VerticalAlignCenterIcon style={ToolIconStyle} />
+						</Button>
+					</div>
+					<div style={ToolElmStyle}>
+						<Button id={"end_valign_button"} style={ToolButtonStyle} 
+								onClick={(e) => {
+									const res = manejarVAlaign(estadoOpciones, "end");
+									setEstadoOpciones(res); 
+									upd();
+									}}>
+							<VerticalAlignBottomIcon style={ToolIconStyle} />
+						</Button>
+					</div>
+				</div>) 
+				: 
+				(<></>)
+				}
+				{Editando.Fuentes["textJustify"]? 
+				(<div style={{display: "flex", flexDirection: "row", height: ToolButtonStyle.maxWidth}}>
+					<div style={ToolElmStyle}>
+						<Button id={"justify_button"} style={ToolButtonStyle} 
+								onClick={(e) => {
+									const res = manejarJustify(estadoOpciones, "inter-word");
+									setEstadoOpciones(res); 
+									upd();
+									}}>
+							<FormatAlignJustifyIcon style={ToolIconStyle} />
+						</Button>
+					</div>
+					<div style={ToolElmStyle}>
+						<Button id={"unjustify_button"} style={ToolButtonStyle} 
+								onClick={(e) => {
+									const res = manejarJustify(estadoOpciones, "none");
+									setEstadoOpciones(res); 
+									upd();
+									}}>
+							<SubjectIcon style={ToolIconStyle} />
+						</Button>
+					</div>
+				</div>) 
+				: 
+				(<></>)
+				}
+			</div>
 		</div>):(<></>)}
 	</div>
 	</>);

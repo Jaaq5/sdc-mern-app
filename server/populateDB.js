@@ -1,6 +1,7 @@
 const Categorias_Curriculum = require("./models/Categorias_Curriculum_Model");
 const Categorias_Habilidad = require("./models/Categorias_Habilidad_Model");
 const Categorias_Puesto = require("./models/Categorias_Puesto_Model");
+const Categorias_EstadoP = require("./models/Categorias_EstadoP_Model");
 const Idiomas = require("./models/Idiomas_Model") ;
 const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
@@ -54,6 +55,13 @@ const populateData = async () => {
     { name: "Cantonés" },
     { name: "Árabe" },
   ];
+
+  const catEstadoPData = [
+    { name: "Finalizado" },
+    { name: "En progreso" },
+    { name: "Hiatus" },
+    { name: "Esperando confirmación"},
+  ];
   
   const Plantillas = [
 	//{ name : plantilla_simple.nombre, documento: plantilla_simple.Documento, categoria_curriculo: plantilla_simple.ID_Categoria_Curriculum, categoria_puesto: plantilla_simple.ID_Categoria_Puesto },
@@ -95,6 +103,19 @@ const populateData = async () => {
       );
     }
     console.log("Collection populated with Categorias_Puesto values");
+  } catch (err) {
+    console.log("Error populating collection:", err);
+  }
+
+  try {
+    for (const item of catEstadoPData) {
+      await Categorias_EstadoP.updateOne(
+        { Nombre: item.name },
+        { $set: item },
+        { upsert: true },
+      );
+    }
+    console.log("Collection populated with Categorias_EstadoP values");
   } catch (err) {
     console.log("Error populating collection:", err);
   }
