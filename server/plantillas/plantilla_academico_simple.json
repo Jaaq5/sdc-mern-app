@@ -796,6 +796,8 @@
                 {
                   "Tipo": "Texto",
                   "Texto": [
+                    "Rol",
+                    " en ",
                     "Proyecto",
                     " para ",
                     "Institucion"

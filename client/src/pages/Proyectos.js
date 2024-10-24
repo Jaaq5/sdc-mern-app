@@ -53,7 +53,8 @@ function Proyectos({
   const [fecha_inicio, setFechaInicio] = useState("");
   const [fecha_final, setFechaFinal] = useState("");
   const [nombreProyecto, setProyecto] = useState("");
-  const [intitucion, setOrganizacion] = useState("");
+  const [institucion, setOrganizacion] = useState("");
+  const [rol, setRol] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [categoria_curriculum, setCurriculum] = useState("");
   const [categoria_puesto, setCatPuesto] = useState("");
@@ -73,11 +74,13 @@ function Proyectos({
           onClick={(e) => editarDatos(plan_id)}
         >
           <ListItemText
-            primary={bloque.Proyecto + " en " + bloque.Intitucion + ""}
+            primary={bloque.Proyecto + " en " + bloque.Institucion + ""}
             secondary={
               bloque.Fecha_Inicio +
               "-" +
               bloque.Fecha_Final +
+              "Rol: " +
+              bloque.Rol +
               ": " +
               bloque.Descripcion.substring(0, 30)
             }
@@ -173,7 +176,8 @@ function Proyectos({
     setFechaInicio(bloque.Fecha_Inicio);
     setFechaFinal(bloque.Fecha_Final);
     setProyecto(bloque.Proyecto);
-    setOrganizacion(bloque.Intitucion);
+    setOrganizacion(bloque.Institucion);
+    setRol(bloque.Rol);
     setDescripcion(bloque.Descripcion);
     setCurriculum(
       bloque.ID_Categoria_Curriculum ? bloque.ID_Categoria_Curriculum : "",
@@ -195,7 +199,8 @@ function Proyectos({
           Fecha_Inicio: fecha_inicio,
           Fecha_Final: fecha_final,
           Proyecto: nombreProyecto,
-          Intitucion: intitucion,
+          Institucion: institucion,
+          Rol: rol,
           Descripcion: descripcion,
           ID_Categoria_Curriculum: categoria_curriculum,
           ID_Categoria_Puesto: categoria_puesto,
@@ -211,7 +216,8 @@ function Proyectos({
           Fecha_Inicio: fecha_inicio,
           Fecha_Final: fecha_final,
           Proyecto: nombreProyecto,
-          Intitucion: intitucion,
+          Institucion: institucion,
+          Rol: rol,
           Descripcion: descripcion,
           ID_Categoria_Curriculum: categoria_curriculum,
           ID_Categoria_Puesto: categoria_puesto,
@@ -358,13 +364,13 @@ function Proyectos({
                     style={row}
                     sx={{ label: { fontWeight: "700", fontSize: "1.3rem" } }}
                     fullWidth
-                    id="intitucion"
-                    label="Intitucion"
+                    id="institucion"
+                    label="Institucion"
                     variant="outlined"
                     placeholder="Nombre de la intitución"
-                    name="intitucion"
+                    name="institucion"
                     required
-                    value={intitucion}
+                    value={institucion}
                     onChange={(e) => {
                       setOrganizacion(e.target.value);
                       e.target.setCustomValidity("");
@@ -372,6 +378,27 @@ function Proyectos({
                     onInvalid={(e) =>
                       e.target.setCustomValidity(
                         "Llenar el nombre de la Institución",
+                      )
+                    }
+                  />
+                  <TextField
+                    style={row}
+                    sx={{ label: { fontWeight: "700", fontSize: "1.3rem" } }}
+                    fullWidth
+                    id="rol"
+                    label="Rol"
+                    variant="outlined"
+                    placeholder="Rol que tuvo en el proyecto"
+                    name="rol"
+                    required
+                    value={rol}
+                    onChange={(e) => {
+                      setRol(e.target.value);
+                      e.target.setCustomValidity("");
+                    }}
+                    onInvalid={(e) =>
+                      e.target.setCustomValidity(
+                        "Llenar el rol",
                       )
                     }
                   />
