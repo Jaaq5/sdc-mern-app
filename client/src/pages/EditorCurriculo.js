@@ -841,7 +841,7 @@ function EditorCurriculo({
 		}
 		Object.entries(documento.diseno.Secciones).forEach(([nombreseccion, seccion]) => {
 			seccion.style = seccion.style? JSON.parse(JSON.stringify(seccion.style)) : {};
-			seccion.style.zIndex = documento.diseno.Paginas[0].Estructura.indexOf(nombreseccion) * 10+10;
+			seccion.style.zIndex = documento.diseno.Paginas[0].Estructura.indexOf(nombreseccion) * 5+5;
 			const p = posicionEnOverlay("Seccion_"+nombreseccion);
 			if(!seccion.Pos && p[0] !== -1){
 				seccion.Pos = [(p[0]-p[2]+p[3])/celdasPagina[0], (p[1]-p[4]-p[5])/celdasPagina[1]];
