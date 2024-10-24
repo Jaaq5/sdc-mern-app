@@ -9,7 +9,11 @@
 			"position": "absolute",
 			"textAlign": "left",
 			"overflow": "hidden",
-			"textWrap" : "wrap"
+			"textWrap" : "wrap",
+			"flexGrow" : 1, 
+			"display": "flex", 
+			"alignItems": "",
+			"justifyContent" : "center"
 			
 		},
 		"Celdas": [40,30],
@@ -18,35 +22,31 @@
 			"Titulo": "Modifcar caja de texto",
 			"Celdas": true,
 			"Pos": true,
-			"Fuentes" : {"backgroundColor": true, "border" : true},
+			"Fuentes" : {"backgroundColor": true, "border" : true, "alignItems" : false, "justifyContent" : false},
 			"Borrar" : true
 		},
 		"Estructura": [
 			{
-				"Tipo" : "Estructura",
-				"style" : {"flexGrow" : 1, "width" : "100%", "height": "100%"},
-				"Estructura" : [
-					{
-					  "Tipo": "Texto",
-					  "Texto": [
-						"TextoInterno"
-					  ],
-					  "Editable": {
-						"Tipo": "Texto",
-						"Titulo": "Editar Texto",
-						"Campo" : "TextoInterno",
-						"Label": "",
-						"Placeholder": "",
-						"multiline" : true,
-						"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true}
-					  },
-					  "style": {
-						"fontWeight": 400,
-						"fontSize": "12px",
-						"fontFamily": "Arial"
-					  }
-					}
-				]
+			  "Tipo": "Texto",
+			  "Texto": [
+				"TextoInterno"
+			  ],
+			  "Editable": {
+				"Tipo": "Texto",
+				"Titulo": "Editar Texto",
+				"Campo" : "TextoInterno",
+				"Label": "",
+				"Placeholder": "",
+				"multiline" : true,
+				"Fuentes" : {"fontFamily":true, "color":true, "fontSize":true, "fontWeight":true, "fontStyle" : true, "textDecoration" : true, "textJustify": true, "justifyContent" : true}
+			  },
+			  "style": {
+				"fontWeight": 400,
+				"fontSize": "12px",
+				"fontFamily": "Arial",
+				"textAlign" : "justify",
+				"textJustify" : "inter-word"
+			  }
 			}
 		]
 	}

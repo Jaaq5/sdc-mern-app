@@ -10,7 +10,7 @@ import PanelSeccion from "../Components/Editor/PanelSeccion";
 import {mapListaToHTML, SeccionOrderEditor} from "../Components/Editor/ListaOrden";
 import {TextoEditor} from "../Components/Editor/TextoEditor";
 import {SelectorID} from "../Components/Editor/SelectorID";
-import {EditorTamano, tamanoObjeto, celdasAPx, celdasPagina, resolucionCeldas, GridCSS} from "../Components/Editor/EditorTamano";
+import {EditorTamano, celdasAPx, celdasPagina, resolucionCeldas, GridCSS} from "../Components/Editor/EditorTamano";
 import Autosave from "../Components/Editor/Autosave";
 import HerramientasElementos from "../Components/Editor/HerramientasElementos";
 import CajaTextoCreador from "../Components/Editor/CajaTextoCreador";
@@ -85,10 +85,10 @@ function EditorCurriculo({
     backgroundColor: "#fff0",
     border: "0px",
     borderRadius: "5px",
-	width: "10%",
-	maxHeight: "2rem",
+	width: "100%",
+	maxHeight: "100%",
 	minWidth: "2rem",
-	minHeight: "1rem",
+	minHeight: "100%",
     cursor: "pointer",
     color: "#000",
 	margin: "0px",
@@ -96,7 +96,7 @@ function EditorCurriculo({
 	display: "inline",
 	fontSize: "inherit",
 	position: "absolute",
-	right: "0%",
+	left: "0%",
 	top: "2px"
   };
   const seccionEditButton = {
@@ -127,7 +127,8 @@ function EditorCurriculo({
 	  width: "20px", 
 	  height: "20px",
 	  maxHeight: "1rem",
-	  pointerEvents: "auto"
+	  pointerEvents: "auto",
+	  color: "#000"
   };
   const pdfCaja = {
 	  backgroundColor: "#303030",
@@ -258,7 +259,7 @@ function EditorCurriculo({
 			texto += user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]]? estructura.Texto[index+1]+user_data.bloques[nombreSeccion][id][estructura.Texto[index+2]] : "";
 			skipNext = 2;
 		}else if(seccion[campo] || seccion[campo] === ""){ //Titulo y otros de plantilla
-			texto += seccion[campo] === ""? estructura.Editable.Placeholder : seccion[campo];
+			texto += seccion[campo] === ""? (estructura.Editable && estructura.Editable.Placeholder || "") : seccion[campo];
 		}else if(id && (user_data.bloques[nombreSeccion][id][campo] || user_data.bloques[nombreSeccion][id][campo] === "")){ //Bloques de datos
 			if(nombreSeccion === "Idiomas" && campo === "Id")
 				texto += getNameById(user_data.bloques[nombreSeccion][id][campo])
@@ -280,7 +281,8 @@ function EditorCurriculo({
   
   const ElementoTextoEditableHTML = ({user_data, documento, nombreSeccion, seccion, estructura, id, index, path}) => {
 	  const newPath = extenderPath(path, [estructura.Editable.Campo]);
-	  return (Editando? 
+	  return (<>
+	  {Editando? 
 		(<></>)
 		:
 		(<Button
@@ -299,7 +301,6 @@ function EditorCurriculo({
 					placeholder: estructura.Editable.Placeholder,
 					path : newPath,
 					id: "Texto_"+nombreSeccion+"_"+index+path,
-					
 					Fuentes : estructura.Editable.Fuentes,
 					Borrar: estructura.Editable.Borrar,
 					multiline: estructura.Editable.multiline,
@@ -307,7 +308,8 @@ function EditorCurriculo({
 			}}
 			>
 			<BorderColorIcon style={editButtonIcon} />
-		</Button>)
+		</Button>)}
+		</>
 	  );
   };
   
@@ -370,7 +372,7 @@ function EditorCurriculo({
 	  estructura.style.position = "relative";
 	  return (<>
 	  <div id={nid} style={estructura.style} key={nombreSeccion+id+path} 
-	  onMouseEnter={(e) => {document.getElementById(nid).style.borderRadius = "3px"; document.getElementById(nid).style.boxShadow = "inset 0 0 0 2px purple";}}
+	  onMouseEnter={(e) => {document.getElementById(nid).style.boxShadow = "inset 0 0 0 2px purple";}}
 	  onMouseLeave={(e) => {document.getElementById(nid).style.boxShadow = "inset 0 0 0 0px purple"}}
 	  
 	  >
@@ -411,8 +413,8 @@ function EditorCurriculo({
 	  imgStyle.left = 0;
 	  const nid = "Imagen_"+nombreSeccion+"_"+index;
 	  return (<div id={"Container_"+nid} style={estructura.style}
-			onMouseEnter={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Edit_Button_Img_"+path).style.borderRadius = "3px"; }}
-			onMouseLeave={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 0px purple"}}
+			onMouseEnter={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 2px purple"; }}
+			onMouseLeave={(e) => {document.getElementById("Edit_Button_Img_"+path).style.boxShadow = "inset 0 0 0 0px purple"; }}
 		>
 		<img id={nid} style={imgStyle} key={nombreSeccion+id+index} src={`data:image/png;base64,${user_data.userImage}`} />
 		{estructura.Editable? (
@@ -539,8 +541,8 @@ function EditorCurriculo({
 	  }
 	  const sec = (
 				<div id={"Seccion_" + seccion} style={documento.diseno.Secciones[seccion].style} key={seccion} 
-					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple"; document.getElementById("Seccion_" + seccion).style.borderRadius = "3px"; }}
-					onMouseLeave={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"}}
+					onMouseEnter={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 2px purple";}}
+					onMouseLeave={(e) => {document.getElementById("Seccion_" + seccion).style.boxShadow = "inset 0 0 0 0px purple"; }}
 					>
 					{documento.diseno.Secciones[seccion].Editable? (
 						<Button  
@@ -827,10 +829,8 @@ function EditorCurriculo({
 		});
 		documentoEstilo.pointerEvents = "auto"
 		documento.diseno.style = documentoEstilo;
-		
-		//Registro de fuentes automatica
+
 		//Hacer estilos un objeto editable
-		const fonts = {};
 		const cont = document.getElementById("contenedor_documentos")
 		const prev = [0,0];
 		if(cont){
@@ -1247,7 +1247,7 @@ function EditorCurriculo({
 					tabIndex={0}
 				  >
 				    
-					<div id="contenedor_documento" style={{position: "relative", width: "50%", height: "150%", pointerEvents: "none", top: (-minMaxDoc[1])+"px", left: (-minMaxDoc[0])+"px"}}>
+					<div id="contenedor_documento" style={{position: "relative", width: "50%", height: "150%", pointerEvents: "none", top: (-minMaxDoc[1]+60)+"px", left: (-minMaxDoc[0])+"px"}}>
 					  <MyHTMLDocument />
 					</div>
 				  </div>
