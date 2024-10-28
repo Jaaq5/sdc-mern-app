@@ -10,7 +10,9 @@ const Secrets_Model = mongoose.Schema({
     type: Buffer,
     required: true,
   },
-
+  QueryToken: {
+    type: String,
+  },
 
   ID_Usuario: {
     type: mongoose.ObjectId,

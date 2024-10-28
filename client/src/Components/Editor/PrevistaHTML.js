@@ -358,6 +358,9 @@ const obtenerTextoEstructura = (
   index,
 ) => {
   let texto = "";
+  if(!estructura)
+	  return texto;
+  
   estructura.Texto.forEach((campo) => {
     if (seccion[campo] || seccion[campo] === "") {
       //Titulo y otros de plantilla
@@ -367,6 +370,8 @@ const obtenerTextoEstructura = (
           : seccion[campo];
     } else if (
       id &&
+	  user_data.bloques &&
+	  user_data.bloques[nombreSeccion] &&
       user_data.bloques[nombreSeccion][id] &&
       user_data.bloques[nombreSeccion][id][campo]
     ) {

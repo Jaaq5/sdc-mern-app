@@ -73,6 +73,7 @@ function App() {
         .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
           usuario_id: user_data.usuario_id,
           bloques: user_data.bloques,
+		  token: user_data.token
         })
         .then((response) => {
           if (!response.data.success) {
@@ -215,6 +216,7 @@ function App() {
           documento: JSON.stringify(plantilla.Documento),
           categoria_curriculum_id: plantilla.ID_Categoria_Curriculum,
           categoria_puesto_id: plantilla.ID_Categoria_Puesto,
+		  token: user_data.token
         })
         .then((response) => {
           if (response.data.success) {
@@ -247,6 +249,7 @@ function App() {
           documento: JSON.stringify(documento),
           categoria_curriculum_id: cat_curr_id,
           categoria_puesto_id: cat_puesto_id,
+		  token: user_data.token
         }) /*.then((response) => {
           //Revisar respuesta si es necesario
           if (response.data.success && response.data.curriculum_id) {
@@ -266,7 +269,9 @@ function App() {
             "/api/users/eliminar-usuario-curr/" +
             user_data.usuario_id +
             "&" +
-            curriculo_id,
+            curriculo_id+
+			"&" + 
+			user_data.token,
           {
             params: {
               usuario_id: user_data.usuario_id,
@@ -355,7 +360,7 @@ function App() {
 
   useEffect(() => {
     
-	if(isLoggedIn){
+	//if(isLoggedIn){
 		//Load DB lists into cache
 		category_manager.ObtenerCategoriasCurriculum();
 		category_manager.ObtenerCategoriasPuesto();
@@ -363,7 +368,7 @@ function App() {
 		category_manager.ObtenerCategoriasHabilidad();
 		category_manager.ObtenerIdiomas();
 		curriculum_manager.ObtenerPlantillas();
-	}
+	//}
   }, [isLoggedIn]);
 
   return (

@@ -48,7 +48,20 @@ function rehasher(encryptedData, text) {
 	const authTag = cipher.getAuthTag();
 
 	// The encrypted data
-	return {text: `${encrypted}:${authTag}`};
+	return {text: `${encrypted}:${authTag}`, noAuth: `${encrypted}`};
+}
+
+async function TokenChecker(token, uid, res){
+	const secret = await Secrets.findOne({ID_Usuario: uid});
+	if (secret.QueryToken !== token || !secret.QueryToken){
+		return {
+			success: false, 
+			res: res
+			.status(403)
+			.json({ success: false, error: "Sesión expirada o inválida" })
+		}
+	}
+	return {success: true};
 }
 
 /*function unhasher(encryptedText) {
@@ -171,15 +184,19 @@ const Crear_Usuario = async (req, res) => {
 
 // Controlador para subir la imagen de usuario
 const Subir_Imagen_Usuario = async (req, res) => {
-  const { usuario_id } = req.body;
+  const { usuario_id, token } = req.body;
 
   try {
-    const user = await Usuarios.findById(new ObjectId(usuario_id));
-    if (!user) {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
       return res
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
     if (!req.file) {
       return res.status(400).json({
@@ -189,14 +206,14 @@ const Subir_Imagen_Usuario = async (req, res) => {
     }
 
     // Guarda la imagen en el campo 'userImage' del modelo como Buffer
-    user.userImage = req.file.buffer;
+    usuario.userImage = req.file.buffer;
 
-    await user.save();
+    await usuario.save();
 
     return res.status(200).json({
       success: true,
       msg: "Imagen de usuario actualizada exitosamente",
-      usuario_id: user._id,
+      usuario_id: usuario._id,
     });
   } catch (error) {
     console.log(error);
@@ -208,15 +225,19 @@ const Subir_Imagen_Usuario = async (req, res) => {
 
 // Controlador para actualizar la imagen de usuario
 const Actualizar_Imagen_Usuario = async (req, res) => {
-  const { usuario_id } = req.params;
+  const { usuario_id, token } = req.params;
 
   try {
-    const user = await Usuarios.findById(new ObjectId(usuario_id));
-    if (!user) {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
       return res
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
     if (!req.file) {
       return res.status(400).json({
@@ -226,14 +247,14 @@ const Actualizar_Imagen_Usuario = async (req, res) => {
     }
 
     // Guarda la imagen en el campo 'userImage' del modelo como Buffer
-    user.userImage = req.file.buffer;
+    usuario.userImage = req.file.buffer;
 
-    await user.save();
+    await usuario.save();
 
     return res.status(200).json({
       success: true,
       msg: "Imagen de usuario actualizada exitosamente",
-      usuario_id: user._id,
+      usuario_id: usuario._id,
     });
   } catch (error) {
     console.log(error);
@@ -245,25 +266,29 @@ const Actualizar_Imagen_Usuario = async (req, res) => {
 
 // Controlador para eliminar la imagen de usuario
 const Eliminar_Imagen_Usuario = async (req, res) => {
-  const { usuario_id } = req.params;
+  const { usuario_id, token } = req.params;
 
   try {
-    const user = await Usuarios.findById(new ObjectId(usuario_id));
-    if (!user) {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
       return res
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
     // Elimina la imagen del campo 'userImage'
-    user.userImage = null;
+    usuario.userImage = null;
 
-    await user.save();
+    await usuario.save();
 
     return res.status(200).json({
       success: true,
       msg: "Imagen de usuario eliminada exitosamente",
-      usuario_id: user._id,
+      usuario_id: usuario._id,
     });
   } catch (error) {
     console.log(error);
@@ -274,7 +299,7 @@ const Eliminar_Imagen_Usuario = async (req, res) => {
 };
 
 const Actualizar_Usuario = async (req, res) => {
-  const { nombre, usuario_id } = req.body;
+  const { nombre, usuario_id, token } = req.body;
   const { curriculums_ids } = req.curriculums;
 
   try {
@@ -304,17 +329,21 @@ const Actualizar_Usuario = async (req, res) => {
 };
 
 const Actualizar_Usuario_Bloque = async (req, res) => {
-  const { usuario_id, bloques } = req.body;
+  const { usuario_id, bloques, token } = req.body;
 
   try {
-    const user = await Usuarios.findById(new ObjectId(usuario_id));
-    if (!user) {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
       return res
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
-    const bloque_datos = await Bloques.findById(user.Bloque_ID);
+    const bloque_datos = await Bloques.findById(usuario.Bloque_ID);
     if (!bloque_datos) {
       return res.status(404).json({
         success: false,
@@ -329,7 +358,7 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
     return res.status(200).json({
       success: true,
       msg: "Se ha actualizado al usuario exitosamente",
-      usuario_id: user._id,
+      usuario_id: usuario._id,
     });
   } catch (error) {
     console.log(error);
@@ -345,6 +374,7 @@ const Crear_Curriculum = async (req, res) => {
     documento,
     categoria_curriculum_id,
     categoria_puesto_id,
+	token
   } = req.body;
 
   try {
@@ -355,6 +385,10 @@ const Crear_Curriculum = async (req, res) => {
         error: "Usuario no encontrado al crear curriculum",
       });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
     const curriculum = new Curriculums({
       Documento: documento,
@@ -395,17 +429,22 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
     documento,
     categoria_curriculum_id,
     categoria_puesto_id,
+	token
   } = req.body;
 
   try {
-    const user = await Usuarios.findById(new ObjectId(usuario_id));
-    if (!user) {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
       return res
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
-    if (!user.Curriculums_IDs.includes(new ObjectId(curriculum_id)))
+    if (!usuario.Curriculums_IDs.includes(new ObjectId(curriculum_id)))
       return res
         .status(403)
         .json({ success: false, error: "Curriculo sin acceso." });
@@ -467,6 +506,11 @@ const Eliminar_Usuario_Curriculum = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
+	
 	const index = usuario.Curriculums_IDs.indexOf(new ObjectId(curriculum_id));
     if (index < 0)
       return res
@@ -519,14 +563,17 @@ const Log_In = async (req, res) => {
   }
   
   const rehashed = rehasher({key: secret.Param_1, iv: secret.Param_2}, contrasena);
-  console.log(rehashed.text)
   if (rehashed.text !== usuario.Contrasena) {
 	  return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
   }
   
+  //Genera un token, se usa para verificar querys
+  const token = rehasher({key: secret.Param_1, iv: secret.Param_2}, "Token De Usuario");
+  secret.QueryToken = token.noAuth;
+  await secret.save();
   return res
     .status(200)
-    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario._id });
+    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario._id, token: token.noAuth });
 };
 
 const Log_Out = async (req, res) => {
@@ -534,8 +581,9 @@ const Log_Out = async (req, res) => {
 };
 
 const Obtener_Datos_Usuario = async (req, res) => {
-  const { usuario_id } = req.params;
+  const { usuario_id, token } = req.params;
   try {
+	console.log(req.params);
     const usuario = await Usuarios.findById(new ObjectId(usuario_id));
 
     if (!usuario) {
@@ -543,6 +591,10 @@ const Obtener_Datos_Usuario = async (req, res) => {
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
 
     const bloques = await Bloques.findById(usuario.Bloque_ID);
 
@@ -567,7 +619,7 @@ const Obtener_Datos_Usuario = async (req, res) => {
   } catch (error) {
     console.log(error.message);
     return res
-      .status(400)
+      .status(500)
       .json({ success: false, error: "Error interno del servidor" });
   }
 };
@@ -584,11 +636,11 @@ const Eliminar_Usuario = async (req, res) => {
         .json({ success: false, msg: "Usuario no encontrado" });
     }
 
-    await Bloques.deleteOne({ _id: deletedUser.Bloque_ID });
+    //await Bloques.deleteOne({ _id: deletedUser.Bloque_ID });
 
-    await Curriculums.deleteMany({ Usuario_ID: us_id });
+    //await Curriculums.deleteMany({ Usuario_ID: us_id });
 
-    await Usuarios.deleteOne({ _id: us_id });
+    //await Usuarios.deleteOne({ _id: us_id });
 
     return res
       .status(200)

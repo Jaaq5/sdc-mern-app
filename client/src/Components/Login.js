@@ -27,12 +27,20 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
       .then((result) => {
         if (result.data.usuario_id) {
           const usuario_id = result.data.usuario_id;
+		  const token = result.data.token;
           axios
-            .get(apiUrl + "/api/users/obtener-usuario/" + usuario_id)
+            .get(apiUrl + "/api/users/obtener-usuario/"+usuario_id+"&"+token, 
+				{ 
+				params: {
+					//usuario_id: usuario_id,
+					//token: token
+				}
+				})
             .then((response) => {
               if (response.data.data) {
                 setIsLoggedIn(true);
                 response.data.data.usuario_id = usuario_id;
+				response.data.data.token = token;
                 Object.keys(response.data.data.curriculums).map(
                   (curriculum_id) => {
                     response.data.data.curriculums[curriculum_id].Documento =
