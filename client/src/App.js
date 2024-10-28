@@ -14,6 +14,8 @@ import Proyectos from "./pages/Proyectos";
 import Habilidades from "./pages/Habilidades";
 import Lenguajes from "./pages/Lenguajes";
 import Conferencias from "./pages/Conferencias";
+import Premios from "./pages/Premios";
+import Repositorios from "./pages/Repositorios";
 
 import CurriculosMenu from "./pages/CurriculosMenu";
 import EditorCurriculo from "./pages/EditorCurriculo";
@@ -143,7 +145,8 @@ function App() {
     },
 
     ObtenerCategoriasHabilidad: async () => {
-      if (listas_categorias.categorias_habilidad) return listas_categorias.categorias_habilidad;
+      if (listas_categorias.categorias_habilidad)
+        return listas_categorias.categorias_habilidad;
       var categorias = [];
       axios
         .get(apiUrl + "/api/cat-skill/obtener-categorias-habilidad")
@@ -240,7 +243,7 @@ function App() {
         })
         .then((response) => {
           if (response.data.success) {
-			plantilla._id = response.data.curriculum_id;
+            plantilla._id = response.data.curriculum_id;
             user_data.curriculums.push(plantilla);
             setUserData(user_data);
             return user_data.curriculums.length - 1;
@@ -260,8 +263,8 @@ function App() {
       cat_curr_id,
       cat_puesto_id,
     ) => {
-	  user_data.curriculums[user_data.editando_curriculo].Documento = documento;
-	  setUserData(user_data);
+      user_data.curriculums[user_data.editando_curriculo].Documento = documento;
+      setUserData(user_data);
       return axios
         .patch(apiUrl + "/api/users/actualizar-usuario-curr", {
           usuario_id: user_data.usuario_id,
@@ -269,7 +272,7 @@ function App() {
           documento: JSON.stringify(documento),
           categoria_curriculum_id: cat_curr_id,
           categoria_puesto_id: cat_puesto_id,
-        })/*.then((response) => {
+        }) /*.then((response) => {
           //Revisar respuesta si es necesario
           if (response.data.success && response.data.curriculum_id) {
             return response.data.curriculum_id;
@@ -300,9 +303,9 @@ function App() {
           if (!response.data.success) {
             console.error("Error a eliminar el currículo");
           } else {
-            user_data.curriculums.splice(index,1); //Eliminar bloque
+            user_data.curriculums.splice(index, 1); //Eliminar bloque
             setUserData(user_data); //Actualizar variable de sesion
-			return true;
+            return true;
           }
         })
         .catch((err) => {
@@ -319,9 +322,9 @@ function App() {
         .then((response) => {
           if (response.data.curriculums) {
             plant = response.data.curriculums;
-			plant.forEach((data) => {
-				data.Documento = JSON.parse(data.Documento);
-			});
+            plant.forEach((data) => {
+              data.Documento = JSON.parse(data.Documento);
+            });
             setPlantillas(plant);
           }
         })
@@ -332,13 +335,11 @@ function App() {
     },
 
     CopiarPlantilla: (plantilla_id) => {
-	  let plantilla = plantillas[plantilla_id]? plantillas[plantilla_id] : plantillas.find((plnt) => plnt._id === plantilla_id);
+      let plantilla = plantillas[plantilla_id]
+        ? plantillas[plantilla_id]
+        : plantillas.find((plnt) => plnt._id === plantilla_id);
 
-      if (
-        plantilla_id !== "simple" &&
-        !plantilla
-      )
-        return null;
+      if (plantilla_id !== "simple" && !plantilla) return null;
 
       if (plantilla_id === "simple") {
         plantilla = JSON.parse(JSON.stringify(plantilla_simple));
@@ -354,20 +355,20 @@ function App() {
 
       if (plantilla.Documento.datos.Secciones.Informacion_Personal === "id") {
         const infoPersonalBloques = user_data.bloques.Informacion_Personal;
-        plantilla.Documento.datos.Secciones.Informacion_Personal = infoPersonalBloques ? Object.keys(infoPersonalBloques)[0] : null;
-		
-		plantilla.ID_Categoria_Curriculum =
-			  listas_categorias.categorias_curriculum.find(
-				(cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
-			  )._id;
-		plantilla.ID_Categoria_Puesto =
-			  listas_categorias.categorias_puesto.find(
-				(cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
-			  )._id;
-		
+        plantilla.Documento.datos.Secciones.Informacion_Personal =
+          infoPersonalBloques ? Object.keys(infoPersonalBloques)[0] : null;
+
+        plantilla.ID_Categoria_Curriculum =
+          listas_categorias.categorias_curriculum.find(
+            (cat) => cat.Nombre === plantilla.ID_Categoria_Curriculum,
+          )._id;
+        plantilla.ID_Categoria_Puesto =
+          listas_categorias.categorias_puesto.find(
+            (cat) => cat.Nombre === plantilla.ID_Categoria_Puesto,
+          )._id;
+
         plantilla.Documento.diseno.Secciones.Informacion_Personal.TituloSeccion =
           user_data.name;
-		  
       }
       return plantilla;
     },
@@ -555,7 +556,7 @@ function App() {
               )
             }
           />
-           <Route
+          <Route
             path="/conferencias"
             element={
               !isLoggedIn ? (
@@ -570,6 +571,43 @@ function App() {
               )
             }
           />
+
+          {/* Inicio ruta para premios y reconocimientos */}
+          <Route
+            path="/premios"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <Premios
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+          {/* Fin ruta para premios y reconocimientos */}
+
+          {/* Inicio ruta para repositorios */}
+          <Route
+            path="/repositorios"
+            element={
+              !isLoggedIn ? (
+                <Navigate to="/login" />
+              ) : (
+                <Repositorios
+                  user_data={user_data}
+                  setUserData={setUserData}
+                  manager_bloques={manager_bloques}
+                  category_manager={category_manager}
+                />
+              )
+            }
+          />
+          {/* Fin ruta para repositorios */}
+
           <Route
             path="/referencias"
             element={
