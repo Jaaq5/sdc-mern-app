@@ -13,6 +13,7 @@ const catCurrRoutes = require("./routes/categoria_curriculum_route");
 const skillRoutes = require("./routes/categoria_habilidad_route");
 const jobRoutes = require("./routes/categoria_puesto_route");
 const stateRoutes = require("./routes/categoria_estadoP_route");
+const levelRoutes = require("./routes/categoria_nivelI_route");
 const languageRoutes = require("./routes/idioma_route");
 const templateRoutes = require("./routes/curriculum_template_route");
 const path = require("path");
@@ -47,6 +48,7 @@ app.use("/api/templates", templateRoutes);
 app.use("/api/cat-curriculums", catCurrRoutes);
 app.use("/api/cat-job", jobRoutes);
 app.use("/api/cat-state", stateRoutes);
+app.use("/api/cat-level", levelRoutes);
 app.use("/api/cat-skill", skillRoutes);
 app.use("/api/cat-language", languageRoutes);
 

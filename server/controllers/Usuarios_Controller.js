@@ -44,8 +44,6 @@ const Crear_Usuario = async (req, res) => {
         Proyectos: {},
         Publicaciones: {},
         Conferencias: {},
-        Premios: {},
-        Repositorios: {},
         Referencias: {},
 
         Informacion_Personal_NID: 1,
@@ -57,8 +55,6 @@ const Crear_Usuario = async (req, res) => {
         Proyectos_NID: 1,
         Publicaciones_NID: 1,
         Conferencias_NID: 1,
-        Premios_NID: 1,
-        Repositorios_NID: 1,
         Referencias_NID: 1,
       },
     });
@@ -349,7 +345,7 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         error: "No se encontró el curriculum del usuario",
       });
     }
-
+	
     const cat_curr = await Categorias_Curriculum.findById(
       new ObjectId(categoria_curriculum_id),
     );
