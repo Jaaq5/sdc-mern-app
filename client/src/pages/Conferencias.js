@@ -17,14 +17,15 @@ import { PostAdd, DeleteForever } from "@mui/icons-material";
 
 //style
 import {
-  paperStylem, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  listStyle, 
-  deleteButton, 
+  paperStylem,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  listStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -38,8 +39,6 @@ function Conferencias({
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [conferencias, setConferencias] = useState([]);
-
-
 
   // Form
   const [conferencia_id, setConferenciaId] = useState(true);
@@ -92,7 +91,7 @@ function Conferencias({
               style={deleteButton}
               onClick={(e) => eliminarConferencia(conferencia_id, index)}
             >
-              <DeleteForever style = {deleteForeverStyle} />
+              <DeleteForever style={deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -207,7 +206,7 @@ function Conferencias({
           <div>
             <Paper style={paperStylem} sx={paperSX}>
               <Typography component="h3" variant="h3" style={heading}>
-              Conferencias
+                Conferencias
               </Typography>
               <List
                 dense={dense}

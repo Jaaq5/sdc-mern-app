@@ -2,11 +2,11 @@ import React from "react";
 import { Paper, Typography } from "@mui/material";
 
 //style
-import { 
-  paperStyle, 
+import {
+  paperStyle,
   twoColumnStyle,
   leftColumnStyle,
-  rightColumnStyle
+  rightColumnStyle,
 } from "../style";
 
 const LaboralExampleTemplate = () => {
@@ -50,10 +50,15 @@ const LaboralExampleTemplate = () => {
 
           {/* Right Column */}
           <div style={rightColumnStyle}>
-            <Typography component="h5" variant="h5" style={{ marginBottom: "1rem" }}>
+            <Typography
+              component="h5"
+              variant="h5"
+              style={{ marginBottom: "1rem" }}
+            >
               <strong>Your Name</strong>
             </Typography>
-            Home Street Address • City, State Zip • email@example.com • (123) 456-7890
+            Home Street Address • City, State Zip • email@example.com • (123)
+            456-7890
             <br />
             <br />
             <strong>Education</strong>
@@ -77,8 +82,7 @@ const LaboralExampleTemplate = () => {
             COMPANY NAME, City, State
             <br />
             Job Title (Month Year – Month Year)
-            <br />
-            • Managed "specific project or task"
+            <br />• Managed "specific project or task"
           </div>
         </div>
       </Paper>

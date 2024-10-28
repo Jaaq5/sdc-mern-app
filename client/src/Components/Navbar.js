@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 // Estilos y componentes locales
 import { theme } from "../theme";
 import { navbutton, burger_button, disabledNavButton } from "../style";
+const logo = "/sdc-logo.png";
 
 // COMPONENTE #################################################################
 /**
@@ -120,6 +121,25 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     <HideOnScroll>
       <AppBar sx={{ bgcolor: theme.palette.lightred.main }}>
         <Toolbar>
+          {/* Imagen del logo */}
+          <div
+            style={{
+              backgroundColor: "pink",
+              borderRadius: "50%",
+              padding: "5px",
+              display: "inline-block",
+            }}
+          >
+            <img
+              src={logo}
+              alt="Logo"
+              style={{
+                height: "40px",
+                width: "auto",
+                display: "block",
+              }}
+            />
+          </div>
           {/* Texto de la barra de navegación */}
           <Typography
             variant="h4"
@@ -214,7 +234,14 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             </div>
 
             {/* Botones de navegación en modo escritorio */}
-            <div style={{ marginLeft: "auto", display: "flex" }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "left",
+                width: "100%",
+              }}
+            >
               {navButtons.map(({ path, label }) =>
                 renderNavButton(path, label),
               )}

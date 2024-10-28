@@ -16,7 +16,6 @@ const Obtener_Categorias_EstadoP = async (req, res) => {
   }
 };
 
-
 module.exports = {
   Obtener_Categorias_EstadoP,
 };

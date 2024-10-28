@@ -4,17 +4,18 @@ const Categorias_Puesto = require("../models/Categorias_Puesto_Model");
 const { ObjectId } = require("mongodb");
 
 const Crear_Curriculum_Template = async (req, res) => {
-  const { name, documento, categoria_curriculum_id, categoria_puesto_id } = req.body;
+  const { name, documento, categoria_curriculum_id, categoria_puesto_id } =
+    req.body;
 
   try {
-	const existing = await Curriculums_Templates.find({Nombre: name});
+    const existing = await Curriculums_Templates.find({ Nombre: name });
     if (existing) {
       return res.status(401).json({
         success: false,
         error: "Plantilla con este nombre ya existe",
       });
     }
-	
+
     const cat_curr = await Categorias_Curriculum.findById(
       new ObjectId(categoria_curriculum_id),
     );
@@ -33,9 +34,8 @@ const Crear_Curriculum_Template = async (req, res) => {
         success: false,
         error: "No se encontró la categoria puesto al crear template",
       });
-	}
-	  
-	  
+    }
+
     const curriculum = new Curriculums_Templates({
       Documento: documento,
       ID_Categoria_Curriculum: new ObjectId(categoria_curriculum_id),
@@ -60,14 +60,14 @@ const Crear_Curriculum_Template_Vacio = async (req, res) => {
   const { name, categoria_curriculum_id, categoria_puesto_id } = req.body;
 
   try {
-	const existing = await Curriculums_Templates.find({Nombre: name});
+    const existing = await Curriculums_Templates.find({ Nombre: name });
     if (existing) {
       return res.status(401).json({
         success: false,
         error: "Plantilla con este nombre ya existe",
       });
     }
-	
+
     const cat_curr = await Categorias_Curriculum.findById(
       new ObjectId(categoria_curriculum_id),
     );
@@ -86,9 +86,8 @@ const Crear_Curriculum_Template_Vacio = async (req, res) => {
         success: false,
         error: "No se encontró la categoria puesto al crear template",
       });
-	}
-	  
-	  
+    }
+
     const curriculum = new Curriculums_Templates({
       Documento: {},
       ID_Categoria_Curriculum: new ObjectId(categoria_curriculum_id),
@@ -151,8 +150,9 @@ const Obtener_Curriculum_Templates = async (req, res) => {
       curriculums = await Curriculums_Templates.find({
         ID_Categoria_Puesto: new ObjectId(categoria_puesto_id),
       });
-    else{}
-		curriculums = await Curriculums_Templates.find();
+    else {
+    }
+    curriculums = await Curriculums_Templates.find();
 
     return res.status(200).json({
       success: true,
@@ -236,7 +236,9 @@ const Eliminar_Curriculum_Template = async (req, res) => {
         .json({ success: false, msg: "Template no encontrado al eliminar" });
     }
 
-    const curriculum_borrado = await Curriculums_Templates.deleteOne({ _id: oid });
+    const curriculum_borrado = await Curriculums_Templates.deleteOne({
+      _id: oid,
+    });
 
     if (!curriculum_borrado.acknowledged) {
       return res.status(404).json({

@@ -20,16 +20,17 @@ import {
 import { DeleteForever, PostAdd } from "@mui/icons-material";
 
 import {
-  paperStyleb, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  fieldTitleStyle, 
-  listStyle, 
-  listButtonStyle, 
-  deleteButton, 
+  paperStyleb,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  fieldTitleStyle,
+  listStyle,
+  listButtonStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -85,7 +86,7 @@ function Proyectos({
               " Rol: " +
               bloque.Rol +
               " Estado: " +
-              bloque.Estado+
+              bloque.Estado +
               " " +
               bloque.Descripcion.substring(0, 30)
             }
@@ -94,7 +95,7 @@ function Proyectos({
             style={deleteButton}
             onClick={(e) => elminarBloque(plan_id, index)}
           >
-            <DeleteForever style = {deleteForeverStyle} />
+            <DeleteForever style={deleteForeverStyle} />
           </Button>
         </ListItemButton>
       )),
@@ -197,7 +198,9 @@ function Proyectos({
       bloque.ID_Categoria_Curriculum ? bloque.ID_Categoria_Curriculum : "",
     );
     setCatPuesto(bloque.ID_Categoria_Puesto ? bloque.ID_Categoria_Puesto : "");
-    setCatEstadoP(bloque.ID_Categoria_EstadoP ? bloque.ID_Categoria_EstadoP : "");
+    setCatEstadoP(
+      bloque.ID_Categoria_EstadoP ? bloque.ID_Categoria_EstadoP : "",
+    );
   };
 
   //To-Do -> Agregar categorias y diferencias entre crear y editar
@@ -416,9 +419,7 @@ function Proyectos({
                       e.target.setCustomValidity("");
                     }}
                     onInvalid={(e) =>
-                      e.target.setCustomValidity(
-                        "Llenar el rol",
-                      )
+                      e.target.setCustomValidity("Llenar el rol")
                     }
                   />
                   <TextField

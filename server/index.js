@@ -56,9 +56,6 @@ app.use("/api/cat-language", languageRoutes);
 
 // Serve static files and index.html in production
 if (process.env.NODE_ENV === "production") {
-	
-  
-  
   app.use(express.static(path.join(__dirname, "../client/build")));
 
   app.get("*", (req, res) => {
@@ -73,9 +70,9 @@ if (process.env.NODE_ENV === "production") {
     });
   });
   //Incluir aqui scripts solo para dev
-}else if (process.env.NODE_ENV === "development"){
-	const templateRoutesDev = require("./routes/curriculum_template_route_dev");
-    app.use("/api/templates", templateRoutesDev);
+} else if (process.env.NODE_ENV === "development") {
+  const templateRoutesDev = require("./routes/curriculum_template_route_dev");
+  app.use("/api/templates", templateRoutesDev);
 }
 
 // Connect to MongoDB #########################################################

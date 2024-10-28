@@ -297,11 +297,21 @@
               "style": {
                 "backgroundColor": "#0000",
                 "border": "0pt",
-                "borderTop": "4pt",
+                "borderTopWidth": "4pt",
                 "borderColor": "#ccc",
                 "borderStyle": "solid",
                 "fontFamily": "Roboto",
                 "fontWeight": 400
+              },
+              "Editable": {
+                "Tipo": "Tamano",
+                "Titulo": "",
+                "Label": "",
+                "Campo": "",
+                "Placeholder": "",
+                "Celdas": false,
+                "Pos": false,
+                "Fuentes": { "border": true }
               },
               "plantillaStyle": {
                 "backgroundColor": "#0ff0",
@@ -323,10 +333,20 @@
                     "fontFamily": "Roboto"
                   },
                   "Editable": {
-                    "Tipo": "Fuentes",
+                    "Tipo": "Estilo",
                     "Titulo": "Editar fuentes",
                     "Label": "Fuentes",
-                    "Placeholder": "Fuentes"
+                    "Placeholder": "Fuentes",
+                    "Fuentes": {
+                      "fontFamily": true,
+                      "color": true,
+                      "fontSize": true,
+                      "fontWeight": true,
+                      "fontStyle": true,
+                      "textDecoration": true,
+                      "backgroundColor": true,
+                      "border": true
+                    }
                   }
                 },
                 {
@@ -1108,27 +1128,27 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+
+          "Celdas": [78, 25],
+
           "Editable": {
             "Titulo": "Cambiar Lista de Conferencias",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
+
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Conferencias"
@@ -1161,11 +1181,9 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Conferencia",
-                    " - ",
-                    "Titulo"
-                  ],
+
+                  "Texto": ["Fecha_Conferencia", " - ", "Titulo"],
+
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1174,9 +1192,9 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Lugar"
-                  ],
+
+                  "Texto": ["Lugar"],
+
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1185,9 +1203,9 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Descripcion"
-                  ],
+
+                  "Texto": ["Descripcion"],
+
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
