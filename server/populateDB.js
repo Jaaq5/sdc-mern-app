@@ -2,6 +2,7 @@ const Categorias_Curriculum = require("./models/Categorias_Curriculum_Model");
 const Categorias_Habilidad = require("./models/Categorias_Habilidad_Model");
 const Categorias_Puesto = require("./models/Categorias_Puesto_Model");
 const Categorias_EstadoP = require("./models/Categorias_EstadoP_Model");
+const Categorias_Niveles = require("./models/Categorias_NivelI_Model");
 const Idiomas = require("./models/Idiomas_Model") ;
 const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
@@ -14,6 +15,12 @@ const populateData = async () => {
     { name: "Academico" },
     { name: "Laboral" },
     { name: "Harvard" },
+  ];
+
+  const catNivelesData = [
+    { name: "Bajo" },
+    { name: "Medio" },
+    { name: "Alto" },
   ];
 
   const catHabilidadesData = [
@@ -77,6 +84,19 @@ const populateData = async () => {
       );
     }
     console.log("Collection populated with Categorias_Curriculum values");
+  } catch (err) {
+    console.log("Error populating collection:", err);
+  }
+
+  try {
+    for (const item of catNivelesData) {
+      await Categorias_Niveles.updateOne(
+        { Nombre: item.name },
+        { $set: item },
+        { upsert: true },
+      );
+    }
+    console.log("Collection populated with Categorias_Niveles values");
   } catch (err) {
     console.log("Error populating collection:", err);
   }

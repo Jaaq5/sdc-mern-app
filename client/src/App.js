@@ -177,6 +177,25 @@ function App() {
         });
       return categorias;
     },
+    ObtenerCategoriasNivelI: async () => {
+      if (listas_categorias.categorias_nivelI)
+        return listas_categorias.categorias_nivelI;
+      var categorias = [];
+      axios
+        .get(apiUrl + "/api/cat-level/obtener-categorias-nivelI")
+        .then((response) => {
+          if (response.data.categorias_nivelI) {
+            categorias = response.data.categorias_nivelI;
+            listas_categorias.categorias_nivelI = categorias;
+            setListas(listas_categorias);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias.result;
+    },
+
     IdANombreCurriculo: (cat_id) => {
       const cat = listas_categorias.categorias_curriculum.find(
         (cat) => cat._id === cat_id,
@@ -191,6 +210,12 @@ function App() {
     },
     IdANombreEstadoP: (cat_id) => {
       const cat = listas_categorias.categorias_estadoP.find(
+        (cat) => cat._id === cat_id,
+      );
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
+    IdANombreNivelI: (cat_id) => {
+      const cat = listas_categorias.categorias_nivelI.find(
         (cat) => cat._id === cat_id,
       );
       return cat && cat.Nombre ? cat.Nombre : "-";
