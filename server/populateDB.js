@@ -2,7 +2,7 @@ const Categorias_Curriculum = require("./models/Categorias_Curriculum_Model");
 const Categorias_Habilidad = require("./models/Categorias_Habilidad_Model");
 const Categorias_Puesto = require("./models/Categorias_Puesto_Model");
 const Categorias_EstadoP = require("./models/Categorias_EstadoP_Model");
-const Idiomas = require("./models/Idiomas_Model") ;
+const Idiomas = require("./models/Idiomas_Model");
 const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
 //const plantilla_simple = require("./Plantillas/simple.json");
@@ -60,12 +60,17 @@ const populateData = async () => {
     { name: "Finalizado" },
     { name: "En progreso" },
     { name: "Hiatus" },
-    { name: "Esperando confirmación"},
+    { name: "Esperando confirmación" },
   ];
-  
+
   const Plantillas = [
-	//{ name : plantilla_simple.nombre, documento: plantilla_simple.Documento, categoria_curriculo: plantilla_simple.ID_Categoria_Curriculum, categoria_puesto: plantilla_simple.ID_Categoria_Puesto },
-	{ name : plantilla_cuadrados.Nombre, documento: plantilla_cuadrados.Documento, categoria_curriculo: plantilla_cuadrados.ID_Categoria_Curriculum, categoria_puesto: plantilla_cuadrados.ID_Categoria_Puesto },
+    //{ name : plantilla_simple.nombre, documento: plantilla_simple.Documento, categoria_curriculo: plantilla_simple.ID_Categoria_Curriculum, categoria_puesto: plantilla_simple.ID_Categoria_Puesto },
+    {
+      name: plantilla_cuadrados.Nombre,
+      documento: plantilla_cuadrados.Documento,
+      categoria_curriculo: plantilla_cuadrados.ID_Categoria_Curriculum,
+      categoria_puesto: plantilla_cuadrados.ID_Categoria_Puesto,
+    },
   ];
 
   try {
@@ -132,25 +137,27 @@ const populateData = async () => {
   } catch (err) {
     console.log("Error populating collection:", err);
   }
-  
+
   //Plantillas
   try {
-    for (const item of Plantillas) {;
-	  
+    for (const item of Plantillas) {
       await Curriculums_Templates.updateOne(
-        { Nombre: item.name, ID_Categoria_Curriculum: item.categoria_curriculo, ID_Categoria_Puesto: item.categoria_puesto },
+        {
+          Nombre: item.name,
+          ID_Categoria_Curriculum: item.categoria_curriculo,
+          ID_Categoria_Puesto: item.categoria_puesto,
+        },
         { $set: item },
         { upsert: true },
       );
-	  await Curriculums_Templates.updateOne(
+      await Curriculums_Templates.updateOne(
         { Nombre: item.name },
-        { $set: {
-			Documento: JSON.stringify(item.documento)
-			}
-		},
+        {
+          $set: {
+            Documento: JSON.stringify(item.documento),
+          },
+        },
       );
-	  
-	  
     }
     console.log("Collection populated with Plantillas values");
   } catch (err) {

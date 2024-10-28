@@ -7,7 +7,7 @@ const Curriculums_Templates_Model = mongoose.Schema({
     required: true,
   },
   Nombre: {
-	type: String,
+    type: String,
     required: true,
   },
   Prevista: {
