@@ -1,37 +1,20 @@
-// IMPORTS ####################################################################
-// Librerías externas
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Logout from "./Logout";
+import { theme } from "../theme";
+import { useLocation, Link } from 'react-router-dom';
+
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Slide from "@mui/material/Slide";
-import { Drawer, IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-
-// Estilos y componentes locales
-import { theme } from "../theme";
 import { navbutton, burger_button, disabledNavButton } from "../style";
 
-// COMPONENTE #################################################################
-/**
- * Componente Navbar
- * @param {Object} props - Props para el componente Navbar.
- * @param {boolean} props.isLoggedIn - Indica si el usuario está logueado.
- * @param {Function} props.setIsLoggedIn - Función para establecer el estado de login.
- * @returns {JSX.Element} El componente Navbar.
- */
 export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
+  
   const color_gray = { color: "#ccf" };
   const [path, setPath] = useState("/");
-  const [expanded, setExpanded] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const location = useLocation();
-
-  // Mapeo de rutas a sus etiquetas en el menú de navegación
   const pathToDisplay = {
     "/experiencialaboral": "Experiencias Laborales",
     "/educacionformal": "Títulos",
@@ -40,29 +23,25 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     "/proyectos": "Proyectos",
     "/publicaciones": "Publicaciones",
     "/habilidades": "Habilidades y Herramientas",
-    "/premios": "Premios y Reconocimientos",
-    "/repositorios": "Repositorios",
-    "/conferencias": "Conferencias",
-    "/lenguajes": "Lenguajes",
     "/referencias": "Referencias",
     "/curriculo-menu": "Currículos",
     "/editor-curriculo": "Currículos",
     "/login": "",
     "/home": "",
   };
+  const [expanded, setExpanded] = useState(false);
+  const location = useLocation();
 
-  // Actualizar la ruta en función de la URL actual
   useEffect(() => {
     setPath(window.location.pathname);
-  }, [location]);
+  });
 
-  /**
-   * Componente que oculta la barra de navegación en el desplazamiento
-   * @param {Object} props - Props del componente.
-   * @returns {JSX.Element} El componente de navegación.
-   */
+  //@mui AppBar API https://mui.com/material-ui/react-app-bar/
   function HideOnScroll(props) {
     const { children, window } = props;
+    // Note that you normally won't need to set the window ref as useScrollTrigger
+    // will default to window.
+    // This is only being set here because the demo is in an iframe.
     const trigger = useScrollTrigger({
       target: window ? window() : undefined,
     });
@@ -74,53 +53,10 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     );
   }
 
-  // Función para abrir y cerrar el drawer
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  /**
-   * Renderiza un botón de navegación
-   * @param {string} to - Ruta a la que apunta el botón.
-   * @param {string} label - Etiqueta que se mostrará en el botón.
-   * @returns {JSX.Element} El botón de navegación.
-   */
-  const renderNavButton = (to, label) => (
-    <Button
-      variant="contained"
-      style={location.pathname === to ? disabledNavButton : navbutton}
-      color="success"
-      component={Link}
-      to={to}
-      onClick={() => setPath(to)}
-    >
-      {label}
-    </Button>
-  );
-
-  // Definición de los botones de navegación
-  const navButtons = [
-    { path: "/curriculo-menu", label: "Currículos" },
-    { path: "/informacionPersonal", label: "Información Personal" },
-    { path: "/educacionformal", label: "Educación Formal" },
-    { path: "/educaciontecnica", label: "Educación Técnica" },
-    { path: "/experiencialaboral", label: "Experiencia Laboral" },
-    { path: "/proyectos", label: "Proyectos" },
-    { path: "/habilidades", label: "Habilidades" },
-    { path: "/publicaciones", label: "Publicaciones" },
-    { path: "/lenguajes", label: "Lenguajes" },
-    { path: "/conferencias", label: "Conferencias" },
-    { path: "/premios", label: "Premios" },
-    { path: "/repositorios", label: "Repositorios" },
-    { path: "/referencias", label: "Referencias" },
-  ];
-
-  // RETORNO ##################################################################
   return (
     <HideOnScroll>
       <AppBar sx={{ bgcolor: theme.palette.lightred.main }}>
         <Toolbar>
-          {/* Texto de la barra de navegación */}
           <Typography
             variant="h4"
             component="div"
@@ -137,112 +73,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
               <> </>
             )}
           </Typography>
-
-          {/* Icono del menú para modo móvil */}
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleDrawerToggle}
-            // Mostrar solo en modo móvil
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          {/* MODO ESCRITORIO ################################################# */}
-
-          {/* Si no está logueado, mostrar botones de Login y Signup */}
-          {!isLoggedIn && (
-            <>
-              <Button
-                variant="contained"
-                style={navbutton}
-                color="error"
-                component={Link}
-                to="/login"
-                // Mostrar solo en modo escritorio
-                sx={{ display: { xs: "none", md: "flex" } }}
-              >
-                Login
-              </Button>
-
-              <Button
-                variant="contained"
-                style={navbutton}
-                color="success"
-                component={Link}
-                to="/signup"
-                // Mostrar solo en modo escritorio
-                sx={{ display: { xs: "none", md: "flex" } }}
-              >
-                Signup
-              </Button>
-            </>
-          )}
-        </Toolbar>
-
-        {/* Barra navegación en modo escritorio cuando está logueado */}
-        {isLoggedIn && (
-          <Toolbar
-            style={{
-              justifyContent: "space-between",
-              paddingLeft: "0px",
-            }}
-            // Mostrar solo en modo escritorio
-            sx={{ display: { xs: "none", md: "flex" } }}
-          >
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Button
-                variant="contained"
-                style={burger_button}
-                onClick={() => setExpanded(!expanded)}
-              >
-                {expanded ? "X" : "|||"}
-              </Button>
-
-              {expanded && (
-                <Button
-                  variant="contained"
-                  style={navbutton}
-                  color="warning"
-                  onClick={() => setIsLoggedIn(false)}
-                >
-                  Logout
-                </Button>
-              )}
-            </div>
-
-            {/* Botones de navegación en modo escritorio */}
-            <div style={{ marginLeft: "auto", display: "flex" }}>
-              {navButtons.map(({ path, label }) =>
-                renderNavButton(path, label),
-              )}
-            </div>
-          </Toolbar>
-        )}
-
-        {/* MODO MÓVIL ######################################################## */}
-
-        {/* Drawer para navegación en modo móvil */}
-        <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
-          <div
-            role="presentation"
-            onClick={handleDrawerToggle}
-            onKeyDown={handleDrawerToggle}
-          >
-            <IconButton onClick={handleDrawerToggle}>
-              <CloseIcon />
-            </IconButton>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "20px",
-              }}
-            >
-              {/* Si no está logueado, mostrar botones de Login y Signup */}
-              {!isLoggedIn ? (
+          {!isLoggedIn ? (
                 <>
                   <Button
                     variant="contained"
@@ -250,60 +81,189 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                     color="error"
                     component={Link}
                     to="/login"
-                    onClick={() => setDrawerOpen(false)}
                   >
                     Login
                   </Button>
+
                   <Button
                     variant="contained"
                     style={navbutton}
                     color="success"
                     component={Link}
                     to="/signup"
-                    onClick={() => setDrawerOpen(false)}
                   >
                     Signup
                   </Button>
                 </>
               ) : (
+                //User Ribbon
                 <>
-                  {/* Botón de logout */}
-                  <Button
-                    variant="contained"
-                    style={navbutton}
-                    color="warning"
-                    onClick={() => setIsLoggedIn(false)}
-                  >
-                    Logout
-                  </Button>
-                  <br />
-
-                  {/* Botones de navegación en modo móvil */}
-                  {navButtons.map(({ path, label }) => (
-                    <Button
-                      key={path}
-                      variant="contained"
-                      style={
-                        location.pathname === path
-                          ? disabledNavButton
-                          : navbutton
-                      }
-                      color="success"
-                      component={Link}
-                      to={path}
-                      onClick={() => {
-                        setPath(path);
-                        setDrawerOpen(false);
-                      }}
-                    >
-                      {label}
-                    </Button>
-                  ))}
+                  
                 </>
               )}
-            </div>
-          </div>
-        </Drawer>
+            </Toolbar>
+            {isLoggedIn ? (
+              <>
+                <Toolbar style={{ display: "flex", justifyContent: "space-between", paddingLeft: "0px" }}>
+                  {/* Left-side container for the Burger button and Logout button */}
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {/* Burger button */}
+                    <Button
+                      variant="contained"
+                      style={burger_button}
+                      onClick={(e) => setExpanded(!expanded)}
+                    >
+                      {expanded ? "X" : "|||"}
+                    </Button>
+
+                    {/* Logout button or invisible placeholder */}
+                    {expanded ? (
+                      <Button
+                        variant="contained"
+                        style={navbutton}
+                        color="warning"
+                        onClick={(e) => setIsLoggedIn(false)}
+                      >
+                        Logout
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        style={{ ...navbutton, visibility: "hidden" }}
+                      >
+                        Logout
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Right-side container for navigation buttons, aligned to the right */}
+                  <div style={{ marginLeft: "auto", display: "flex" }}>
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/curriculo-menu" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/curriculo-menu"
+                      onClick={(e) => setPath("/curriculo-menu")}
+                    >
+                      Currículos
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/informacionPersonal" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/informacionPersonal"
+                      onClick={(e) => setPath("/informacionPersonal")}
+                    >
+                      Informacion Personal
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/educacionformal" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/educacionformal"
+                      onClick={(e) => setPath("/educacionformal")}
+                    >
+                      Educacion Formal
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/educaciontecnica" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/educaciontecnica"
+                      onClick={(e) => setPath("/educaciontecnica")}
+                    >
+                      Educacion Técnica
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/experiencialaboral" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/experiencialaboral"
+                      onClick={(e) => setPath("/experiencialaboral")}
+                    >
+                      Experiencia Laboral
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/proyectos" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/proyectos"
+                      onClick={(e) => setPath("/proyectos")}
+                    >
+                      Proyectos
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/habilidades" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/habilidades"
+                      onClick={(e) => setPath("/habilidades")}
+                    >
+                      Habilidades
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/publicaciones" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/publicaciones"
+                      onClick={(e) => setPath("/publicaciones")}
+                    >
+                      Publicaciones
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/lenguajes" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/lenguajes"
+                      onClick={(e) => setPath("/lenguajes")}
+                    >
+                      Lenguajes
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/conferencias" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/conferencias"
+                      onClick={(e) => setPath("/conferencias")}
+                    >
+                      Conferencias
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      style={location.pathname === "/referencias" ? disabledNavButton : navbutton}
+                      color="success"
+                      component={Link}
+                      to="/referencias"
+                      onClick={(e) => setPath("/referencias")}
+                    >
+                      Referencias
+                    </Button>
+                  </div>
+                </Toolbar>
+              </>
+            ) : (
+              <></>
+            )}
       </AppBar>
     </HideOnScroll>
   );
