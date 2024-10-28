@@ -3,9 +3,75 @@ const Curriculums = require("../models/Curriculums_Model");
 const Bloques = require("../models/Bloques_Model");
 const Categorias_Curriculum = require("../models/Categorias_Curriculum_Model");
 const Categorias_Puesto = require("../models/Categorias_Puesto_Model");
+const Secrets = require("../models/Secrets_Model")
 const { ObjectId } = require("mongodb");
 // Dependiencia para manejar archivos
 const multer = require("multer");
+const crypto = require('crypto');
+
+//Creates password hash
+function hasher(text){
+	const algorithm = 'aes-256-gcm';
+	const key = crypto.randomBytes(32);
+	const iv = crypto.randomBytes(16);
+
+	// Create the cipher
+	const cipher = crypto.createCipheriv(algorithm, key, iv);
+
+	// Encrypt the data
+	let encrypted = cipher.update(text, 'utf8', 'hex');
+	encrypted += cipher.final('hex');
+
+	// Add the auth tag
+	const authTag = cipher.getAuthTag();
+
+	// The encrypted data
+	const encryptedText = `${encrypted}:${authTag}`;
+	return {text: encryptedText, key: key, iv: iv};
+}
+
+//Hashes text using existing crypto data
+function rehasher(encryptedData, text) {
+	// Split the encrypted data and auth tag
+	const algorithm = 'aes-256-gcm';
+	const key = encryptedData.key;
+	const iv = encryptedData.iv;
+
+	// Create the decipher
+	const cipher = crypto.createCipheriv(algorithm, key, iv);
+
+	// Encrypt the data
+	let encrypted = cipher.update(text, 'utf8', 'hex');
+	encrypted += cipher.final('hex');
+
+	// Add the auth tag
+	const authTag = cipher.getAuthTag();
+
+	// The encrypted data
+	return {text: `${encrypted}:${authTag}`};
+}
+
+/*function unhasher(encryptedText) {
+	// Split the encrypted data and auth tag
+	const [encrypted, authTag] = encryptedText.split(':');
+
+	const algorithm = 'aes-256-gcm';
+	const key = crypto.randomBytes(32);
+	const iv = crypto.randomBytes(16);
+
+	// Create the decipher
+	const decipher = crypto.createDecipheriv(algorithm, key, iv);
+
+	// Verify the auth tag
+	decipher.setAuthTag(authTag);
+
+	// Decrypt the data
+	let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+	decrypted += decipher.final('utf8');
+
+	// The decrypted data
+	const decryptedText = decrypted;
+}*/
 
 // Configuración de multer para manejar la carga de archivos
 const storage = multer.memoryStorage();
@@ -32,6 +98,8 @@ const Crear_Usuario = async (req, res) => {
         error: "Dirección de correo electrónico ya está en uso",
       });
     }
+	
+	
 
     const Bloque = new Bloques({
       Bloques: {
@@ -63,28 +131,28 @@ const Crear_Usuario = async (req, res) => {
       },
     });
     await Bloque.save();
+	
+	//Encriptar contrasena y guardar parametros
+	const hash = hasher(contrasena)
+	const secret = new Secrets({
+		Param_1 : hash.key,
+		Param_2 : hash.iv,
+	});
 
     const user = new Usuarios({
       Nombre: nombre,
       Email: email,
-      Contrasena: contrasena, //TO-DO: Encrypt
+      Contrasena: hash.text, 
       Curriculums_IDs: [],
       Bloque_ID: Bloque._id,
     });
 
     await user.save();
-
-    /*await Bloques.updateOne(
-     *			{ _id: Bloque._id },
-     *				{
-     *					$set{ ID_Usuario: user._id }
-  }
-  function (err, res) {
-  if (err)
-    throw err
-  });*/
+	
     Bloque.ID_Usuario = user._id;
     await Bloque.save();
+	secret.ID_Usuario = user.id;
+	await secret.save();
 
     if (!res) return true;
 
@@ -399,15 +467,15 @@ const Eliminar_Usuario_Curriculum = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
-
-    if (!usuario.Curriculums_IDs.includes(new ObjectId(curriculum_id)))
+	const index = usuario.Curriculums_IDs.indexOf(new ObjectId(curriculum_id));
+    if (index < 0)
       return res
         .status(403)
         .json({ success: false, error: "Curriculo sin acceso." });
 
     const curriculum_id_v = new ObjectId(curriculum_id);
     const curriculum = await Curriculums.findById(
-      new ObjectId(curriculum_id_v),
+      curriculum_id_v,
     );
     if (!curriculum) {
       return res.status(404).json({
@@ -416,9 +484,7 @@ const Eliminar_Usuario_Curriculum = async (req, res) => {
       });
     }
 
-    var nueva_lista = usuario.Curriculums_IDs.filter(
-      (id) => id != curriculum_id_v,
-    );
+    var nueva_lista = usuario.Curriculums_IDs.toSpliced(index, 1);
     usuario.Curriculums_IDs = nueva_lista;
 
     await usuario.save();
@@ -436,22 +502,31 @@ const Eliminar_Usuario_Curriculum = async (req, res) => {
 const Log_In = async (req, res) => {
   const email = req.body.email;
   const contrasena = req.body.contrasena;
+
+  
   const usuario = await Usuarios.findOne({
     Email: email,
-    Contrasena: contrasena,
+    //Contrasena: hasher(contrasena),
   });
-  let usuario_id;
+  
   if (!usuario) {
-    return res.status(201).json({
-      success: true,
-      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
-    });
+    return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
   }
-
-  usuario_id = usuario._id;
+  
+  const secret = await Secrets.findOne({ID_Usuario: usuario._id});
+  if (!secret) {
+    return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
+  }
+  
+  const rehashed = rehasher({key: secret.Param_1, iv: secret.Param_2}, contrasena);
+  console.log(rehashed.text)
+  if (rehashed.text !== usuario.Contrasena) {
+	  return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
+  }
+  
   return res
     .status(200)
-    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario_id });
+    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario._id });
 };
 
 const Log_Out = async (req, res) => {

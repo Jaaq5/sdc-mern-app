@@ -310,9 +310,13 @@ function App() {
     },
 
     CopiarPlantilla: (plantilla_id) => {
-      let plantilla = plantillas[plantilla_id]
-        ? plantillas[plantilla_id]
-        : plantillas.find((plnt) => plnt._id === plantilla_id);
+      let plantilla = null;
+	  if(plantillas)
+		  plantilla = plantillas[plantilla_id]
+			? plantillas[plantilla_id]
+			: plantillas.find((plnt) => plnt._id === plantilla_id);
+	  else
+		  return null;
 
       if (plantilla_id !== "simple" && !plantilla) return null;
 
@@ -350,14 +354,17 @@ function App() {
   };
 
   useEffect(() => {
-    //Load DB lists into cache
-    category_manager.ObtenerCategoriasCurriculum();
-    category_manager.ObtenerCategoriasPuesto();
-    category_manager.ObtenerCategoriasEstadoP();
-    category_manager.ObtenerCategoriasHabilidad();
-    category_manager.ObtenerIdiomas();
-    curriculum_manager.ObtenerPlantillas();
-  });
+    
+	if(isLoggedIn){
+		//Load DB lists into cache
+		category_manager.ObtenerCategoriasCurriculum();
+		category_manager.ObtenerCategoriasPuesto();
+		category_manager.ObtenerCategoriasEstadoP();
+		category_manager.ObtenerCategoriasHabilidad();
+		category_manager.ObtenerIdiomas();
+		curriculum_manager.ObtenerPlantillas();
+	}
+  }, [isLoggedIn]);
 
   return (
     <div>

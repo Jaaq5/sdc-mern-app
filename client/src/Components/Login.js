@@ -84,7 +84,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
                 variant="outlined"
                 type="email"
                 autoComplete="email"
-                placeholder="Enter Email"
+                placeholder="Ingresar email"
                 name="email"
                 required
                 onChange={(e) => setEmail(e.target.value)}
@@ -98,7 +98,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
                 variant="outlined"
                 type="password"
                 autoComplete="current-password"
-                placeholder="Enter Password"
+                placeholder="Ingresar contraseña"
                 name="contrasena"
                 required
                 onChange={(e) => setPassword(e.target.value)}
@@ -109,7 +109,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
             </Button>
           </form>
           <p>
-            Don't have an account? <Link href="/signup">SignUp</Link>
+            No tienes una cuenta? <Link href="/signup">Sign Up</Link>
           </p>
         </Paper>
       </Grid>
