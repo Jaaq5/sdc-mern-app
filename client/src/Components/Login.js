@@ -13,12 +13,7 @@ import {
 import { apiUrl } from "../consts";
 
 //style
-import {
-  paperStyles, 
-  heading, row, 
-  btnStyle, 
-  label
-} from "../style";
+import { paperStyles, heading, row, btnStyle, label } from "../style";
 
 function Login({ setIsLoggedIn, user_data, setUserData }) {
   const [email, setEmail] = useState("");

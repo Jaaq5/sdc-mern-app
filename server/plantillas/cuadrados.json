@@ -558,7 +558,16 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": ["Rol"," en ","Proyecto"," para ","Institucion"," (","Estado",")"],
+                  "Texto": [
+                    "Rol",
+                    " en ",
+                    "Proyecto",
+                    " para ",
+                    "Institucion",
+                    " (",
+                    "Estado",
+                    ")"
+                  ],
                   "style": { "dsiplay": "flex" }
                 }
               ]

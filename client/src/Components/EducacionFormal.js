@@ -24,16 +24,17 @@ import { AddCard, DeleteForever, PostAdd } from "@mui/icons-material";
 
 //style
 import {
-  paperStyleb, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  fieldTitleStyle, 
-  listStyle, 
-  listButtonStyle, 
-  deleteButton, 
+  paperStyleb,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  fieldTitleStyle,
+  listStyle,
+  listButtonStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -51,7 +52,6 @@ function EducacionFormal({
   const [cats_curr, setCatCurr] = useState([]);
   const [cats_puesto, setCatPuesto] = useState([]);
 
-  
   //Form
   const [bloque_id, setBloqueId] = useState(true);
 
@@ -91,7 +91,7 @@ function EducacionFormal({
             style={deleteButton}
             onClick={(e) => elminarBloque(plan_id, index)}
           >
-            <DeleteForever style = {deleteForeverStyle} />
+            <DeleteForever style={deleteForeverStyle} />
           </Button>
         </ListItemButton>
       )),

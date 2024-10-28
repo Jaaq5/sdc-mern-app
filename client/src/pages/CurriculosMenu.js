@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
-import PrevistaHTML  from "../Components/Editor/PrevistaHTML"
-import PrevistaPlantillaHTML  from "../Components/Editor/PrevistaPlantillaHTML"
+import PrevistaHTML from "../Components/Editor/PrevistaHTML";
+import PrevistaPlantillaHTML from "../Components/Editor/PrevistaPlantillaHTML";
 
 import {
   Input,
@@ -26,12 +26,12 @@ import HarvardExampleTemplate from "../Components/HarvardExampleTemplate";
 import AcademicExampleTemplate from "../Components/AcademicExampleTemplate";
 
 import {
-  paperStyle, 
+  paperStyle,
   heading,
-  listButtonStyle, 
-  deleteButton, 
+  listButtonStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -59,7 +59,7 @@ function CurriculosMenu({
     "Una plantilla que no tiene elementos ni estructura especial.",
   );
   const [PlantillaSimple, setPlantillaSimple] = useState(null);
-  
+
   //Form
   const [curriculo_id, setCurriculoId] = useState(true);
 
@@ -93,16 +93,16 @@ function CurriculosMenu({
     backgroundColor: "#fff",
     display: "block",
     verticalAlign: "top",
-	position: "relative",
-	padding: "0px"
+    position: "relative",
+    padding: "0px",
   };
   const previstaStyle = {
-	position: "absolute",
-	backgroundColor: "#0000", 
-	width: "100%", 
-	height: "100%"
-  }
-  
+    position: "absolute",
+    backgroundColor: "#0000",
+    width: "100%",
+    height: "100%",
+  };
+
   const mapToHTML = (curriculos, callback, id_callback, nuevo) => {
     if (!curriculos) return;
 
@@ -113,8 +113,8 @@ function CurriculosMenu({
             backgroundColor: "#FFFFFF",
             border: "solid 1px #999a",
             margin: "5px 5px",
-			position: "relative",
-			width: "310px"
+            position: "relative",
+            width: "310px",
           }}
           key={plan_id}
         >
@@ -129,9 +129,11 @@ function CurriculosMenu({
                 marginRight: "5px",
               }}
             >
-              {!nuevo? category_manager.IdANombreCurriculo(
-                curriculos[plan_id].ID_Categoria_Curriculum,
-              ) : curriculos[plan_id].ID_Categoria_Curriculum}
+              {!nuevo
+                ? category_manager.IdANombreCurriculo(
+                    curriculos[plan_id].ID_Categoria_Curriculum,
+                  )
+                : curriculos[plan_id].ID_Categoria_Curriculum}
             </span>
             <span
               style={{
@@ -143,9 +145,11 @@ function CurriculosMenu({
                 marginRight: "5px",
               }}
             >
-              {!nuevo? category_manager.IdANombrePuesto(
-                curriculos[plan_id].ID_Categoria_Puesto,
-              ) : curriculos[plan_id].ID_Categoria_Puesto}
+              {!nuevo
+                ? category_manager.IdANombrePuesto(
+                    curriculos[plan_id].ID_Categoria_Puesto,
+                  )
+                : curriculos[plan_id].ID_Categoria_Puesto}
             </span>
 
             {!nuevo ? (
@@ -155,13 +159,13 @@ function CurriculosMenu({
                   eliminarCurriculo(curriculos[plan_id]._id, index)
                 }
               >
-                <DeleteForever style = {deleteForeverStyle} />
+                <DeleteForever style={deleteForeverStyle} />
               </Button>
             ) : (
               <></>
             )}
           </div>
-		  
+
           <ListItemButton
             key={plan_id}
             style={listStyle}
@@ -170,14 +174,18 @@ function CurriculosMenu({
               manejarDatos(plan_id, nuevo);
             }}
           >
-		  
-		  {nuevo?
-			(<PrevistaPlantillaHTML documento={curriculos[plan_id].Documento} />)
-			:
-			(<PrevistaHTML user_data={user_data} documento={curriculos[plan_id].Documento} />)
-		  }
-		  
-		  <div style={previstaStyle}> </div>
+            {nuevo ? (
+              <PrevistaPlantillaHTML
+                documento={curriculos[plan_id].Documento}
+              />
+            ) : (
+              <PrevistaHTML
+                user_data={user_data}
+                documento={curriculos[plan_id].Documento}
+              />
+            )}
+
+            <div style={previstaStyle}> </div>
           </ListItemButton>
         </div>
       )),
@@ -227,7 +235,7 @@ function CurriculosMenu({
       mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
 
       //Mapear plantillas a HTML
-	  setPlantillaSimple(curriculum_manager.CopiarPlantilla("simple"));
+      setPlantillaSimple(curriculum_manager.CopiarPlantilla("simple"));
 
       //Mapear plantillas a HTML
       curriculum_manager
@@ -308,9 +316,9 @@ function CurriculosMenu({
     if (Object.keys(user_data.bloques.Informacion_Personal).length === 0) {
       //TODO
       //Mostrar mensaje de error, no de enviar al editor
-	  window.alert("Necesita registrar la Informacion Personal para empezar");
-	  navigate("/informacionPersonal");
-	  return;
+      window.alert("Necesita registrar la Informacion Personal para empezar");
+      navigate("/informacionPersonal");
+      return;
     }
 
     if (!nuevo) {
@@ -322,8 +330,8 @@ function CurriculosMenu({
       curriculum_manager
         .CrearCurriculo(user_data, setUserData, plantilla)
         .then((response) => {
-			editarCurriculo(response);
-		})
+          editarCurriculo(response);
+        })
         .catch((e) => {
           console.log(e);
         });
@@ -339,14 +347,11 @@ function CurriculosMenu({
     //delete user_data.curriculums[index];
     //setUserData(user_data);
 
-    curriculum_manager.EliminarCurriculo(
-      user_data,
-      setUserData,
-      index,
-      plan_id,
-    ).then((response) => {
-		mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
-	});
+    curriculum_manager
+      .EliminarCurriculo(user_data, setUserData, index, plan_id)
+      .then((response) => {
+        mapToHTML(user_data.curriculums, setCurriculos, setCurriculoId, false);
+      });
   };
 
   return (
@@ -401,9 +406,18 @@ function CurriculosMenu({
               <Typography component="h3" variant="h3" style={heading}>
                 Plantillas:
               </Typography>
-              <form style={{ margin: "5px", display: "flex", justifyContent: "flex-start", gap: "10px" }}>
+              <form
+                style={{
+                  margin: "5px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                }}
+              >
                 <FormControl style={{ width: "300px" }}>
-                  <InputLabel id="id-curriculum-select-label">Tipo de CV</InputLabel>
+                  <InputLabel id="id-curriculum-select-label">
+                    Tipo de CV
+                  </InputLabel>
                   <Select
                     variant="outlined"
                     labelId="id-curriculum-select-label"
@@ -442,67 +456,72 @@ function CurriculosMenu({
                   overflow: "auto",
                   backgroundColor: "#ccd5",
                   display: "flex",
-                  flexDirection: "row", 
-				  flexWrap: "wrap"
+                  flexDirection: "row",
+                  flexWrap: "wrap",
                 }}
               >
                 <div
-				  style={{
-					backgroundColor: "#FFFFFF",
-					border: "solid 1px #999a",
-					margin: "5px 5px",
-					position: "relative",
-					width: "310px"
-				  }}
-				  key={"simple"}
-				>
-				  <div style={{ paddingTop: "2px" }}>
-					<span
-					  style={{
-						backgroundColor: "#4139d4",
-						borderRadius: "10px",
-						fontWeight: "900",
-						padding: "5px",
-						color: "white",
-						marginRight: "5px",
-					  }}
-					>
-					  {PlantillaSimple? category_manager.IdANombreCurriculo(
-						PlantillaSimple.ID_Categoria_Curriculum,
-					  ) : ""}
-					</span>
-					<span
-					  style={{
-						backgroundColor: "#d47a39",
-						borderRadius: "10px",
-						fontWeight: "900",
-						padding: "5px",
-						color: "white",
-						marginRight: "5px",
-					  }}
-					>
-					  {PlantillaSimple? category_manager.IdANombrePuesto(
-						PlantillaSimple.ID_Categoria_Puesto,
-					  ) : ""}
-					</span>
-				  </div>
-				  
-				  <ListItemButton
-					key={"simple"}
-					style={listStyle}
-					onClick={(e) => {
-					  setPlantilla("simple");
-					  setCurriculoId(true);
-					  manejarDatos("simple",true)
-					}}
-				  >
-				  
-				  <PrevistaPlantillaHTML user_data={user_data} documento={PlantillaSimple?.Documento} />
-				  
-				  <div style={previstaStyle}> </div>
-				  </ListItemButton>
-				</div>
-				
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    border: "solid 1px #999a",
+                    margin: "5px 5px",
+                    position: "relative",
+                    width: "310px",
+                  }}
+                  key={"simple"}
+                >
+                  <div style={{ paddingTop: "2px" }}>
+                    <span
+                      style={{
+                        backgroundColor: "#4139d4",
+                        borderRadius: "10px",
+                        fontWeight: "900",
+                        padding: "5px",
+                        color: "white",
+                        marginRight: "5px",
+                      }}
+                    >
+                      {PlantillaSimple
+                        ? category_manager.IdANombreCurriculo(
+                            PlantillaSimple.ID_Categoria_Curriculum,
+                          )
+                        : ""}
+                    </span>
+                    <span
+                      style={{
+                        backgroundColor: "#d47a39",
+                        borderRadius: "10px",
+                        fontWeight: "900",
+                        padding: "5px",
+                        color: "white",
+                        marginRight: "5px",
+                      }}
+                    >
+                      {PlantillaSimple
+                        ? category_manager.IdANombrePuesto(
+                            PlantillaSimple.ID_Categoria_Puesto,
+                          )
+                        : ""}
+                    </span>
+                  </div>
+
+                  <ListItemButton
+                    key={"simple"}
+                    style={listStyle}
+                    onClick={(e) => {
+                      setPlantilla("simple");
+                      setCurriculoId(true);
+                      manejarDatos("simple", true);
+                    }}
+                  >
+                    <PrevistaPlantillaHTML
+                      user_data={user_data}
+                      documento={PlantillaSimple?.Documento}
+                    />
+
+                    <div style={previstaStyle}> </div>
+                  </ListItemButton>
+                </div>
 
                 <div style={{ display: "flex", alignItems: "flex-start" }}>
                   {" "}

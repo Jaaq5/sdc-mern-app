@@ -1,7 +1,16 @@
 {
-	"palettes" : {
-		"Azules" : {"Nombre" : "Azúl", "Paleta" : ["#040E4B", "#07146D", "#091A8F", "#0B21B1", "#0D27D3"]},
-		"Cyan" : {"Nombre" : "Cyan", "Paleta" : ["#1C5564", "#267186", "#28788E", "#39ABCA", "#39ABCA"]},
-		"Naranjas" : {"Nombre" : "Naranja", "Paleta" : ["#4B2703", "#6D3904", "#8F4A06", "#B15C07", "#DC7308"]}
-	}
+  "palettes": {
+    "Azules": {
+      "Nombre": "Azúl",
+      "Paleta": ["#040E4B", "#07146D", "#091A8F", "#0B21B1", "#0D27D3"]
+    },
+    "Cyan": {
+      "Nombre": "Cyan",
+      "Paleta": ["#1C5564", "#267186", "#28788E", "#39ABCA", "#39ABCA"]
+    },
+    "Naranjas": {
+      "Nombre": "Naranja",
+      "Paleta": ["#4B2703", "#6D3904", "#8F4A06", "#B15C07", "#DC7308"]
+    }
+  }
 }
