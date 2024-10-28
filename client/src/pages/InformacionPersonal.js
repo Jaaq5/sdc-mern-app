@@ -21,14 +21,15 @@ import axios from "axios";
 
 //styles
 import {
-  paperStyleb, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  listStyle, 
-  deleteButton, 
+  paperStyleb,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  listStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -70,7 +71,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever style = {deleteForeverStyle} />
+          <DeleteForever style={deleteForeverStyle} />
         </Button>
       </div>
     ) : user_data.userImage ? (
@@ -81,7 +82,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever style = {deleteForeverStyle} />
+          <DeleteForever style={deleteForeverStyle} />
         </Button>
       </div>
     ) : (
@@ -92,7 +93,7 @@ function InformacionPersonal({
           style={{ width: "100px", height: "100px", marginRight: "10px" }}
         />
         <Button style={deleteButton} onClick={eliminarImagen}>
-          <DeleteForever style = {deleteForeverStyle} />
+          <DeleteForever style={deleteForeverStyle} />
         </Button>
       </div>
     );
@@ -115,7 +116,7 @@ function InformacionPersonal({
               style={deleteButton}
               onClick={(e) => eliminarBloque(info_id, index)}
             >
-              <DeleteForever style = {deleteForeverStyle} />
+              <DeleteForever style={deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -316,7 +317,7 @@ function InformacionPersonal({
               >
                 <ListItemButton
                   key={true}
-                  style={( listStyle, { backgroundColor: "#4f96"})}
+                  style={(listStyle, { backgroundColor: "#4f96" })}
                   onClick={(e) => reiniciarForm()}
                 >
                   <PostAdd />
@@ -352,9 +353,7 @@ function InformacionPersonal({
                     onChange={(e) => {
                       const regex = /^[0-9\b]+$/;
                       if (e.target.value === "" || regex.test(e.target.value)) {
-						e.target.setCustomValidity(
-                        "",
-                        )
+                        e.target.setCustomValidity("");
                         setTelefono(e.target.value);
                       }
                     }}
@@ -416,7 +415,10 @@ function InformacionPersonal({
                   <Button
                     variant="contained"
                     component="label"
-                    style={{ marginRight: "10px" , backgroundColor: theme.palette.yellow.main}}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: theme.palette.yellow.main,
+                    }}
                   >
                     Subir Imagen
                     <input

@@ -17,14 +17,15 @@ import { PostAdd, DeleteForever } from "@mui/icons-material";
 
 //style
 import {
-  paperStylem, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  listStyle, 
-  deleteButton, 
+  paperStylem,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  listStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -38,8 +39,6 @@ function Publicaciones({
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [publicaciones, setPublicaciones] = useState([]);
-
-
 
   // Form
   const [publicacion_id, setPublicacionId] = useState(true);
@@ -92,7 +91,7 @@ function Publicaciones({
               style={deleteButton}
               onClick={(e) => eliminarPublicacion(publicacion_id, index)}
             >
-              <DeleteForever style = {deleteForeverStyle} />
+              <DeleteForever style={deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );

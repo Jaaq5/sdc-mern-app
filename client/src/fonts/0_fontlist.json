@@ -1,11 +1,39 @@
 {
-	"fonts" : [
-		{"name" : "Arial",  		 "fontFamily" : "Arial",  	   	 "importAvailability" : ["Regular", "Italic", "Bold"]},
-		{"name" : "Arial Light",  	 "fontFamily" : "Arial",  	 	 "importAvailability" : ["Light", "Italic"]},
-		{"name" : "Roboto", 		 "fontFamily" : "Roboto", 		 "importAvailability" : ["Regular", "Italic", "Bold"]},
-		{"name" : "Roboto Light",  	 "fontFamily" : "Roboto",  	 	 "importAvailability" : ["Light", "Italic"]},
-		{"name" : "Tahoma", 		 "fontFamily" : "Tahoma", 		 "importAvailability" : ["Regular", "Bold"]},
-		{"name" : "Times New Roman", "fontFamily" : "TimesNewRoman", "importAvailability" : ["Regular", "Italic", "Bold"]},
-		{"name" : "Comic Sans",  	 "fontFamily" : "Comic Sans MS",  	 "importAvailability" : ["Regular"]}
-	]
+  "fonts": [
+    {
+      "name": "Arial",
+      "fontFamily": "Arial",
+      "importAvailability": ["Regular", "Italic", "Bold"]
+    },
+    {
+      "name": "Arial Light",
+      "fontFamily": "Arial",
+      "importAvailability": ["Light", "Italic"]
+    },
+    {
+      "name": "Roboto",
+      "fontFamily": "Roboto",
+      "importAvailability": ["Regular", "Italic", "Bold"]
+    },
+    {
+      "name": "Roboto Light",
+      "fontFamily": "Roboto",
+      "importAvailability": ["Light", "Italic"]
+    },
+    {
+      "name": "Tahoma",
+      "fontFamily": "Tahoma",
+      "importAvailability": ["Regular", "Bold"]
+    },
+    {
+      "name": "Times New Roman",
+      "fontFamily": "TimesNewRoman",
+      "importAvailability": ["Regular", "Italic", "Bold"]
+    },
+    {
+      "name": "Comic Sans",
+      "fontFamily": "Comic Sans MS",
+      "importAvailability": ["Regular"]
+    }
+  ]
 }

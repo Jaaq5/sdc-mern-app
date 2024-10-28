@@ -22,15 +22,16 @@ import "react-international-phone/style.css";
 
 //style
 import {
-  paperStylexb, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  listStyle, 
-  listButtonStyle, 
-  deleteButton, 
+  paperStylexb,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  listStyle,
+  listButtonStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 // Para cargar los datos de usuario, ponerlos como parámetros aquí
@@ -102,7 +103,7 @@ function Referencias({
               style={deleteButton}
               onClick={(e) => eliminarPublicacion(referencia_id, index)}
             >
-              <DeleteForever style = {deleteForeverStyle} />
+              <DeleteForever style={deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );

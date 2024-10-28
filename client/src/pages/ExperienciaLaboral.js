@@ -21,16 +21,17 @@ import { DeleteForever, PostAdd } from "@mui/icons-material";
 
 //style
 import {
-  paperStylexb, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  fieldTitleStyle, 
-  listStyle, 
-  listButtonStyle, 
-  deleteButton, 
+  paperStylexb,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  fieldTitleStyle,
+  listStyle,
+  listButtonStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
 //Para cargar los datos de usuario, ponerlos como parametros aqui
@@ -90,7 +91,7 @@ function ExperienciaLaboral({
             style={deleteButton}
             onClick={(e) => elminarBloque(plan_id, index)}
           >
-            <DeleteForever style = {deleteForeverStyle} />
+            <DeleteForever style={deleteForeverStyle} />
           </Button>
         </ListItemButton>
       )),
