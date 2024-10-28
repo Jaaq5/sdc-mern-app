@@ -6,9 +6,7 @@ import axios from "axios";
 import { Button } from "@mui/material";
 
 //style
-import {
-  logoutbutton
-} from "../style";
+import { logoutbutton } from "../style";
 
 function Logout({ setIsLoggedIn }) {
   const navigate = useNavigate();
@@ -29,7 +27,7 @@ function Logout({ setIsLoggedIn }) {
         console.error("Error logging out:", error);
       });
   };
-  
+
   return (
     <Button
       variant="contained"

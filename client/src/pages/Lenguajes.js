@@ -19,22 +19,29 @@ import { PostAdd, DeleteForever } from "@mui/icons-material";
 
 //style
 import {
-  paperStyles, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  listStyle, 
-  listButtonStyle, 
-  deleteButton, 
+  paperStyles,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  listStyle,
+  listButtonStyle,
+  deleteButton,
   dense,
-  deleteForeverStyle
+  deleteForeverStyle,
 } from "../style";
 
-function Lenguajes({ user_data, setUserData, manager_bloques, category_manager}) {
+function Lenguajes({
+  user_data,
+  setUserData,
+  manager_bloques,
+  category_manager,
+}) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [lenguajes, setLenguajes] = useState([]);
   const [cat_lenguajes, setLenguajesCat] = useState([]);
+
   const [cat_niveles, setNivelesCat] = useState([]);
  
   /*const niveles = [
@@ -51,11 +58,12 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
   const [lista, setL] = useState("");
   //
 
-  const getNameById =
-        (id) => {
-          const matchedMenuItem = cat_lenguajes.find((menuItem) => menuItem.props.value === id);
-          return matchedMenuItem ? matchedMenuItem.props.children : null;
-        };
+  const getNameById = (id) => {
+    const matchedMenuItem = cat_lenguajes.find(
+      (menuItem) => menuItem.props.value === id,
+    );
+    return matchedMenuItem ? matchedMenuItem.props.children : null;
+  };
 
   // Cargar habilidades y mapeo a HTML
   const mapToHTML = (bloques) => {
@@ -82,7 +90,7 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
               style={deleteButton}
               onClick={(e) => eliminarLenguaje(lenguaje_id, index)}
             >
-              <DeleteForever style = {deleteForeverStyle} />
+              <DeleteForever style={deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
@@ -125,11 +133,10 @@ function Lenguajes({ user_data, setUserData, manager_bloques, category_manager})
         .catch((e) => {});
 
       // Mapear la lista de habilidades a HTML
-      
+
       setLoading(false);
     }
   }, [user_data, setUserData, navigate]);
-
 
   useEffect(() => {
     if (cat_lenguajes.length > 0) {

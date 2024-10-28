@@ -8,4 +8,6 @@ categoria_estadoP_route.get(
   Categorias_EstadoP_Controller.Obtener_Categorias_EstadoP,
 );
 
+
 module.exports = categoria_estadoP_route;
+

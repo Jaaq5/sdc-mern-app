@@ -10,7 +10,16 @@ import { useLocation, Link } from 'react-router-dom';
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Slide from "@mui/material/Slide";
 import { navbutton, burger_button, disabledNavButton } from "../style";
+const logo = "/sdc-logo.png";
 
+// COMPONENTE #################################################################
+/**
+ * Componente Navbar
+ * @param {Object} props - Props para el componente Navbar.
+ * @param {boolean} props.isLoggedIn - Indica si el usuario está logueado.
+ * @param {Function} props.setIsLoggedIn - Función para establecer el estado de login.
+ * @returns {JSX.Element} El componente Navbar.
+ */
 export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   
   const color_gray = { color: "#ccf" };
@@ -57,6 +66,26 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     <HideOnScroll>
       <AppBar sx={{ bgcolor: theme.palette.lightred.main }}>
         <Toolbar>
+          {/* Imagen del logo */}
+          <div
+            style={{
+              backgroundColor: "pink",
+              borderRadius: "50%",
+              padding: "5px",
+              display: "inline-block",
+            }}
+          >
+            <img
+              src={logo}
+              alt="Logo"
+              style={{
+                height: "40px",
+                width: "auto",
+                display: "block",
+              }}
+            />
+          </div>
+          {/* Texto de la barra de navegación */}
           <Typography
             variant="h4"
             component="div"
@@ -73,7 +102,119 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
               <> </>
             )}
           </Typography>
-          {!isLoggedIn ? (
+
+          {/* Icono del menú para modo móvil */}
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleDrawerToggle}
+            // Mostrar solo en modo móvil
+            sx={{ display: { xs: "block", md: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          {/* MODO ESCRITORIO ################################################# */}
+
+          {/* Si no está logueado, mostrar botones de Login y Signup */}
+          {!isLoggedIn && (
+            <>
+              <Button
+                variant="contained"
+                style={navbutton}
+                color="error"
+                component={Link}
+                to="/login"
+                // Mostrar solo en modo escritorio
+                sx={{ display: { xs: "none", md: "flex" } }}
+              >
+                Login
+              </Button>
+
+              <Button
+                variant="contained"
+                style={navbutton}
+                color="success"
+                component={Link}
+                to="/signup"
+                // Mostrar solo en modo escritorio
+                sx={{ display: { xs: "none", md: "flex" } }}
+              >
+                Signup
+              </Button>
+            </>
+          )}
+        </Toolbar>
+
+        {/* Barra navegación en modo escritorio cuando está logueado */}
+        {isLoggedIn && (
+          <Toolbar
+            style={{
+              justifyContent: "space-between",
+              paddingLeft: "0px",
+            }}
+            // Mostrar solo en modo escritorio
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="contained"
+                style={burger_button}
+                onClick={() => setExpanded(!expanded)}
+              >
+                {expanded ? "X" : "|||"}
+              </Button>
+
+              {expanded && (
+                <Button
+                  variant="contained"
+                  style={navbutton}
+                  color="warning"
+                  onClick={() => setIsLoggedIn(false)}
+                >
+                  Logout
+                </Button>
+              )}
+            </div>
+
+            {/* Botones de navegación en modo escritorio */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "left",
+                width: "100%",
+              }}
+            >
+              {navButtons.map(({ path, label }) =>
+                renderNavButton(path, label),
+              )}
+            </div>
+          </Toolbar>
+        )}
+
+        {/* MODO MÓVIL ######################################################## */}
+
+        {/* Drawer para navegación en modo móvil */}
+        <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
+          <div
+            role="presentation"
+            onClick={handleDrawerToggle}
+            onKeyDown={handleDrawerToggle}
+          >
+            <IconButton onClick={handleDrawerToggle}>
+              <CloseIcon />
+            </IconButton>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "20px",
+              }}
+            >
+              {/* Si no está logueado, mostrar botones de Login y Signup */}
+              {!isLoggedIn ? (
                 <>
                   <Button
                     variant="contained"

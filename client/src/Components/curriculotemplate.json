@@ -296,11 +296,21 @@
               "style": {
                 "backgroundColor": "#0000",
                 "border": "0pt",
-                "borderTop": "4pt",
+                "borderTopWidth": "4pt",
                 "borderColor": "#ccc",
                 "borderStyle": "solid",
                 "fontFamily": "Roboto",
                 "fontWeight": 400
+              },
+              "Editable": {
+                "Tipo": "Tamano",
+                "Titulo": "",
+                "Label": "",
+                "Campo": "",
+                "Placeholder": "",
+                "Celdas": false,
+                "Pos": false,
+                "Fuentes": { "border": true }
               },
               "plantillaStyle": {
                 "backgroundColor": "#0ff0",
@@ -325,12 +335,22 @@
                     "fontSize": "14px",
                     "fontFamily": "Roboto"
                   },
-				  "Editable": {
-					"Tipo": "Fuentes",
-					"Titulo": "Editar fuentes",
-					"Label": "Fuentes",
-					"Placeholder": "Fuentes"
-				  }
+                  "Editable": {
+                    "Tipo": "Estilo",
+                    "Titulo": "Editar fuentes",
+                    "Label": "Fuentes",
+                    "Placeholder": "Fuentes",
+                    "Fuentes": {
+                      "fontFamily": true,
+                      "color": true,
+                      "fontSize": true,
+                      "fontWeight": true,
+                      "fontStyle": true,
+                      "textDecoration": true,
+                      "backgroundColor": true,
+                      "border": true
+                    }
+                  }
                 },
                 {
                   "Tipo": "Texto",
@@ -1014,9 +1034,7 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Descripcion"
-                  ],
+                  "Texto": ["Descripcion"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1027,9 +1045,9 @@
             }
           ]
         },
-        "Conferencias": {
+        "Premios": {
           "Mostrar": true,
-          "TituloSeccion": "Conferencias",
+          "TituloSeccion": "Premios",
           "style": {
             "textAlign": "left",
             "position": "relative",
@@ -1037,30 +1055,25 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+          "Celdas": [78, 25],
           "Editable": {
-            "Titulo": "Cambiar Lista de Conferencias",
+            "Titulo": "Cambiar Lista de Premios",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
-                "Placeholder": "Titulo de Conferencias"
+                "Placeholder": "Titulo de Premios"
               },
               "style": {
                 "fontWeight": 900,
@@ -1090,11 +1103,7 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Fecha_Conferencia",
-                    " - ",
-                    "Titulo"
-                  ],
+                  "Texto": ["Fecha", " - ", "Nombre"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1103,9 +1112,76 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Lugar"
-                  ],
+                  "Texto": ["Institucion"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "Repositorios": {
+          "Mostrar": true,
+          "TituloSeccion": "Conferencias",
+          "style": {
+            "textAlign": "left",
+            "position": "relative",
+            "width": "595px",
+            "height": "182.21666666666667px",
+            "overflow": "hidden"
+          },
+          "Celdas": [78, 25],
+          "Editable": {
+            "Titulo": "Cambiar Lista de Repositorios",
+            "Campo": "IDs",
+            "Tipo": "IDs",
+            "Arreglo": true,
+            "Celdas": true,
+            "Pos": true
+          },
+          "Estructura": [
+            {
+              "Tipo": "Texto",
+              "Texto": ["TituloSeccion"],
+              "Editable": {
+                "Tipo": "Texto",
+                "Campo": "TituloSeccion",
+                "Titulo": "Editar titulo",
+                "Label": "Titulo",
+                "Placeholder": "Titulo de Repositorios"
+              },
+              "style": {
+                "fontWeight": 900,
+                "fontSize": "20px",
+                "fontFamily": "Roboto"
+              }
+            },
+            {
+              "Tipo": "IDs",
+              "style": {
+                "dsiplay": "flex",
+                "border": "0pt",
+                "borderTop": "4pt",
+                "borderColor": "#ccc",
+                "borderStyle": "solid",
+                "fontFamily": "Roboto",
+                "fontWeight": 400
+              },
+              "plantillaStyle": {
+                "display": "flex",
+                "flexDirection": "row",
+                "border": "0pt",
+                "borderBottom": "2pt",
+                "borderColor": "#ddd",
+                "borderStyle": "solid"
+              },
+              "Plantilla": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Nombre"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1114,9 +1190,16 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Descripcion"
-                  ],
+                  "Texto": ["Url"],
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Descripcion"],
                   "style": {
                     "dsiplay": "flex",
                     "fontFamily": "Roboto",
@@ -1137,27 +1220,27 @@
             "height": "182.21666666666667px",
             "overflow": "hidden"
           },
-          "Celdas": [
-            78,
-            25
-          ],
+
+          "Celdas": [78, 25],
+
           "Editable": {
             "Titulo": "Cambiar Lista de Referencias",
             "Campo": "IDs",
             "Tipo": "IDs",
             "Arreglo": true,
             "Celdas": true,
-			"Pos": true
+
+            "Pos": true
           },
           "Estructura": [
             {
               "Tipo": "Texto",
-              "Texto": [
-                "TituloSeccion"
-              ],
+
+              "Texto": ["TituloSeccion"],
               "Editable": {
                 "Tipo": "Texto",
-				"Campo": "TituloSeccion",
+                "Campo": "TituloSeccion",
+
                 "Titulo": "Editar titulo",
                 "Label": "Titulo",
                 "Placeholder": "Titulo de Referencias",
@@ -1191,11 +1274,9 @@
               "Plantilla": [
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Nombre",
-                    " de ",
-                    "Organizacion"
-                  ],
+
+                  "Texto": ["Fecha_Conferencia", " - ", "Titulo"],
+
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",
@@ -1204,12 +1285,104 @@
                 },
                 {
                   "Tipo": "Texto",
-                  "Texto": [
-                    "Contacto: ",
-                    "Email",
-                    ", ",
-                    "Telefono"
-                  ],
+
+                  "Texto": ["Lugar"],
+
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+
+                  "Texto": ["Descripcion"],
+
+                  "style": {
+                    "dsiplay": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "Referencias": {
+          "Mostrar": true,
+          "TituloSeccion": "Referencias",
+          "style": {
+            "textAlign": "left",
+            "position": "relative",
+            "width": "595px",
+            "height": "182.21666666666667px",
+            "overflow": "hidden"
+          },
+          "Celdas": [78, 25],
+          "Editable": {
+            "Titulo": "Cambiar Lista de Referencias",
+            "Campo": "IDs",
+            "Tipo": "IDs",
+            "Arreglo": true,
+            "Celdas": true,
+            "Pos": true
+          },
+          "Estructura": [
+            {
+              "Tipo": "Texto",
+              "Texto": ["TituloSeccion"],
+              "Editable": {
+                "Tipo": "Texto",
+                "Campo": "TituloSeccion",
+                "Titulo": "Editar titulo",
+                "Label": "Titulo",
+                "Placeholder": "Titulo de Referencias",
+                "Fuentes": {
+                  "fontFamily": true,
+                  "color": true,
+                  "fontSize": true,
+                  "fontWeight": true
+                }
+              },
+              "style": {
+                "fontWeight": 900,
+                "fontSize": "20px",
+                "fontFamily": "Roboto"
+              }
+            },
+            {
+              "Tipo": "IDs",
+              "style": {
+                "display": "flex",
+                "border": "0pt",
+                "borderTop": "4pt",
+                "borderColor": "#ccc",
+                "borderStyle": "solid",
+                "fontFamily": "Roboto",
+                "fontWeight": 400
+              },
+              "plantillaStyle": {
+                "display": "flex",
+                "flexDirection": "row",
+                "border": "0pt",
+                "borderBottom": "2pt",
+                "borderColor": "#ddd",
+                "borderStyle": "solid"
+              },
+              "Plantilla": [
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Nombre", " de ", "Organizacion"],
+                  "style": {
+                    "display": "flex",
+                    "fontFamily": "Roboto",
+                    "fontWeight": 400
+                  }
+                },
+                {
+                  "Tipo": "Texto",
+                  "Texto": ["Contacto: ", "Email", ", ", "Telefono"],
                   "style": {
                     "display": "flex",
                     "fontFamily": "Roboto",

@@ -1,7 +1,6 @@
 const Categorias_Curriculum = require("../models/Categorias_Curriculum_Model");
 const { ObjectId } = require("mongodb");
 
-
 const Obtener_Categorias_Curriculum = async (req, res) => {
   try {
     const categorias_curriculum = await Categorias_Curriculum.find();
@@ -16,7 +15,6 @@ const Obtener_Categorias_Curriculum = async (req, res) => {
       .json({ success: false, error: "Error interno del servidor" });
   }
 };
-
 
 module.exports = {
   Obtener_Categorias_Curriculum,

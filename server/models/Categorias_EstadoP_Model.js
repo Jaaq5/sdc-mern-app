@@ -9,3 +9,4 @@ const Categorias_EstadoP_Model = mongoose.Schema({
 });
 
 module.exports = mongoose.model("Categorias_EstadoP", Categorias_EstadoP_Model);
+

@@ -22,13 +22,14 @@ import axios from "axios";
 
 //style
 import {
-  paperStylem, 
-  paperSX, 
-  heading, row, 
-  btnStyle, 
-  listStyle, 
+  paperStylem,
+  paperSX,
+  heading,
+  row,
+  btnStyle,
+  listStyle,
   deleteButton,
-  deleteForeverStyle 
+  deleteForeverStyle,
 } from "../style";
 
 function Habilidades({ user_data, setUserData, manager_bloques }) {
@@ -77,7 +78,7 @@ function Habilidades({ user_data, setUserData, manager_bloques }) {
               style={deleteButton}
               onClick={(e) => eliminarHabilidad(habilidad_id)}
             >
-              <DeleteForever style = {deleteForeverStyle} />
+              <DeleteForever style={deleteForeverStyle} />
             </Button>
           </ListItemButton>
         );
