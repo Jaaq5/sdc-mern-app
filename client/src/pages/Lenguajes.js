@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  FormControl,
 } from "@mui/material";
 import { PostAdd, DeleteForever } from "@mui/icons-material";
 
@@ -40,12 +41,13 @@ function Lenguajes({
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [lenguajes, setLenguajes] = useState([]);
   const [cat_lenguajes, setLenguajesCat] = useState([]);
-
-  const niveles = [
+  const [cat_niveles, setNivelesCat] = useState([]);
+ 
+  /*const niveles = [
     { id: 1, nombre: "Bajo" },
     { id: 2, nombre: "Medio" },
     { id: 3, nombre: "Alto" },
-  ];
+  ];*/
 
   // Formulario
   const [bloque_id, setBloqueId] = useState(true);
@@ -81,7 +83,7 @@ function Lenguajes({
           >
             <ListItemText
               primary={`Nombre: ${tipoLenguaje} | Certificación: ${bloque.Certificacion}`}
-              secondary={`Nivel ${niveles.find((obj) => obj.id == bloque.Nivel).nombre}`}
+              secondary={`Nivel ${bloque.NivelNombre}`}
             />
             <Button
               style={deleteButton}
@@ -119,6 +121,13 @@ function Lenguajes({
         .ObtenerIdiomas()
         .then((response) => {
           mapDBListToHTML(setLenguajesCat, response);
+        })
+        .catch((e) => {});
+
+      category_manager
+        .ObtenerCategoriasNivelI()
+        .then((response) => {
+          mapDBListToHTML(setNivelesCat, response);
         })
         .catch((e) => {});
 
@@ -165,6 +174,7 @@ function Lenguajes({
     const datosBloque = {
       Id: lenguaje,
       Nivel: nivel,
+      NivelNombre: category_manager.IdANombreNivelI(nivel),
       Certificacion: certificacion,
     };
 
@@ -263,29 +273,20 @@ function Lenguajes({
                     {cat_lenguajes}
                   </Select>
                   <div>
-                    <InputLabel id="nivelesSelect">Nivel</InputLabel>
+                  <FormControl style={{ width: "80%", marginTop: "20px" }}>
+                    <InputLabel id="id-nivel-select-label">Nivel</InputLabel>
                     <Select
-                      style={{ width: "60%" }}
-                      variant="outlined"
-                      labelId="nivelesSelect"
-                      label={"Nivel"}
+                      labelId="id-nivel-select-label"
+                      id="id-nivel-simple-select"
+                      defaultValue={""}
+
                       value={nivel}
-                      onChange={(e) => {
-                        setNivel(e.target.value);
-                      }}
+                      label="Nivel"
+                      onChange={(e) => setNivel(e.target.value)}
                     >
-                      <option value="Seleccione un nivel">
-                        {" "}
-                        -- Seleccione un nivel --{" "}
-                      </option>
-                      {niveles.map((option) => {
-                        return (
-                          <MenuItem key={option.id} value={option.id}>
-                            {option.nombre}
-                          </MenuItem>
-                        );
-                      })}
+                      {cat_niveles}
                     </Select>
+                  </FormControl>
                   </div>
                   <TextField
                     style={row}
