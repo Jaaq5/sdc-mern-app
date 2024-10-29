@@ -15,10 +15,20 @@ import { apiUrl } from "../consts";
 //style
 import { paperStyles, heading, row, btnStyle, label } from "../style";
 
-function Login({ setIsLoggedIn, user_data, setUserData }) {
+function Login({ setIsLoggedIn, user_data, setUserData, setLocal }) {
   const [email, setEmail] = useState("");
   const [contrasena, setPassword] = useState("");
   const navigate = useNavigate();
+  
+  const manejarLocal = () => {
+	  setLocal(true);
+	  setIsLoggedIn(true);
+	  const local = localStorage.getItem("sdc_local");
+	  const data = local? JSON.parse(local) : {bloques: {}, curriculums: [], usuario_id: "1", token: "1", name: "Local", email: "local@sdc.com"};
+	  setUserData(data)
+	  localStorage.setItem("sdc_local", JSON.stringify(data));
+	  navigate("/curriculo-menu");
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -27,12 +37,20 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
       .then((result) => {
         if (result.data.usuario_id) {
           const usuario_id = result.data.usuario_id;
+		  const token = result.data.token;
           axios
-            .get(apiUrl + "/api/users/obtener-usuario/" + usuario_id)
+            .get(apiUrl + "/api/users/obtener-usuario/"+usuario_id+"&"+token, 
+				{ 
+				params: {
+					//usuario_id: usuario_id,
+					//token: token
+				}
+				})
             .then((response) => {
               if (response.data.data) {
                 setIsLoggedIn(true);
                 response.data.data.usuario_id = usuario_id;
+				response.data.data.token = token;
                 Object.keys(response.data.data.curriculums).map(
                   (curriculum_id) => {
                     response.data.data.curriculums[curriculum_id].Documento =
@@ -84,7 +102,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
                 variant="outlined"
                 type="email"
                 autoComplete="email"
-                placeholder="Enter Email"
+                placeholder="Ingresar email"
                 name="email"
                 required
                 onChange={(e) => setEmail(e.target.value)}
@@ -98,7 +116,7 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
                 variant="outlined"
                 type="password"
                 autoComplete="current-password"
-                placeholder="Enter Password"
+                placeholder="Ingresar contraseña"
                 name="contrasena"
                 required
                 onChange={(e) => setPassword(e.target.value)}
@@ -109,8 +127,11 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
             </Button>
           </form>
           <p>
-            Don't have an account? <Link href="/signup">SignUp</Link>
+            No tienes una cuenta? <Link href="/signup">Sign Up</Link>
           </p>
+		  <p style={{display: "none"}}>
+		    O utilizalo localmente <Link onClick={(e) => manejarLocal()}>Local</Link>
+		  </p>
         </Paper>
       </Grid>
     </div>

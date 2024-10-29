@@ -25,7 +25,7 @@ router.patch("/actualizar-imagen/:usuario_id", Actualizar_Imagen_Usuario);
 router.delete("/eliminar-imagen/:usuario_id", Eliminar_Imagen_Usuario);
 router.post("/log-in-usuario", Log_In);
 router.post("/log-out-usuario", Log_Out);
-router.get("/obtener-usuario/:usuario_id", Obtener_Datos_Usuario);
+router.get("/obtener-usuario/:usuario_id&:token", Obtener_Datos_Usuario);
 router.post("/crear-curriculum", Crear_Curriculum);
 router.patch("/actualizar-usuario", Actualizar_Usuario);
 router.patch("/actualizar-usuario-bloque", Actualizar_Usuario_Bloque);
