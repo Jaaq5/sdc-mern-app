@@ -15,10 +15,20 @@ import { apiUrl } from "../consts";
 //style
 import { paperStyles, heading, row, btnStyle, label } from "../style";
 
-function Login({ setIsLoggedIn, user_data, setUserData }) {
+function Login({ setIsLoggedIn, user_data, setUserData, setLocal }) {
   const [email, setEmail] = useState("");
   const [contrasena, setPassword] = useState("");
   const navigate = useNavigate();
+  
+  const manejarLocal = () => {
+	  setLocal(true);
+	  setIsLoggedIn(true);
+	  const local = localStorage.getItem("sdc_local");
+	  const data = local? JSON.parse(local) : {bloques: {}, curriculums: [], usuario_id: "1", token: "1", name: "Local", email: "local@sdc.com"};
+	  setUserData(data)
+	  localStorage.setItem("sdc_local", JSON.stringify(data));
+	  navigate("/curriculo-menu");
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -119,6 +129,9 @@ function Login({ setIsLoggedIn, user_data, setUserData }) {
           <p>
             No tienes una cuenta? <Link href="/signup">Sign Up</Link>
           </p>
+		  <p style={{display: "none"}}>
+		    O utilizalo localmente <Link onClick={(e) => manejarLocal()}>Local</Link>
+		  </p>
         </Paper>
       </Grid>
     </div>

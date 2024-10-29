@@ -36,6 +36,17 @@ function App() {
   const [user_data, setUserData] = useState(null);
   const [listas_categorias, setListas] = useState({});
   const [plantillas, setPlantillas] = useState(null);
+  const [local, setLocal] = useState(false);
+  
+  const guardarLocal = (local) => {
+	  const data = {ultima_modificacion: Date.now()/60000};
+	  user_data.ultima_modificacion = data.ultima_modificacion;
+	  if(local){
+		  data.bloques = user_data.bloques;
+		  data.urriculums = user_data.curriculums;
+	  }
+	  localStorage.setItem("sdc_local", JSON.stringify(data));
+  };
 
   const manager_bloques = {
     //Funciones dinamicas para manipular bloques
@@ -55,24 +66,56 @@ function App() {
       user_data.bloques[sub_tabla + "_NID"] =
         user_data.bloques[sub_tabla + "_NID"] + 1; //Incrementar
       setUserData(user_data); //Actualizar variable de sesion
+	  
+	  axios
+        .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
+			usuario_id: user_data.usuario_id,
+			seccion: sub_tabla,
+			id: user_data.bloques[sub_tabla + "_NID"],
+			datos: data,
+			token: user_data.token,
+		  }).then((response) => {
+			
+		  });;
+	  
       return user_data.bloques[sub_tabla + "_NID"] - 1;
     },
 
     ActualizarBloque: (user_data, setUserData, sub_tabla, id, data) => {
       user_data.bloques[sub_tabla][id] = data; //Actualizar bloque
       setUserData(user_data); //Actualizar variable de sesion
+	  axios
+        .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
+			usuario_id: user_data.usuario_id,
+			seccion: sub_tabla,
+			id: id,
+			datos: data,
+			token: user_data.token,
+		  }).then((response) => {
+			
+		  });;
     },
 
     BorrarBloque: (user_data, setUserData, sub_tabla, id) => {
       delete user_data.bloques[sub_tabla][id]; //Eliminar bloque
       setUserData(user_data); //Actualizar variable de sesion
+	  axios
+        .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
+			usuario_id: user_data.usuario_id,
+			seccion: sub_tabla,
+			id: id,
+			datos: null,
+			token: user_data.token,
+		  }).then((response) => {
+			
+		  });
     },
 
-    GuardarCambios: (user_data) => {
-      axios
+    GuardarCambios: (user_data, seccion, id, campo) => {
+      /*axios
         .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
           usuario_id: user_data.usuario_id,
-          bloques: user_data.bloques,
+          datos: user_data.bloques,
 		  token: user_data.token
         })
         .then((response) => {
@@ -82,7 +125,8 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
-        });
+        });*/
+	  guardarLocal(local);
       return;
     },
   };
@@ -390,6 +434,7 @@ function App() {
                   setIsLoggedIn={setIsLoggedIn}
                   user_data={user_data}
                   setUserData={setUserData}
+				  setLocal={setLocal}
                 />
               )
             }

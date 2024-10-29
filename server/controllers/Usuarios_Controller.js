@@ -328,7 +328,7 @@ const Actualizar_Usuario = async (req, res) => {
   }
 };
 
-const Actualizar_Usuario_Bloque = async (req, res) => {
+const Actualizar_Usuario_Bloque_old = async (req, res) => {
   const { usuario_id, bloques, token } = req.body;
 
   try {
@@ -359,6 +359,72 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
       success: true,
       msg: "Se ha actualizado al usuario exitosamente",
       usuario_id: usuario._id,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Error interno del servidor" });
+  }
+};
+
+const Actualizar_Usuario_Bloque = async (req, res) => {
+  const { usuario_id, seccion, id, campo, datos, token } = req.body;
+
+  try {
+    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    if (!usuario) {
+      return res
+        .status(404)
+        .json({ success: false, error: "No se encontró al usuario" });
+    }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
+
+    const bloque_datos = await Bloques.findById(usuario.Bloque_ID);
+    if (!bloque_datos) {
+      return res.status(404).json({
+        success: false,
+        error: "No se encontró al bloque del usuario",
+      });
+    }
+	
+	if(seccion){
+		bloque_datos.Bloques[seccion] = bloque_datos.Bloques[seccion]? bloque_datos.Bloques[seccion] : {};
+	}
+	
+	let bloqueId = 1;
+	if(id){
+		bloqueId = Number(bloque_datos.Bloques[seccion][id]? id : bloque_datos[seccion+"_NID"]);
+		if(!bloque_datos.Bloques[seccion][bloqueId])
+			bloque_datos[seccion+"_NID"] += 1;
+		
+		bloque_datos.Bloques[seccion][bloqueId] = bloque_datos.Bloques[seccion][bloqueId]? bloque_datos.Bloques[seccion][bloqueId] : {};
+	}
+	
+	//Cambiar un campo especifico
+	if(campo){
+		bloque_datos.Bloques[seccion][bloqueId][campo] = datos;
+	}else if(id){ //Cambiar un bloque especifico
+		bloque_datos.Bloques[seccion][bloqueId] = datos;
+	}else if(seccion){ //Cambiar todos los bloques de una seccion
+		bloque_datos.Bloques[seccion] = datos;
+	}else{ //Cambiar todas las secciones
+		bloque_datos.Bloques = datos;
+	}
+	
+	//https://stackoverflow.com/questions/61955931/mongoose-save-not-saving-changes
+	//Marcar para que mongoose guarde los cambios
+	bloque_datos.markModified('Bloques');
+    await bloque_datos.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Se ha actualizado al usuario exitosamente",
+      usuario_id: usuario._id,
+	  nid: bloqueId
     });
   } catch (error) {
     console.log(error);
@@ -583,7 +649,6 @@ const Log_Out = async (req, res) => {
 const Obtener_Datos_Usuario = async (req, res) => {
   const { usuario_id, token } = req.params;
   try {
-	console.log(req.params);
     const usuario = await Usuarios.findById(new ObjectId(usuario_id));
 
     if (!usuario) {
