@@ -232,6 +232,7 @@ function InformacionPersonal({
       const formData = new FormData();
       formData.append("userImage", imagen);
       formData.append("usuario_id", user_data.usuario_id);
+	  formData.append("token", user_data.token);
 
       try {
         await axios.post(apiUrl + "/api/users/subir-imagen", formData, {
@@ -267,7 +268,7 @@ function InformacionPersonal({
   const eliminarImagen = async () => {
     try {
       await axios.delete(
-        `${apiUrl}/api/users/eliminar-imagen/${user_data.usuario_id}`,
+        `${apiUrl}/api/users/eliminar-imagen/${user_data.usuario_id}&${user_data.token}`,
       );
       console.log("Imagen eliminada con éxito");
 
