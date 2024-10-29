@@ -564,7 +564,7 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
 
 const Eliminar_Usuario_Curriculum = async (req, res) => {
   try {
-    const { usuario_id, curriculum_id } = req.params;
+    const { usuario_id, curriculum_id, token } = req.params;
 
     const usuario = await Usuarios.findById(new ObjectId(usuario_id));
     if (!usuario) {
@@ -634,7 +634,7 @@ const Log_In = async (req, res) => {
   }
   
   //Genera un token, se usa para verificar querys
-  const token = rehasher({key: secret.Param_1, iv: secret.Param_2}, "Token De Usuario");
+  const token = rehasher({key: secret.Param_1, iv: secret.Param_2}, "Token De Usuario" + (new Date()).getDay());
   secret.QueryToken = token.noAuth;
   await secret.save();
   return res
@@ -643,6 +643,23 @@ const Log_In = async (req, res) => {
 };
 
 const Log_Out = async (req, res) => {
+  const { usuario_id, token } = req.params;
+  
+  const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+
+    if (!usuario) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Usuario no encontrado" });
+    }
+	
+	const secret = await TokenChecker(token, usuario._id, res);
+	if(!secret.success)
+		return secret.res;
+	
+	secret.QueryToken = null;
+    await secret.save();
+  
   return res.status(200).json({ success: true, msg: "Log out exitoso." });
 };
 
