@@ -427,6 +427,7 @@ function App() {
   };
 
   useEffect(() => {
+	axios.defaults.withCredentials = true
 	//if(isLoggedIn){
 		//Load DB lists into cache
 		category_manager.ObtenerCategoriasCurriculum();
