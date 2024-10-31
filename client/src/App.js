@@ -465,6 +465,44 @@ function App() {
     category_manager.ObtenerPreguntas();
     curriculum_manager.ObtenerPlantillas();
     //}
+	
+	//Mantener sesion
+	//Vuelve a pedir los datos de BD pero entra de una vez
+	if(!isLoggedIn && localStorage.getItem("sdc_session")){
+		const items = localStorage.getItem("sdc_session").split(";");
+		const usuario_id = items[0];
+		const token = items[1];
+		axios
+            .get(
+              apiUrl + "/api/users/obtener-usuario/" + usuario_id + "&" + token,
+              {
+                params: {
+                  //usuario_id: usuario_id,
+                  //token: token
+                },
+              },
+            )
+            .then((response) => {
+              if (response.data.data) {
+                setIsLoggedIn(true);
+                response.data.data.usuario_id = usuario_id;
+                response.data.data.token = token;
+                Object.keys(response.data.data.curriculums).map(
+                  (curriculum_id) => {
+                    response.data.data.curriculums[curriculum_id].Documento =
+                      JSON.parse(
+                        response.data.data.curriculums[curriculum_id].Documento,
+                      );
+                  },
+                );
+                setUserData(response.data.data);
+                //navigate.navigate("/curriculo-menu"); //, { state: { usuario_id: usuario_id, user_data: response.data.data } });
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+	}
   }, [isLoggedIn]);
 
   return (
@@ -480,7 +518,7 @@ function App() {
             path="/login"
             element={
               isLoggedIn ? (
-                <Navigate to="/home" />
+                <Navigate to="/curriculo-menu" />
               ) : (
                 <Login
                   setIsLoggedIn={setIsLoggedIn}

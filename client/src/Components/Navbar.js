@@ -115,6 +115,11 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     { path: "/repositorios", label: "Repositorios" },
     { path: "/referencias", label: "Referencias" },
   ];
+  
+  const handleLogout = () => {
+	setIsLoggedIn(false); 
+	localStorage.removeItem("sdc_session");  
+  };
 
   // RETORNO ##################################################################
   return (
@@ -226,7 +231,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                   variant="contained"
                   style={navbutton}
                   color="warning"
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={() => handleLogout()}
                 >
                   Logout
                 </Button>
@@ -299,7 +304,7 @@ export const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                     variant="contained"
                     style={navbutton}
                     color="warning"
-                    onClick={() => setIsLoggedIn(false)}
+                    onClick={() => handleLogout()}
                   >
                     Logout
                   </Button>

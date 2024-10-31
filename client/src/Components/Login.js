@@ -62,6 +62,7 @@ function Login({ setIsLoggedIn, user_data, setUserData, setLocal }) {
                 setIsLoggedIn(true);
                 response.data.data.usuario_id = usuario_id;
                 response.data.data.token = token;
+				localStorage.setItem("sdc_session", usuario_id+";"+token);
                 Object.keys(response.data.data.curriculums).map(
                   (curriculum_id) => {
                     response.data.data.curriculums[curriculum_id].Documento =
