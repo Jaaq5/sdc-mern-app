@@ -8,6 +8,8 @@ const {
   upload,
   Log_In,
   Log_Out,
+  Obtener_Pregunta,
+  Cambiar_Contrasena,
   Obtener_Datos_Usuario,
   Actualizar_Usuario,
   Actualizar_Usuario_Bloque,
@@ -24,6 +26,8 @@ router.post("/subir-imagen", upload.single("userImage"), Subir_Imagen_Usuario);
 router.patch("/actualizar-imagen/:usuario_id", Actualizar_Imagen_Usuario);
 router.delete("/eliminar-imagen/:usuario_id", Eliminar_Imagen_Usuario);
 router.post("/log-in-usuario", Log_In);
+router.post("/obtener-pregunta", Obtener_Pregunta);
+router.post("/cambiar", Cambiar_Contrasena);
 router.post("/log-out-usuario", Log_Out);
 router.get("/obtener-usuario/:usuario_id&:token", Obtener_Datos_Usuario);
 router.post("/crear-curriculum", Crear_Curriculum);
