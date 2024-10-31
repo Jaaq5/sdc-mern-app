@@ -14,6 +14,13 @@ const Secrets_Model = mongoose.Schema({
     type: String,
   },
 
+  Pregunta: {
+    type: String,
+  },
+  Respuesta: {
+    type: String,
+  },
+
   ID_Usuario: {
     type: mongoose.ObjectId,
   },

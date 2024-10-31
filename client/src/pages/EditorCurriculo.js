@@ -160,6 +160,7 @@ function EditorCurriculo({
     position: "absolute",
     left: "0%",
     top: "2px",
+    pointerEvents: "auto",
   };
   const seccionEditButton = {
     backgroundColor: "#fff0",
