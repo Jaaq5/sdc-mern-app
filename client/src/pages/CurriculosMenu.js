@@ -241,7 +241,8 @@ function CurriculosMenu({
       curriculum_manager
         .ObtenerPlantillas(null)
         .then((response) => {
-          mapToHTML(response, setPlantillas, setPlantilla, true);
+		  if(response)
+			mapToHTML(response, setPlantillas, setPlantilla, true);
         })
         .catch((e) => {});
 
@@ -313,7 +314,7 @@ function CurriculosMenu({
   };
 
   const manejarDatos = (curriculo_id, nuevo) => {
-    if (Object.keys(user_data.bloques.Informacion_Personal).length === 0) {
+    if ((!user_data.bloques.Informacion_Personal) || Object.keys(user_data.bloques.Informacion_Personal).length === 0) {
       //TODO
       //Mostrar mensaje de error, no de enviar al editor
       window.alert("Necesita registrar la Informacion Personal para empezar");

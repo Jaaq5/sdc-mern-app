@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 
 //Color
-import { SwatchesPicker, CompactPicker, SketchPicker } from "react-color";
+import { SketchPicker } from "react-color";
 import Paletas from "./ColorPalettes";
 
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
