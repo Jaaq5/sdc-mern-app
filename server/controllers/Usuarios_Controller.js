@@ -396,6 +396,7 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
     }
 
     if (seccion) {
+	  bloque_datos.Bloques[seccion + "_NID"] =  bloque_datos.Bloques[seccion + "_NID"]?  bloque_datos.Bloques[seccion + "_NID"] : 1;
       bloque_datos.Bloques[seccion] = bloque_datos.Bloques[seccion]
         ? bloque_datos.Bloques[seccion]
         : {};
@@ -403,11 +404,10 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
 
     let bloqueId = 1;
     if (id) {
-      bloqueId = Number(
-        bloque_datos.Bloques[seccion][id] ? id : bloque_datos[seccion + "_NID"],
-      );
+      bloqueId = Number(id);
+	  bloqueId = bloque_datos.Bloques[seccion][bloqueId]? bloqueId : bloque_datos.Bloques[seccion + "_NID"];
       if (!bloque_datos.Bloques[seccion][bloqueId])
-        bloque_datos[seccion + "_NID"] += 1;
+        bloque_datos.Bloques[seccion + "_NID"] += 1;
 
       bloque_datos.Bloques[seccion][bloqueId] = bloque_datos.Bloques[seccion][
         bloqueId
