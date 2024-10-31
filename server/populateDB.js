@@ -4,6 +4,7 @@ const Categorias_Puesto = require("./models/Categorias_Puesto_Model");
 const Categorias_EstadoP = require("./models/Categorias_EstadoP_Model");
 const Categorias_Niveles = require("./models/Categorias_NivelI_Model");
 const Idiomas = require("./models/Idiomas_Model");
+const Preguntas = require("./models/Preguntas_Model");
 const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
 //const plantilla_simple = require("./Plantillas/simple.json");
@@ -68,6 +69,13 @@ const populateData = async () => {
     { name: "En progreso" },
     { name: "Hiatus" },
     { name: "Esperando confirmación" },
+  ];
+
+  const preguntasSeguridad = [
+    { name: "¿El nombre de tu primer mascota?" },
+    { name: "¿Nombre de tu personaje favorito?" },
+    { name: "¿Cuál es tu platillo favorito?" },
+    { name: "¿Queso favorito?" },
   ];
 
   const Plantillas = [
@@ -158,6 +166,18 @@ const populateData = async () => {
     console.log("Error populating collection:", err);
   }
 
+  try {
+    for (const item of preguntasSeguridad) {
+      await Preguntas.updateOne(
+        { Nombre: item.name },
+        { $set: item },
+        { upsert: true },
+      );
+    }
+    console.log("Collection populated with Preguntas values");
+  } catch (err) {
+    console.log("Error populating collection:", err);
+  }
 
   //Plantillas
   try {

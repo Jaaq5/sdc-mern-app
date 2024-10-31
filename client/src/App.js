@@ -16,6 +16,7 @@ import Lenguajes from "./pages/Lenguajes";
 import Conferencias from "./pages/Conferencias";
 import Premios from "./pages/Premios";
 import Repositorios from "./pages/Repositorios";
+import CambiarContrasena from "./Components/CambiarContrasena";
 
 import CurriculosMenu from "./pages/CurriculosMenu";
 import EditorCurriculo from "./pages/EditorCurriculo";
@@ -37,15 +38,15 @@ function App() {
   const [listas_categorias, setListas] = useState({});
   const [plantillas, setPlantillas] = useState(null);
   const [local, setLocal] = useState(false);
-  
+
   const guardarLocal = (local) => {
-	  const data = {ultima_modificacion: Date.now()/60000};
-	  user_data.ultima_modificacion = data.ultima_modificacion;
-	  if(local){
-		  data.bloques = user_data.bloques;
-		  data.urriculums = user_data.curriculums;
-	  }
-	  localStorage.setItem("sdc_local", JSON.stringify(data));
+    const data = { ultima_modificacion: Date.now() / 60000 };
+    user_data.ultima_modificacion = data.ultima_modificacion;
+    if (local) {
+      data.bloques = user_data.bloques;
+      data.urriculums = user_data.curriculums;
+    }
+    localStorage.setItem("sdc_local", JSON.stringify(data));
   };
 
   const manager_bloques = {
@@ -66,49 +67,46 @@ function App() {
       user_data.bloques[sub_tabla + "_NID"] =
         user_data.bloques[sub_tabla + "_NID"] + 1; //Incrementar
       setUserData(user_data); //Actualizar variable de sesion
-	  
-	  axios
+
+      axios
         .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
-			usuario_id: user_data.usuario_id,
-			seccion: sub_tabla,
-			id: user_data.bloques[sub_tabla + "_NID"],
-			datos: data,
-			token: user_data.token,
-		  }).then((response) => {
-			
-		  });;
-	  
+          usuario_id: user_data.usuario_id,
+          seccion: sub_tabla,
+          id: user_data.bloques[sub_tabla + "_NID"],
+          datos: data,
+          token: user_data.token,
+        })
+        .then((response) => {});
+
       return user_data.bloques[sub_tabla + "_NID"] - 1;
     },
 
     ActualizarBloque: (user_data, setUserData, sub_tabla, id, data) => {
       user_data.bloques[sub_tabla][id] = data; //Actualizar bloque
       setUserData(user_data); //Actualizar variable de sesion
-	  axios
+      axios
         .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
-			usuario_id: user_data.usuario_id,
-			seccion: sub_tabla,
-			id: id,
-			datos: data,
-			token: user_data.token,
-		  }).then((response) => {
-			
-		  });;
+          usuario_id: user_data.usuario_id,
+          seccion: sub_tabla,
+          id: id,
+          datos: data,
+          token: user_data.token,
+        })
+        .then((response) => {});
     },
 
     BorrarBloque: (user_data, setUserData, sub_tabla, id) => {
       delete user_data.bloques[sub_tabla][id]; //Eliminar bloque
       setUserData(user_data); //Actualizar variable de sesion
-	  axios
+      axios
         .patch(apiUrl + "/api/users/actualizar-usuario-bloque", {
-			usuario_id: user_data.usuario_id,
-			seccion: sub_tabla,
-			id: id,
-			datos: null,
-			token: user_data.token,
-		  }).then((response) => {
-			
-		  });
+          usuario_id: user_data.usuario_id,
+          seccion: sub_tabla,
+          id: id,
+          datos: null,
+          token: user_data.token,
+        })
+        .then((response) => {});
     },
 
     GuardarCambios: (user_data, seccion, id, campo) => {
@@ -126,7 +124,7 @@ function App() {
         .catch((err) => {
           console.log(err);
         });*/
-	  guardarLocal(local);
+      guardarLocal(local);
       return;
     },
   };
@@ -243,6 +241,26 @@ function App() {
         });
       return categorias.result;
     },
+
+    ObtenerPreguntas: async () => {
+      if (listas_categorias.preguntas) return listas_categorias.preguntas;
+      var categorias = [];
+      return axios
+        .get(apiUrl + "/api/cat-question/obtener-preguntas")
+        .then((response) => {
+          if (response.data.preguntas) {
+            categorias = response.data.preguntas;
+            listas_categorias.preguntas = categorias;
+            setListas(listas_categorias);
+            return response.data.preguntas;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return categorias;
+    },
+
     IdANombreNivelI: (cat_id) => {
       const cat = listas_categorias.categorias_nivelI.find(
         (cat) => cat._id === cat_id,
@@ -267,6 +285,16 @@ function App() {
       );
       return cat && cat.Nombre ? cat.Nombre : "-";
     },
+    IdAPregunta: (cat_id) => {
+      const cat = listas_categorias.preguntas.find((cat) => cat._id === cat_id);
+      return cat && cat.Nombre ? cat.Nombre : "-";
+    },
+    NombreAIdPregunta: (name) => {
+      const cat = listas_categorias.preguntas.find(
+        (cat) => cat.Nombre === name,
+      );
+      return cat && cat._id ? cat._id : "";
+    },
   };
 
   const curriculum_manager = {
@@ -284,7 +312,7 @@ function App() {
           documento: JSON.stringify(plantilla.Documento),
           categoria_curriculum_id: plantilla.ID_Categoria_Curriculum,
           categoria_puesto_id: plantilla.ID_Categoria_Puesto,
-		  token: user_data.token
+          token: user_data.token,
         })
         .then((response) => {
           if (response.data.success) {
@@ -317,7 +345,7 @@ function App() {
           documento: JSON.stringify(documento),
           categoria_curriculum_id: cat_curr_id,
           categoria_puesto_id: cat_puesto_id,
-		  token: user_data.token
+          token: user_data.token,
         }) /*.then((response) => {
           //Revisar respuesta si es necesario
           if (response.data.success && response.data.curriculum_id) {
@@ -337,9 +365,9 @@ function App() {
             "/api/users/eliminar-usuario-curr/" +
             user_data.usuario_id +
             "&" +
-            curriculo_id+
-			"&" + 
-			user_data.token,
+            curriculo_id +
+            "&" +
+            user_data.token,
           {
             params: {
               usuario_id: user_data.usuario_id,
@@ -384,12 +412,11 @@ function App() {
 
     CopiarPlantilla: (plantilla_id) => {
       let plantilla = null;
-	  if(plantillas)
-		  plantilla = plantillas[plantilla_id]
-			? plantillas[plantilla_id]
-			: plantillas.find((plnt) => plnt._id === plantilla_id);
-	  else
-		  return null;
+      if (plantillas)
+        plantilla = plantillas[plantilla_id]
+          ? plantillas[plantilla_id]
+          : plantillas.find((plnt) => plnt._id === plantilla_id);
+      else return null;
 
       if (plantilla_id !== "simple" && !plantilla) return null;
 
@@ -427,16 +454,17 @@ function App() {
   };
 
   useEffect(() => {
-	axios.defaults.withCredentials = true
-	//if(isLoggedIn){
-		//Load DB lists into cache
-		category_manager.ObtenerCategoriasCurriculum();
-		category_manager.ObtenerCategoriasPuesto();
-		category_manager.ObtenerCategoriasEstadoP();
-		category_manager.ObtenerCategoriasHabilidad();
-		category_manager.ObtenerIdiomas();
-		curriculum_manager.ObtenerPlantillas();
-	//}
+    axios.defaults.withCredentials = true;
+    //if(isLoggedIn){
+    //Load DB lists into cache
+    category_manager.ObtenerCategoriasCurriculum();
+    category_manager.ObtenerCategoriasPuesto();
+    category_manager.ObtenerCategoriasEstadoP();
+    category_manager.ObtenerCategoriasHabilidad();
+    category_manager.ObtenerIdiomas();
+    category_manager.ObtenerPreguntas();
+    curriculum_manager.ObtenerPlantillas();
+    //}
   }, [isLoggedIn]);
 
   return (
@@ -458,7 +486,7 @@ function App() {
                   setIsLoggedIn={setIsLoggedIn}
                   user_data={user_data}
                   setUserData={setUserData}
-				  setLocal={setLocal}
+                  setLocal={setLocal}
                 />
               )
             }
@@ -469,7 +497,17 @@ function App() {
               isLoggedIn ? (
                 <Navigate to="/home" />
               ) : (
-                <SignUp setIsLoggedIn={setIsLoggedIn} />
+                <SignUp category_manager={category_manager} />
+              )
+            }
+          />
+          <Route
+            path="/cambiarcontrasena"
+            element={
+              isLoggedIn ? (
+                <Navigate to="/home" />
+              ) : (
+                <CambiarContrasena category_manager={category_manager} />
               )
             }
           />
