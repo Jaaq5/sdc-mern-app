@@ -51,6 +51,22 @@ const validateMongoUri = (callback) => {
   );
 };
 
+// Function to validate JWT_SECRET input #####################################
+const validateJwtSecret = (callback) => {
+  console.log("Example: mySecretKey");
+  readLine.question(
+    "Please enter a JWT secret (max 50 characters): ",
+    (jwtSecret) => {
+      if (jwtSecret.length <= 50) {
+        callback(jwtSecret);
+      } else {
+        console.log(`${RED}Please enter a secret up to 50 characters.${RESET}`);
+        validateJwtSecret(callback);
+      }
+    },
+  );
+};
+
 // Install dependencies ######################################################
 const installDependencies = (directory) =>
   new Promise((resolve, reject) => {
@@ -92,7 +108,7 @@ const setupEnvFile = (envFile, exampleEnv, replacements) => {
 };
 
 // Setup server .env file #####################################################
-const setupServerEnv = (port, mongoUri) => {
+const setupServerEnv = (port, mongoUri, jwtSecret) => {
   const serverDir = path.join(__dirname, "..", "server");
   const envFile = path.join(serverDir, ".env.development");
   const exampleEnv = path.join(serverDir, ".env.example");
@@ -104,6 +120,7 @@ const setupServerEnv = (port, mongoUri) => {
       "MONGO_URI=CHANGEMYNAME",
       `MONGO_URI=mongodb://localhost:27017/${mongoUri}`,
     ],
+    ["JWT_SECRET=CHANGEMYNAME", `JWT_SECRET=${jwtSecret}`],
   ]);
 };
 
@@ -139,24 +156,26 @@ const runSetup = async () => {
     if (!serverEnvExists || !clientEnvExists) {
       validatePort(async (port) => {
         validateMongoUri(async (mongoUri) => {
-          // Setup server and install dependencies if necessary
-          if (!serverEnvExists) {
-            setupServerEnv(port, mongoUri);
-            console.log(`${BLUE}Installing server dependencies...${RESET}`);
-            await installDependencies(path.join(__dirname, "..", "server"));
-          }
+          validateJwtSecret(async (jwtSecret) => {
+            // Setup server and install dependencies if necessary
+            if (!serverEnvExists) {
+              setupServerEnv(port, mongoUri, jwtSecret);
+              console.log(`${BLUE}Installing server dependencies...${RESET}`);
+              await installDependencies(path.join(__dirname, "..", "server"));
+            }
 
-          // Setup client and install dependencies if necessary
-          if (!clientEnvExists) {
-            setupClientEnv(port);
-            console.log(`${BLUE}Installing client dependencies...${RESET}`);
-            await installDependencies(path.join(__dirname, "..", "client"));
-          }
-          console.log("");
-          console.log(
-            `${GREEN}All development dependencies installed successfully.${RESET}`,
-          );
-          readLine.close();
+            // Setup client and install dependencies if necessary
+            if (!clientEnvExists) {
+              setupClientEnv(port);
+              console.log(`${BLUE}Installing client dependencies...${RESET}`);
+              await installDependencies(path.join(__dirname, "..", "client"));
+            }
+            console.log("");
+            console.log(
+              `${GREEN}All development dependencies installed successfully.${RESET}`,
+            );
+            readLine.close();
+          });
         });
       });
     } else {

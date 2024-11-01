@@ -1,4 +1,5 @@
 const express = require("express");
+const authMiddleware = require("../middleware/accessTokenMiddleware");
 
 const {
   Crear_Usuario,
@@ -28,8 +29,12 @@ router.delete("/eliminar-imagen/:usuario_id", Eliminar_Imagen_Usuario);
 router.post("/log-in-usuario", Log_In);
 router.post("/obtener-pregunta", Obtener_Pregunta);
 router.post("/cambiar", Cambiar_Contrasena);
-router.post("/log-out-usuario", Log_Out);
-router.get("/obtener-usuario/:usuario_id&:token", Obtener_Datos_Usuario);
+router.post("/log-out-usuario", authMiddleware, Log_Out);
+router.get(
+  "/obtener-usuario/:usuario_id&:token",
+  authMiddleware,
+  Obtener_Datos_Usuario,
+);
 router.post("/crear-curriculum", Crear_Curriculum);
 router.patch("/actualizar-usuario", Actualizar_Usuario);
 router.patch("/actualizar-usuario-bloque", Actualizar_Usuario_Bloque);
