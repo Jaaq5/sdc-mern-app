@@ -8,6 +8,10 @@ const { ObjectId } = require("mongodb");
 // Dependiencia para manejar archivos
 const multer = require("multer");
 const crypto = require("crypto");
+// Dependiencia para manejar tokens de acceso
+const jwt = require("jsonwebtoken");
+// Dependiencia para manejar cookies
+const cookieParser = require("cookie-parser");
 
 //Creates password hash
 function hasher(text) {
@@ -396,7 +400,11 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
     }
 
     if (seccion) {
-	  bloque_datos.Bloques[seccion + "_NID"] =  bloque_datos.Bloques[seccion + "_NID"]?  bloque_datos.Bloques[seccion + "_NID"] : 1;
+      bloque_datos.Bloques[seccion + "_NID"] = bloque_datos.Bloques[
+        seccion + "_NID"
+      ]
+        ? bloque_datos.Bloques[seccion + "_NID"]
+        : 1;
       bloque_datos.Bloques[seccion] = bloque_datos.Bloques[seccion]
         ? bloque_datos.Bloques[seccion]
         : {};
@@ -405,7 +413,9 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
     let bloqueId = 1;
     if (id) {
       bloqueId = Number(id);
-	  bloqueId = bloque_datos.Bloques[seccion][bloqueId]? bloqueId : bloque_datos.Bloques[seccion + "_NID"];
+      bloqueId = bloque_datos.Bloques[seccion][bloqueId]
+        ? bloqueId
+        : bloque_datos.Bloques[seccion + "_NID"];
       if (!bloque_datos.Bloques[seccion][bloqueId])
         bloque_datos.Bloques[seccion + "_NID"] += 1;
 
@@ -629,22 +639,18 @@ const Log_In = async (req, res) => {
   });
 
   if (!usuario) {
-    return res
-      .status(201)
-      .json({
-        success: true,
-        error: "Ese correo electrónico equivocado o contraseña incorrecta.",
-      });
+    return res.status(201).json({
+      success: true,
+      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
+    });
   }
 
   const secret = await Secrets.findOne({ ID_Usuario: usuario._id });
   if (!secret) {
-    return res
-      .status(201)
-      .json({
-        success: true,
-        error: "Ese correo electrónico equivocado o contraseña incorrecta.",
-      });
+    return res.status(201).json({
+      success: true,
+      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
+    });
   }
 
   const rehashed = rehasher(
@@ -652,12 +658,10 @@ const Log_In = async (req, res) => {
     contrasena,
   );
   if (rehashed.text !== usuario.Contrasena) {
-    return res
-      .status(201)
-      .json({
-        success: true,
-        error: "Ese correo electrónico equivocado o contraseña incorrecta.",
-      });
+    return res.status(201).json({
+      success: true,
+      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
+    });
   }
 
   //Genera un token, se usa para verificar querys
@@ -667,14 +671,35 @@ const Log_In = async (req, res) => {
   );
   secret.QueryToken = token.noAuth;
   await secret.save();
-  return res
-    .status(200)
-    .json({
-      success: true,
-      msg: "Log in exitoso.",
-      usuario_id: usuario._id,
-      token: token.noAuth,
-    });
+
+  // Genera el accessToken usando jsonwebtoken
+  const accessToken = jwt.sign(
+    { id: usuario._id, email: usuario.Email },
+    // Usa la clave de .env
+    process.env.JWT_SECRET,
+    // Expiracion en del token
+    { expiresIn: "15m" },
+  );
+
+  // Configura la cookie para el accessToken
+  res.cookie("accessToken", accessToken, {
+    // Evita el JavaScript del navegador
+    httpOnly: true,
+    // Solo envía la cookie por HTTPS en producción
+    secure: process.env.NODE_ENV === "production",
+    // Duración de la cookie en segundos
+    maxAge: 15 * 60 * 1000,
+    // Evita que el cookie se envíe en las solicitudes de sitios cruzados
+    sameSite: "Strict",
+  });
+
+  return res.status(200).json({
+    success: true,
+    msg: "Log in exitoso.",
+    usuario_id: usuario._id,
+    token: token.noAuth,
+    accessToken: accessToken,
+  });
 };
 
 const Obtener_Pregunta = async (req, res) => {
@@ -695,13 +720,11 @@ const Obtener_Pregunta = async (req, res) => {
     return res.status(201).json({ success: false, error: "Usuario no válido" });
   }
 
-  return res
-    .status(200)
-    .json({
-      success: true,
-      msg: "Buscar pregunta exitoso.",
-      pregunta: secret.Pregunta,
-    });
+  return res.status(200).json({
+    success: true,
+    msg: "Buscar pregunta exitoso.",
+    pregunta: secret.Pregunta,
+  });
 };
 
 const Cambiar_Contrasena = async (req, res) => {
@@ -712,22 +735,18 @@ const Cambiar_Contrasena = async (req, res) => {
   });
 
   if (!usuario) {
-    return res
-      .status(201)
-      .json({
-        success: false,
-        error: "Correo electrónico equivocado o respuesta incorrecta.",
-      });
+    return res.status(201).json({
+      success: false,
+      error: "Correo electrónico equivocado o respuesta incorrecta.",
+    });
   }
 
   const secret = await Secrets.findOne({ ID_Usuario: usuario._id });
   if (!secret) {
-    return res
-      .status(201)
-      .json({
-        success: false,
-        error: "Correo electrónico equivocado o respuesta incorrecta.",
-      });
+    return res.status(201).json({
+      success: false,
+      error: "Correo electrónico equivocado o respuesta incorrecta.",
+    });
   }
 
   const rehashed = rehasher(
@@ -735,12 +754,10 @@ const Cambiar_Contrasena = async (req, res) => {
     respuesta,
   );
   if (rehashed.noAuth !== secret.Respuesta) {
-    return res
-      .status(201)
-      .json({
-        success: false,
-        error: "Correo electrónico equivocado o respuesta incorrecta.",
-      });
+    return res.status(201).json({
+      success: false,
+      error: "Correo electrónico equivocado o respuesta incorrecta.",
+    });
   }
 
   usuario.Contrasena = rehasher(
@@ -750,13 +767,11 @@ const Cambiar_Contrasena = async (req, res) => {
   await secret.save();
   await usuario.save();
 
-  return res
-    .status(200)
-    .json({
-      success: true,
-      msg: "Cambio de contrasena exitoso.",
-      success: true,
-    });
+  return res.status(200).json({
+    success: true,
+    msg: "Cambio de contrasena exitoso.",
+    success: true,
+  });
 };
 
 const Log_Out = async (req, res) => {
@@ -773,6 +788,13 @@ const Log_Out = async (req, res) => {
   const secret = await TokenChecker(token, usuario._id, res);
   if (!secret.success) return secret.res;
 
+  // Limpia la cookie del accessToken
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+
   secret.QueryToken = null;
   await secret.save();
 
@@ -781,24 +803,70 @@ const Log_Out = async (req, res) => {
 
 const Obtener_Datos_Usuario = async (req, res) => {
   const { usuario_id, token } = req.params;
-  try {
-    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
 
-    if (!usuario) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Usuario no encontrado" });
+  //Comprobar si hay un token de acceso en cookies o en el header
+  const accessToken =
+    req.cookies.accessToken || req.headers["authorization"]?.split(" ")[1];
+
+  try {
+    let usuario;
+
+    if (accessToken) {
+      // Si hay un token de acceso, verificar y obtener datos del usuario
+      let decoded;
+      try {
+        decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+
+        // Verifica si el usuario existe en la base de datos
+        usuario = await Usuarios.findById(decoded.id);
+        if (!usuario) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Usuario no encontrado" });
+        }
+
+        // Verifica que el email del token coincida con el del usuario
+        if (decoded.email !== usuario.Email) {
+          return res
+            .status(403)
+            .json({ success: false, error: "Token inválido" });
+        }
+      } catch (error) {
+        // Manejo de errores específicos del JWT
+        if (error.name === "JsonWebTokenError") {
+          return res
+            .status(403)
+            .json({ success: false, error: "Token inválido" });
+        }
+        if (error.name === "TokenExpiredError") {
+          return res
+            .status(403)
+            .json({ success: false, error: "Token expirado" });
+        }
+        return res
+          .status(500)
+          .json({ success: false, error: "Error interno del servidor" });
+      }
+    } else {
+      // Si no hay un token de acceso, usar usuario_id y token del parámetro de la URL
+      usuario = await Usuarios.findById(new ObjectId(usuario_id));
+      if (!usuario) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Usuario no encontrado" });
+      }
+
+      const secret = await TokenChecker(token, usuario._id, res);
+      if (!secret.success) return secret.res;
     }
 
-    const secret = await TokenChecker(token, usuario._id, res);
-    if (!secret.success) return secret.res;
-
+    // Obtener datos adicionales de bloques y curriculums
     const bloques = await Bloques.findById(usuario.Bloque_ID);
-
     const curriculums = await Curriculums.find({
       _id: { $in: usuario.Curriculums_IDs },
     });
 
+    // Estructura la respuesta de usuario
     const userData = {
       _id: usuario._id,
       name: usuario.Nombre,
@@ -806,13 +874,17 @@ const Obtener_Datos_Usuario = async (req, res) => {
       userImage: usuario.userImage
         ? usuario.userImage.toString("base64")
         : null,
-      bloques: bloques.Bloques,
-      curriculums: curriculums ? curriculums : [],
+      bloques: bloques ? bloques.Bloques : null,
+      curriculums: curriculums || [],
     };
 
-    return res
-      .status(200)
-      .json({ success: true, msg: "Usuario encontrado", data: userData });
+    // Devolver respuesta con datos del usuario
+    return res.status(200).json({
+      success: true,
+      msg: "Usuario encontrado",
+      data: userData,
+    });
+    // Manejo de errores específicos
   } catch (error) {
     console.log(error.message);
     return res

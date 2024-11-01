@@ -7,6 +7,8 @@ const cors = require("cors");
 const corsOptions = require("./middleware/corsMiddleware");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+// Maneja cookies
+const cookieParser = require("cookie-parser");
 
 const userRoutes = require("./routes/usuario_route");
 const catCurrRoutes = require("./routes/categoria_curriculum_route");
@@ -27,7 +29,10 @@ const app = express();
 const port = process.env.PORT ?? 0;
 
 // Middleware #################################################################
+// Parse JSON request bodies
 app.use(express.json());
+// Cookie parser
+app.use(cookieParser());
 
 // Enable CORS for all origins
 // app.use(cors());
