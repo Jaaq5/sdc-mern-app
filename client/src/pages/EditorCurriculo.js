@@ -12,6 +12,8 @@ import {
 } from "@react-pdf/renderer";
 import Slider from "@mui/material/Slider";
 
+import colors from '../Components/Editor/ColorPalettes.json';
+
 import DocumentoPDF from "../Components/Editor/DocumentoPDF";
 
 import PanelSeccion from "../Components/Editor/PanelSeccion";
@@ -141,6 +143,7 @@ function EditorCurriculo({
   const [plantillas, setPlantillas] = useState([]);
   const [curriculo_id, setCurriculoId] = useState(null);
   const [idiomas, setIdiomas] = useState(null);
+  const [color, setColor] = useState(null);
 
   //Stilos barra de herramientas
   const editButton = {
@@ -223,6 +226,19 @@ function EditorCurriculo({
   const [minMaxDoc, setMinMaxDoc] = useState([0, 0, 600, 800]);
   const [zoom, setZoom] = useState(1);
   const [controles, setControles] = useState({});
+
+  const colores = {
+    0: null,
+    1: colors.palettes.Azules.Paleta,
+    2: colors.palettes.Cyan.Paleta,
+    3: colors.palettes.Naranjas.Paleta,
+  };
+
+  const indexes = {
+    "Bloque_1": 0,
+    "Bloque_3": 0,
+    "Bloque_2": 1,
+  };
 
   //DEBUG
   const [editMode, setEditMode] = useState("Usuario");
@@ -775,7 +791,14 @@ function EditorCurriculo({
     const sec = (
       <div
         id={"Seccion_" + seccion}
-        style={documento.diseno.Secciones[seccion].style}
+        style={
+          colores[color] && colores[color][indexes[seccion]] !== null
+            ? {
+                ...documento.diseno.Secciones[seccion].style,
+                backgroundColor: colores[color][indexes[seccion]]
+              }
+            : documento.diseno.Secciones[seccion].style
+        }
         key={seccion}
         onMouseEnter={(e) => {
           document.getElementById("Seccion_" + seccion).style.boxShadow =
@@ -1189,6 +1212,12 @@ function EditorCurriculo({
           seccion.style = seccion.style
             ? JSON.parse(JSON.stringify(seccion.style))
             : {};
+            if(colores[color] && colores[color][indexes[seccion]] !== null){
+              seccion.style = {
+                ...seccion.style,
+                backgroundColor: colores[color]?.[indexes[nombreseccion]] || seccion.style.backgroundColor
+              };
+            }
           seccion.style.zIndex =
             documento.diseno.Paginas[0].Estructura.indexOf(nombreseccion) * 5 +
             5;
@@ -1576,6 +1605,23 @@ function EditorCurriculo({
                   setZoom(val.target.value);
                 }}
               />
+              <TextField
+                select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={color}
+                label="Color"
+                placeholder="Color"
+                onChange={(e) => setColor(e.target.value)}
+                style={{ width: '100px', color: theme.palette.yellow.main }}
+                InputProps={{
+                  style: { color: theme.palette.yellow.main }, // Change the text color
+                }}
+              >
+                <MenuItem value={1}>Azul</MenuItem>
+                <MenuItem value={2}>Cyan</MenuItem>
+                <MenuItem value={3}>Naranja</MenuItem>
+              </TextField>
               {process.env.NODE_ENV === "development" ? (
                 <>
                   <Button

@@ -461,6 +461,7 @@ function App() {
     category_manager.ObtenerCategoriasPuesto();
     category_manager.ObtenerCategoriasEstadoP();
     category_manager.ObtenerCategoriasHabilidad();
+    category_manager.ObtenerCategoriasNivelI();
     category_manager.ObtenerIdiomas();
     category_manager.ObtenerPreguntas();
     curriculum_manager.ObtenerPlantillas();
