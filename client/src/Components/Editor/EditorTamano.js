@@ -15,8 +15,11 @@ const celdasPagina = [594 / resolucionCeldas, 841 / resolucionCeldas]; //react-p
 const tamanoObjeto = (path, documento, setDocumento, id = "") => {
   if (!documento || !path) return { width: 0, height: 0 };
   let item = documento;
-  if (path.Celdas) item = path;
-  else path.forEach((campo) => (item = item[campo]));
+  
+  if (path.Celdas) 
+	  item = path;
+  else if(path.forEach)
+	  path.forEach((campo) => (item = item[campo]));
 
   const elm = document.getElementById(id);
   const mrgnCeldas = [0, 0];
@@ -548,6 +551,9 @@ const EditorTamano = ({
   Editando.path.forEach((campo) => {
     item = item[campo];
   });
+  /*if(!item.Celdas || !item.Pos)
+	  return (<></>);*/
+  
   const hasParent =
     Editando.path[Editando.path.length - 1] !== Editando.Seccion;
 

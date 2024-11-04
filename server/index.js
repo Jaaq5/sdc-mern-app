@@ -16,9 +16,9 @@ const skillRoutes = require("./routes/categoria_habilidad_route");
 const jobRoutes = require("./routes/categoria_puesto_route");
 const stateRoutes = require("./routes/categoria_estadoP_route");
 const languageRoutes = require("./routes/idioma_route");
-const questionsRoutes = require("./routes/pregunta_route");
 const templateRoutes = require("./routes/curriculum_template_route");
 const levelRoutes = require("./routes/categoria_nivelI_route");
+const questionsRoutes = require("./routes/pregunta_route");
 const path = require("path");
 const populateData = require("./populateDB");
 

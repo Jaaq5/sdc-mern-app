@@ -35,6 +35,7 @@ function Conferencias({
   setUserData,
   manager_bloques,
   category_manager,
+  mostrarTitulo
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -113,6 +114,9 @@ function Conferencias({
       // Mapear la lista de publicaciones a HTML
       mapToHTML(user_data.bloques.Conferencias);
       setLoading(false);
+	  
+	  //valor default
+	  mostrarTitulo = mostrarTitulo !== false;
     }
   }, [user_data, setUserData, navigate]);
 
@@ -198,9 +202,12 @@ function Conferencias({
 
   return (
     <>
-      <div>
+	{mostrarTitulo? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Conferencias</h1>
-      </div>
+      </div>)
+	  :
+	  (<></>)
+	}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
