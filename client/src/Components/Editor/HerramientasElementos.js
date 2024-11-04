@@ -243,6 +243,7 @@ function manejarBorde(estado, data) {
 function manejarHAlaign(estado, dir) {
   estado.justifyContent = dir;
   estado.textAlign = dir;
+  estado.textJustify = dir;
   return estado;
 }
 

@@ -36,21 +36,23 @@ const TextoEditor = ({
     justifyContent: elmStyle.justifyContent,
     textJustify: elmStyle.textJustify,
     color: elmStyle.color || "#000",
+	backgroundColor: elmStyle.backgroundColor || "#FFF",
     textDecoration: elmStyle.textDecoration,
     fontStyle: elmStyle.fontStyle || "normal",
-    textAlign: elmStyle,
     fontWeight: elmStyle.fontWeight,
     fontSize: elmStyle.fontSize,
     fontFamily: elmStyle.fontFamily,
     margin: "0px",
   };
+  console.log(copiedStyle)
   return (
     <div
       style={{
         position: "absolute",
         left: Editando.pos[0] * zoom + "px",
         top: Math.max(Editando.pos[1], 60) * zoom + "px",
-        marginTop: "-3px",
+        marginTop: "-0.3rem",
+		marginLeft: "-0.15rem",
         zIndex: 1000,
       }}
     >
@@ -63,6 +65,9 @@ const TextoEditor = ({
             zIndex: 100,
             minWidth: elmStyle.width,
             minHeight: elmStyle.height,
+			zoom: zoom,
+			padding: "0px",
+			margin: "0px"
           }}
           InputProps={{ style: copiedStyle }}
           variant="standard"
