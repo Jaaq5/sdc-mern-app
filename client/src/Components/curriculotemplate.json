@@ -152,6 +152,7 @@
               "style": {},
               "Celdas": [58, 30],
               "Editable": {
+				"Tipo": "Tamano",
                 "Celdas": true
               },
               "Estructura": [

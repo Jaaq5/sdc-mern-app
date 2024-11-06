@@ -3,65 +3,69 @@ const Curriculums = require("../models/Curriculums_Model");
 const Bloques = require("../models/Bloques_Model");
 const Categorias_Curriculum = require("../models/Categorias_Curriculum_Model");
 const Categorias_Puesto = require("../models/Categorias_Puesto_Model");
-const Secrets = require("../models/Secrets_Model")
+const Secrets = require("../models/Secrets_Model");
 const { ObjectId } = require("mongodb");
 // Dependiencia para manejar archivos
 const multer = require("multer");
-const crypto = require('crypto');
+const crypto = require("crypto");
+// Dependiencia para manejar tokens de acceso
+const jwt = require("jsonwebtoken");
+// Dependiencia para manejar cookies
+const cookieParser = require("cookie-parser");
 
 //Creates password hash
-function hasher(text){
-	const algorithm = 'aes-256-gcm';
-	const key = crypto.randomBytes(32);
-	const iv = crypto.randomBytes(16);
+function hasher(text) {
+  const algorithm = "aes-256-gcm";
+  const key = crypto.randomBytes(32);
+  const iv = crypto.randomBytes(16);
 
-	// Create the cipher
-	const cipher = crypto.createCipheriv(algorithm, key, iv);
+  // Create the cipher
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
 
-	// Encrypt the data
-	let encrypted = cipher.update(text, 'utf8', 'hex');
-	encrypted += cipher.final('hex');
+  // Encrypt the data
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
 
-	// Add the auth tag
-	const authTag = cipher.getAuthTag();
+  // Add the auth tag
+  const authTag = cipher.getAuthTag();
 
-	// The encrypted data
-	const encryptedText = `${encrypted}:${authTag}`;
-	return {text: encryptedText, key: key, iv: iv};
+  // The encrypted data
+  const encryptedText = `${encrypted}:${authTag}`;
+  return { text: encryptedText, key: key, iv: iv };
 }
 
 //Hashes text using existing crypto data
 function rehasher(encryptedData, text) {
-	// Split the encrypted data and auth tag
-	const algorithm = 'aes-256-gcm';
-	const key = encryptedData.key;
-	const iv = encryptedData.iv;
+  // Split the encrypted data and auth tag
+  const algorithm = "aes-256-gcm";
+  const key = encryptedData.key;
+  const iv = encryptedData.iv;
 
-	// Create the decipher
-	const cipher = crypto.createCipheriv(algorithm, key, iv);
+  // Create the decipher
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
 
-	// Encrypt the data
-	let encrypted = cipher.update(text, 'utf8', 'hex');
-	encrypted += cipher.final('hex');
+  // Encrypt the data
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
 
-	// Add the auth tag
-	const authTag = cipher.getAuthTag();
+  // Add the auth tag
+  const authTag = cipher.getAuthTag();
 
-	// The encrypted data
-	return {text: `${encrypted}:${authTag}`, noAuth: `${encrypted}`};
+  // The encrypted data
+  return { text: `${encrypted}:${authTag}`, noAuth: `${encrypted}` };
 }
 
-async function TokenChecker(token, uid, res){
-	const secret = await Secrets.findOne({ID_Usuario: uid});
-	if (secret.QueryToken !== token || !secret.QueryToken){
-		return {
-			success: false, 
-			res: res
-			.status(403)
-			.json({ success: false, error: "Sesión expirada o inválida" })
-		}
-	}
-	return {success: true};
+async function TokenChecker(token, uid, res) {
+  const secret = await Secrets.findOne({ ID_Usuario: uid });
+  if (secret.QueryToken !== token || !secret.QueryToken) {
+    return {
+      success: false,
+      res: res
+        .status(403)
+        .json({ success: false, error: "Sesión expirada o inválida" }),
+    };
+  }
+  return { success: true };
 }
 
 /*function unhasher(encryptedText) {
@@ -93,7 +97,7 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 }, // Limitar el tamaño del archivo a 2 MB
 });
 const Crear_Usuario = async (req, res) => {
-  const { nombre, email, contrasena } = req.body;
+  const { nombre, email, contrasena, pregunta, respuesta } = req.body;
   //const profilePicture = req.file;
 
   try {
@@ -106,13 +110,20 @@ const Crear_Usuario = async (req, res) => {
 
     const existingEmail = await Usuarios.findOne({ Email: email });
     if (existingEmail) {
+      const secret = await Secrets.findOne({ ID_Usuario: existingEmail._id });
+      if (secret && !secret.Respuesta) {
+        secret.Pregunta = pregunta;
+        secret.Respuesta = rehasher(
+          { key: secret.Param_1, iv: secret.Param_2 },
+          respuesta,
+        ).noAuth;
+        await secret.save();
+      }
       return res.status(402).json({
         success: false,
         error: "Dirección de correo electrónico ya está en uso",
       });
     }
-	
-	
 
     const Bloque = new Bloques({
       Bloques: {
@@ -144,28 +155,30 @@ const Crear_Usuario = async (req, res) => {
       },
     });
     await Bloque.save();
-	
-	//Encriptar contrasena y guardar parametros
-	const hash = hasher(contrasena)
-	const secret = new Secrets({
-		Param_1 : hash.key,
-		Param_2 : hash.iv,
-	});
+
+    //Encriptar contrasena y guardar parametros
+    const hash = hasher(contrasena);
+    const secret = new Secrets({
+      Param_1: hash.key,
+      Param_2: hash.iv,
+      Pregunta: pregunta,
+      Respuesta: rehasher(hash, respuesta).noAuth,
+    });
 
     const user = new Usuarios({
       Nombre: nombre,
       Email: email,
-      Contrasena: hash.text, 
+      Contrasena: hash.text,
       Curriculums_IDs: [],
       Bloque_ID: Bloque._id,
     });
 
     await user.save();
-	
+
     Bloque.ID_Usuario = user._id;
     await Bloque.save();
-	secret.ID_Usuario = user.id;
-	await secret.save();
+    secret.ID_Usuario = user.id;
+    await secret.save();
 
     if (!res) return true;
 
@@ -193,10 +206,9 @@ const Subir_Imagen_Usuario = async (req, res) => {
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     if (!req.file) {
       return res.status(400).json({
@@ -234,10 +246,9 @@ const Actualizar_Imagen_Usuario = async (req, res) => {
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     if (!req.file) {
       return res.status(400).json({
@@ -275,10 +286,9 @@ const Eliminar_Imagen_Usuario = async (req, res) => {
         .status(404)
         .json({ success: false, error: "Usuario no encontrado" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     // Elimina la imagen del campo 'userImage'
     usuario.userImage = null;
@@ -338,10 +348,9 @@ const Actualizar_Usuario_Bloque_old = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     const bloque_datos = await Bloques.findById(usuario.Bloque_ID);
     if (!bloque_datos) {
@@ -378,10 +387,9 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     const bloque_datos = await Bloques.findById(usuario.Bloque_ID);
     if (!bloque_datos) {
@@ -390,41 +398,58 @@ const Actualizar_Usuario_Bloque = async (req, res) => {
         error: "No se encontró al bloque del usuario",
       });
     }
-	
-	if(seccion){
-		bloque_datos.Bloques[seccion] = bloque_datos.Bloques[seccion]? bloque_datos.Bloques[seccion] : {};
-	}
-	
-	let bloqueId = 1;
-	if(id){
-		bloqueId = Number(bloque_datos.Bloques[seccion][id]? id : bloque_datos[seccion+"_NID"]);
-		if(!bloque_datos.Bloques[seccion][bloqueId])
-			bloque_datos[seccion+"_NID"] += 1;
-		
-		bloque_datos.Bloques[seccion][bloqueId] = bloque_datos.Bloques[seccion][bloqueId]? bloque_datos.Bloques[seccion][bloqueId] : {};
-	}
-	
-	//Cambiar un campo especifico
-	if(campo){
-		bloque_datos.Bloques[seccion][bloqueId][campo] = datos;
-	}else if(id){ //Cambiar un bloque especifico
-		bloque_datos.Bloques[seccion][bloqueId] = datos;
-	}else if(seccion){ //Cambiar todos los bloques de una seccion
-		bloque_datos.Bloques[seccion] = datos;
-	}else{ //Cambiar todas las secciones
-		bloque_datos.Bloques = datos;
-	}
-	
-	//https://stackoverflow.com/questions/61955931/mongoose-save-not-saving-changes
-	//Marcar para que mongoose guarde los cambios
-	bloque_datos.markModified('Bloques');
+
+    if (seccion) {
+      bloque_datos.Bloques[seccion + "_NID"] = bloque_datos.Bloques[
+        seccion + "_NID"
+      ]
+        ? bloque_datos.Bloques[seccion + "_NID"]
+        : 1;
+      bloque_datos.Bloques[seccion] = bloque_datos.Bloques[seccion]
+        ? bloque_datos.Bloques[seccion]
+        : {};
+    }
+
+    let bloqueId = 1;
+    if (id) {
+      bloqueId = Number(id);
+      bloqueId = bloque_datos.Bloques[seccion][bloqueId]
+        ? bloqueId
+        : bloque_datos.Bloques[seccion + "_NID"];
+      if (!bloque_datos.Bloques[seccion][bloqueId])
+        bloque_datos.Bloques[seccion + "_NID"] += 1;
+
+      bloque_datos.Bloques[seccion][bloqueId] = bloque_datos.Bloques[seccion][
+        bloqueId
+      ]
+        ? bloque_datos.Bloques[seccion][bloqueId]
+        : {};
+    }
+
+    //Cambiar un campo especifico
+    if (campo) {
+      bloque_datos.Bloques[seccion][bloqueId][campo] = datos;
+    } else if (id) {
+      //Cambiar un bloque especifico
+      bloque_datos.Bloques[seccion][bloqueId] = datos;
+    } else if (seccion) {
+      //Cambiar todos los bloques de una seccion
+      bloque_datos.Bloques[seccion] = datos;
+    } else {
+      //Cambiar todas las secciones
+      bloque_datos.Bloques = datos;
+    }
+
+    //https://stackoverflow.com/questions/61955931/mongoose-save-not-saving-changes
+    //Marcar para que mongoose guarde los cambios
+    bloque_datos.markModified("Bloques");
     await bloque_datos.save();
 
     return res.status(200).json({
       success: true,
       msg: "Se ha actualizado al usuario exitosamente",
       usuario_id: usuario._id,
-	  nid: bloqueId
+      nid: bloqueId,
     });
   } catch (error) {
     console.log(error);
@@ -440,7 +465,7 @@ const Crear_Curriculum = async (req, res) => {
     documento,
     categoria_curriculum_id,
     categoria_puesto_id,
-	token
+    token,
   } = req.body;
 
   try {
@@ -451,10 +476,9 @@ const Crear_Curriculum = async (req, res) => {
         error: "Usuario no encontrado al crear curriculum",
       });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     const curriculum = new Curriculums({
       Documento: documento,
@@ -495,7 +519,7 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
     documento,
     categoria_curriculum_id,
     categoria_puesto_id,
-	token
+    token,
   } = req.body;
 
   try {
@@ -505,10 +529,9 @@ const Actualizar_Usuario_Curriculum = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
 
     if (!usuario.Curriculums_IDs.includes(new ObjectId(curriculum_id)))
       return res
@@ -572,21 +595,18 @@ const Eliminar_Usuario_Curriculum = async (req, res) => {
         .status(404)
         .json({ success: false, error: "No se encontró al usuario" });
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
-	
-	const index = usuario.Curriculums_IDs.indexOf(new ObjectId(curriculum_id));
+
+    const secret = await TokenChecker(token, usuario._id, res);
+    if (!secret.success) return secret.res;
+
+    const index = usuario.Curriculums_IDs.indexOf(new ObjectId(curriculum_id));
     if (index < 0)
       return res
         .status(403)
         .json({ success: false, error: "Curriculo sin acceso." });
 
     const curriculum_id_v = new ObjectId(curriculum_id);
-    const curriculum = await Curriculums.findById(
-      curriculum_id_v,
-    );
+    const curriculum = await Curriculums.findById(curriculum_id_v);
     if (!curriculum) {
       return res.status(404).json({
         success: false,
@@ -613,77 +633,240 @@ const Log_In = async (req, res) => {
   const email = req.body.email;
   const contrasena = req.body.contrasena;
 
-  
   const usuario = await Usuarios.findOne({
     Email: email,
     //Contrasena: hasher(contrasena),
   });
-  
+
   if (!usuario) {
-    return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
+    return res.status(201).json({
+      success: true,
+      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
+    });
   }
-  
-  const secret = await Secrets.findOne({ID_Usuario: usuario._id});
+
+  const secret = await Secrets.findOne({ ID_Usuario: usuario._id });
   if (!secret) {
-    return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
+    return res.status(201).json({
+      success: true,
+      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
+    });
   }
-  
-  const rehashed = rehasher({key: secret.Param_1, iv: secret.Param_2}, contrasena);
+
+  const rehashed = rehasher(
+    { key: secret.Param_1, iv: secret.Param_2 },
+    contrasena,
+  );
   if (rehashed.text !== usuario.Contrasena) {
-	  return res.status(201).json({success: true, error: "Ese correo electrónico equivocado o contraseña incorrecta.",});
+    return res.status(201).json({
+      success: true,
+      error: "Ese correo electrónico equivocado o contraseña incorrecta.",
+    });
   }
-  
+
   //Genera un token, se usa para verificar querys
-  const token = rehasher({key: secret.Param_1, iv: secret.Param_2}, "Token De Usuario" + (new Date()).getDay());
+  const token = rehasher(
+    { key: secret.Param_1, iv: secret.Param_2 },
+    "Token De Usuario" + new Date().getDay(),
+  );
   secret.QueryToken = token.noAuth;
   await secret.save();
-  return res
-    .status(200)
-    .json({ success: true, msg: "Log in exitoso.", usuario_id: usuario._id, token: token.noAuth });
+
+  // Genera el accessToken usando jsonwebtoken
+  const accessToken = jwt.sign(
+    { id: usuario._id, email: usuario.Email },
+    // Usa la clave de .env
+    process.env.JWT_SECRET,
+    // Expiracion en del token
+    { expiresIn: "15m" },
+  );
+
+  // Configura la cookie para el accessToken
+  res.cookie("accessToken", accessToken, {
+    // Evita el JavaScript del navegador
+    httpOnly: true,
+    // Solo envía la cookie por HTTPS en producción
+    secure: process.env.NODE_ENV === "production",
+    // Duración de la cookie en segundos
+    maxAge: 15 * 60 * 1000,
+    // Evita que el cookie se envíe en las solicitudes de sitios cruzados
+    sameSite: "Strict",
+  });
+
+  return res.status(200).json({
+    success: true,
+    msg: "Log in exitoso.",
+    usuario_id: usuario._id,
+    token: token.noAuth,
+    accessToken: accessToken,
+  });
+};
+
+const Obtener_Pregunta = async (req, res) => {
+  const { email } = req.body;
+
+  const usuario = await Usuarios.findOne({
+    Email: email,
+  });
+
+  if (!usuario) {
+    return res
+      .status(201)
+      .json({ success: false, error: "Correo electrónico equivocado" });
+  }
+
+  const secret = await Secrets.findOne({ ID_Usuario: usuario._id });
+  if (!secret) {
+    return res.status(201).json({ success: false, error: "Usuario no válido" });
+  }
+
+  return res.status(200).json({
+    success: true,
+    msg: "Buscar pregunta exitoso.",
+    pregunta: secret.Pregunta,
+  });
+};
+
+const Cambiar_Contrasena = async (req, res) => {
+  const { email, contrasena, respuesta } = req.body;
+
+  const usuario = await Usuarios.findOne({
+    Email: email,
+  });
+
+  if (!usuario) {
+    return res.status(201).json({
+      success: false,
+      error: "Correo electrónico equivocado o respuesta incorrecta.",
+    });
+  }
+
+  const secret = await Secrets.findOne({ ID_Usuario: usuario._id });
+  if (!secret) {
+    return res.status(201).json({
+      success: false,
+      error: "Correo electrónico equivocado o respuesta incorrecta.",
+    });
+  }
+
+  const rehashed = rehasher(
+    { key: secret.Param_1, iv: secret.Param_2 },
+    respuesta,
+  );
+  if (rehashed.noAuth !== secret.Respuesta) {
+    return res.status(201).json({
+      success: false,
+      error: "Correo electrónico equivocado o respuesta incorrecta.",
+    });
+  }
+
+  usuario.Contrasena = rehasher(
+    { key: secret.Param_1, iv: secret.Param_2 },
+    contrasena,
+  ).text;
+  await secret.save();
+  await usuario.save();
+
+  return res.status(200).json({
+    success: true,
+    msg: "Cambio de contrasena exitoso.",
+    success: true,
+  });
 };
 
 const Log_Out = async (req, res) => {
   const { usuario_id, token } = req.params;
-  
+
   const usuario = await Usuarios.findById(new ObjectId(usuario_id));
 
-    if (!usuario) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Usuario no encontrado" });
-    }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
-	
-	secret.QueryToken = null;
-    await secret.save();
-  
+  if (!usuario) {
+    return res
+      .status(404)
+      .json({ success: false, error: "Usuario no encontrado" });
+  }
+
+  const secret = await TokenChecker(token, usuario._id, res);
+  if (!secret.success) return secret.res;
+
+  // Limpia la cookie del accessToken
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+
+  secret.QueryToken = null;
+  await secret.save();
+
   return res.status(200).json({ success: true, msg: "Log out exitoso." });
 };
 
 const Obtener_Datos_Usuario = async (req, res) => {
   const { usuario_id, token } = req.params;
+
+  //Comprobar si hay un token de acceso en cookies o en el header
+  const accessToken =
+    req.cookies.accessToken || req.headers["authorization"]?.split(" ")[1];
+
   try {
-    const usuario = await Usuarios.findById(new ObjectId(usuario_id));
+    let usuario;
 
-    if (!usuario) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Usuario no encontrado" });
+    if (accessToken) {
+      // Si hay un token de acceso, verificar y obtener datos del usuario
+      let decoded;
+      try {
+        decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+
+        // Verifica si el usuario existe en la base de datos
+        usuario = await Usuarios.findById(decoded.id);
+        if (!usuario) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Usuario no encontrado" });
+        }
+
+        // Verifica que el email del token coincida con el del usuario
+        if (decoded.email !== usuario.Email) {
+          return res
+            .status(403)
+            .json({ success: false, error: "Token inválido" });
+        }
+      } catch (error) {
+        // Manejo de errores específicos del JWT
+        if (error.name === "JsonWebTokenError") {
+          return res
+            .status(403)
+            .json({ success: false, error: "Token inválido" });
+        }
+        if (error.name === "TokenExpiredError") {
+          return res
+            .status(403)
+            .json({ success: false, error: "Token expirado" });
+        }
+        return res
+          .status(500)
+          .json({ success: false, error: "Error interno del servidor" });
+      }
+    } else {
+      // Si no hay un token de acceso, usar usuario_id y token del parámetro de la URL
+      usuario = await Usuarios.findById(new ObjectId(usuario_id));
+      if (!usuario) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Usuario no encontrado" });
+      }
+
+      const secret = await TokenChecker(token, usuario._id, res);
+      if (!secret.success) return secret.res;
     }
-	
-	const secret = await TokenChecker(token, usuario._id, res);
-	if(!secret.success)
-		return secret.res;
 
+    // Obtener datos adicionales de bloques y curriculums
     const bloques = await Bloques.findById(usuario.Bloque_ID);
-
     const curriculums = await Curriculums.find({
       _id: { $in: usuario.Curriculums_IDs },
     });
 
+    // Estructura la respuesta de usuario
     const userData = {
       _id: usuario._id,
       name: usuario.Nombre,
@@ -691,13 +874,17 @@ const Obtener_Datos_Usuario = async (req, res) => {
       userImage: usuario.userImage
         ? usuario.userImage.toString("base64")
         : null,
-      bloques: bloques.Bloques,
-      curriculums: curriculums ? curriculums : [],
+      bloques: bloques ? bloques.Bloques : null,
+      curriculums: curriculums || [],
     };
 
-    return res
-      .status(200)
-      .json({ success: true, msg: "Usuario encontrado", data: userData });
+    // Devolver respuesta con datos del usuario
+    return res.status(200).json({
+      success: true,
+      msg: "Usuario encontrado",
+      data: userData,
+    });
+    // Manejo de errores específicos
   } catch (error) {
     console.log(error.message);
     return res
@@ -740,6 +927,8 @@ module.exports = {
   Crear_Usuario,
   Log_In,
   Log_Out,
+  Obtener_Pregunta,
+  Cambiar_Contrasena,
   Obtener_Datos_Usuario,
   Actualizar_Usuario,
   Actualizar_Usuario_Bloque,

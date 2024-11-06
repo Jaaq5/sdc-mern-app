@@ -12,6 +12,7 @@ function BotonEditable({
   iconStyle,
   setTextoEditar,
   texto,
+  setOpcionesPanel
 }) {
   const bid = "Edit_Button_Estructura_" + path;
   return (
@@ -31,6 +32,8 @@ function BotonEditable({
           }}
           onClick={(e) => {
             setTextoEditar(texto);
+			if(setOpcionesPanel && nombreSeccion)
+				setOpcionesPanel({Seccion: nombreSeccion});
             setEditando(null);
             setEditando({
               Tipo: estructura.Editable.Tipo,
@@ -42,6 +45,7 @@ function BotonEditable({
               Pos: estructura.Editable.Pos,
               path: path,
               id: nid,
+			  multiline: estructura.Editable.multiline,
               Fuentes: estructura.Editable.Fuentes,
               Borrar: estructura.Editable.Borrar,
             });

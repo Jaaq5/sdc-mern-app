@@ -26,7 +26,7 @@ import {
   deleteForeverStyle,
 } from "../style";
 
-function Premios({ user_data, setUserData, manager_bloques }) {
+function Premios({ user_data, setUserData, manager_bloques, mostrarTitulo }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [premios, setPremios] = useState([]);
@@ -84,6 +84,8 @@ function Premios({ user_data, setUserData, manager_bloques }) {
       // Mapear la lista de premios a HTML
       mapToHTML(user_data.bloques.Premios);
       setLoading(false);
+	  //valor default
+	  mostrarTitulo = mostrarTitulo !== false;
     }
   }, [user_data, setUserData, navigate]);
 
@@ -159,11 +161,12 @@ function Premios({ user_data, setUserData, manager_bloques }) {
 
   return (
     <>
-      <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Premios y Reconocimientos
-        </h1>
-      </div>
+      {mostrarTitulo? (<div>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>Premios y Reconocimientos</h1>
+      </div>)
+	  :
+	  (<></>)
+	}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>

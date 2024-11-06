@@ -19,15 +19,24 @@ function Login({ setIsLoggedIn, user_data, setUserData, setLocal }) {
   const [email, setEmail] = useState("");
   const [contrasena, setPassword] = useState("");
   const navigate = useNavigate();
-  
+
   const manejarLocal = () => {
-	  setLocal(true);
-	  setIsLoggedIn(true);
-	  const local = localStorage.getItem("sdc_local");
-	  const data = local? JSON.parse(local) : {bloques: {}, curriculums: [], usuario_id: "1", token: "1", name: "Local", email: "local@sdc.com"};
-	  setUserData(data)
-	  localStorage.setItem("sdc_local", JSON.stringify(data));
-	  navigate("/curriculo-menu");
+    setLocal(true);
+    setIsLoggedIn(true);
+    const local = localStorage.getItem("sdc_local");
+    const data = local
+      ? JSON.parse(local)
+      : {
+          bloques: {},
+          curriculums: [],
+          usuario_id: "1",
+          token: "1",
+          name: "Local",
+          email: "local@sdc.com",
+        };
+    setUserData(data);
+    localStorage.setItem("sdc_local", JSON.stringify(data));
+    navigate("/curriculo-menu");
   };
 
   const handleLogin = (e) => {
@@ -37,20 +46,23 @@ function Login({ setIsLoggedIn, user_data, setUserData, setLocal }) {
       .then((result) => {
         if (result.data.usuario_id) {
           const usuario_id = result.data.usuario_id;
-		  const token = result.data.token;
+          const token = result.data.token;
           axios
-            .get(apiUrl + "/api/users/obtener-usuario/"+usuario_id+"&"+token, 
-				{ 
-				params: {
-					//usuario_id: usuario_id,
-					//token: token
-				}
-				})
+            .get(
+              apiUrl + "/api/users/obtener-usuario/" + usuario_id + "&" + token,
+              {
+                params: {
+                  //usuario_id: usuario_id,
+                  //token: token
+                },
+              },
+            )
             .then((response) => {
               if (response.data.data) {
                 setIsLoggedIn(true);
                 response.data.data.usuario_id = usuario_id;
-				response.data.data.token = token;
+                response.data.data.token = token;
+				localStorage.setItem("sdc_session", usuario_id+";"+token);
                 Object.keys(response.data.data.curriculums).map(
                   (curriculum_id) => {
                     response.data.data.curriculums[curriculum_id].Documento =
@@ -129,9 +141,14 @@ function Login({ setIsLoggedIn, user_data, setUserData, setLocal }) {
           <p>
             No tienes una cuenta? <Link href="/signup">Sign Up</Link>
           </p>
-		  <p style={{display: "none"}}>
-		    O utilizalo localmente <Link onClick={(e) => manejarLocal()}>Local</Link>
-		  </p>
+          <p>
+            Olvidaste tu contraseña?{" "}
+            <Link href="/cambiarcontrasena">Cambiar</Link>
+          </p>
+          <p style={{ display: "none" }}>
+            O utilizalo localmente{" "}
+            <Link onClick={(e) => manejarLocal()}>Local</Link>
+          </p>
         </Paper>
       </Grid>
     </div>

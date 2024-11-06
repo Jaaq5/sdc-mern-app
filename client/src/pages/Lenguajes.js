@@ -36,6 +36,7 @@ function Lenguajes({
   setUserData,
   manager_bloques,
   category_manager,
+  mostrarTitulo
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -141,6 +142,9 @@ function Lenguajes({
     if (cat_lenguajes.length > 0) {
       mapToHTML(user_data.bloques.Idiomas);
     }
+	
+	//valor default
+	mostrarTitulo = mostrarTitulo !== false;
   }, [cat_lenguajes, user_data]);
 
   if (loading) {
@@ -219,9 +223,12 @@ function Lenguajes({
 
   return (
     <>
-      <div>
+      {mostrarTitulo? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Idiomas</h1>
-      </div>
+      </div>)
+	  :
+	  (<></>)
+	}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>

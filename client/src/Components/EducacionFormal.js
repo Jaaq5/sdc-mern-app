@@ -44,6 +44,7 @@ function EducacionFormal({
   setUserData,
   manager_bloques,
   category_manager,
+  mostrarTitulo
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -138,6 +139,9 @@ function EducacionFormal({
       mapToHTML(user_data.bloques.Educacion_Formal);
 
       setLoading(false);
+	  
+	  //valor default
+	  mostrarTitulo = mostrarTitulo !== false;
     }
   }, [
     user_data,
@@ -159,7 +163,6 @@ function EducacionFormal({
 
   const reiniciarForm = () => {
     setBloqueId(true);
-
     setFechaInicio("");
     setFechaFinal("");
     setPrograma("");
@@ -253,9 +256,12 @@ function EducacionFormal({
 
   return (
     <>
-      <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>Educación Formal</h1>
-      </div>
+      {mostrarTitulo? (<div>
+			<h1 style={{ color: "white", fontSize: "5rem" }}>Educación Formal</h1>
+		  </div>)
+		  :
+		  (<></>)
+	  }
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
@@ -275,7 +281,7 @@ function EducacionFormal({
                 <ListItemButton
                   key={true}
                   style={(listStyle, { backgroundColor: "#4f96" })}
-                  onClick={(e) => reiniciarForm()}
+                  onClick={(e) => {reiniciarForm(); document.getElementById("data_form")?.scrollIntoView({ behavior: "smooth", block: "start" });}}
                 >
                   <PostAdd />
                   <div style={{ width: "20px" }}></div>
@@ -295,7 +301,7 @@ function EducacionFormal({
                 <Typography component="h3" variant="h3" style={heading}>
                   {bloque_id === true ? "Añadir" : "Modificar"} Título
                 </Typography>
-                <form onSubmit={manejarDatos}>
+                <form onSubmit={manejarDatos} id={"data_form"}>
                   <h4 style={fieldTitleStyle}>Fecha de inicio:</h4>
                   <Input
                     style={row}

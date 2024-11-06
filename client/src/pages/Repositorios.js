@@ -27,7 +27,7 @@ import {
   deleteForeverStyle,
 } from "../style";
 
-function Repositorios({ user_data, setUserData, manager_bloques }) {
+function Repositorios({ user_data, setUserData, manager_bloques, mostrarTitulo }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [repos, setRepos] = useState([]);
@@ -108,6 +108,9 @@ function Repositorios({ user_data, setUserData, manager_bloques }) {
       // Mapear la lista de repos a HTML
       mapToHTML(user_data.bloques.Repositorios);
       setLoading(false);
+	  
+	  //valor default
+	  mostrarTitulo = mostrarTitulo !== false;
     }
   }, [user_data, setUserData, navigate]);
 
@@ -206,9 +209,12 @@ function Repositorios({ user_data, setUserData, manager_bloques }) {
 
   return (
     <>
-      <div>
+      {mostrarTitulo? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Repositorios</h1>
-      </div>
+      </div>)
+	  :
+	  (<></>)
+	}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
