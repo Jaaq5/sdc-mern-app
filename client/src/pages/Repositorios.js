@@ -224,11 +224,7 @@ function Repositorios({
       <br></br>
       <br></br>
 
-<<<<<<< Updated upstream
       {mostrarTitulo !== false ? (
-=======
-      {mostrarTitulo ? (
->>>>>>> Stashed changes
         <div>
           <h1 style={{ color: "white", fontSize: "5rem" }}>Repositorios</h1>
         </div>
