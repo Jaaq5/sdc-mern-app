@@ -116,7 +116,9 @@ function Conferencias({
       setLoading(false);
 	  
 	  //valor default
+	  console.log(mostrarTitulo);
 	  mostrarTitulo = mostrarTitulo !== false;
+	  console.log("2 "+mostrarTitulo);
     }
   }, [user_data, setUserData, navigate]);
 
@@ -202,15 +204,7 @@ function Conferencias({
 
   return (
     <>
-
-    <br ></br>
-    <br ></br>
-    <br ></br>
-    <br ></br>
-    <br ></br>
-    <br ></br>
-    
-	{mostrarTitulo? (<div>
+	{mostrarTitulo !== false? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Conferencias</h1>
       </div>)
 	  :

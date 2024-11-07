@@ -26,6 +26,8 @@ import plantilla_academico from "./Components/curriculoAcademicoTemplate";
 import plantilla_harvard from "./Components/curriculoHarvardTemplate";
 
 import { Navbar } from "./Components/Navbar";
+import GuardarEstadoPagina from "./Components/GuardarEstadoPagina";
+import CargarEstadoPagina from "./Components/CargarEstadoPagina";
 // import ProtectedRoute from "./Components/ProtectedRoute";
 
 import { apiUrl } from "./consts";
@@ -513,14 +515,15 @@ function App() {
         <Routes>
           <Route
             path="/home"
-            element={<Home user_data={user_data} setUserData={setUserData} />}
+            element={<><GuardarEstadoPagina user_data={user_data} /><Home user_data={user_data} setUserData={setUserData} /></>}
           />
           <Route
             path="/login"
             element={
-              isLoggedIn ? (
-                <Navigate to="/curriculo-menu" />
-              ) : (
+              isLoggedIn ? (<>
+                {/*<Navigate to="/curriculo-menu" />*/}
+				<CargarEstadoPagina user_data={user_data}/>
+              </>) : (
                 <Login
                   setIsLoggedIn={setIsLoggedIn}
                   user_data={user_data}
@@ -556,13 +559,15 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
-                <CurriculosMenu
+                <><GuardarEstadoPagina user_data={user_data} />
+				<CurriculosMenu
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   curriculum_manager={curriculum_manager}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -572,11 +577,13 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <InformacionPersonal
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                 />
+				</>
               )
             }
           />
@@ -586,12 +593,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <EducacionFormal
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -601,12 +610,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <EducacionTecnica
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -616,12 +627,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <ExperienciaLaboral
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -632,12 +645,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Proyectos
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -648,12 +663,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Habilidades
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -664,12 +681,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Lenguajes
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -680,12 +699,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Publicaciones
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -695,12 +716,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Conferencias
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -712,12 +735,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Premios
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -730,12 +755,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Repositorios
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -747,12 +774,14 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <Referencias
                   user_data={user_data}
                   setUserData={setUserData}
                   manager_bloques={manager_bloques}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />
@@ -762,6 +791,7 @@ function App() {
               !isLoggedIn ? (
                 <Navigate to="/login" />
               ) : (
+			    <><GuardarEstadoPagina user_data={user_data} />
                 <EditorCurriculo
                   user_data={user_data}
                   setUserData={setUserData}
@@ -769,6 +799,7 @@ function App() {
                   curriculum_manager={curriculum_manager}
                   category_manager={category_manager}
                 />
+				</>
               )
             }
           />

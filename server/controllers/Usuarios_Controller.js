@@ -678,7 +678,7 @@ const Log_In = async (req, res) => {
     // Usa la clave de .env
     process.env.JWT_SECRET,
     // Expiracion en del token
-    { expiresIn: "15m" },
+    { expiresIn: "24h" },
   );
 
   // Configura la cookie para el accessToken
@@ -688,7 +688,7 @@ const Log_In = async (req, res) => {
     // Solo envía la cookie por HTTPS en producción
     secure: process.env.NODE_ENV === "production",
     // Duración de la cookie en segundos
-    maxAge: 15 * 60 * 1000,
+    maxAge: 3600 * 24,
     // Evita que el cookie se envíe en las solicitudes de sitios cruzados
     sameSite: "Strict",
   });

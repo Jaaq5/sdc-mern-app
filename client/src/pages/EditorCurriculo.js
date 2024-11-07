@@ -474,6 +474,7 @@ function EditorCurriculo({
       ),
     );
     //dangerouslySetInnerHTML={{__html: [elm, ()]}}
+	estructura.style.pointerEvents = "none";
     return (
       <>
         <div
@@ -509,6 +510,7 @@ function EditorCurriculo({
   }) => {
     const nid = "Div_" + nombreSeccion + "_" + path;
     estructura.style.position = "relative";
+	estructura.style.pointerEvents = "none";
     return (
       <>
         <div
