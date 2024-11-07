@@ -39,6 +39,7 @@ function InformacionPersonal({
   setUserData,
   manager_bloques,
   category_manager,
+  mostrarTitulo
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -139,6 +140,9 @@ function InformacionPersonal({
       // Mapear la lista de información personal a HTML
       mapToHTML(user_data.bloques.Informacion_Personal);
       setLoading(false);
+	  
+	  //valor default
+	  mostrarTitulo = mostrarTitulo !== false;
     }
   }, [user_data, setUserData, navigate]);
 
@@ -295,11 +299,12 @@ function InformacionPersonal({
 
   return (
     <>
-      <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Información Personal
-        </h1>
-      </div>
+      {mostrarTitulo? (<div>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>Información Personal</h1>
+      </div>)
+	  :
+	  (<></>)
+	}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>

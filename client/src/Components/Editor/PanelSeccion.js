@@ -11,6 +11,11 @@ import Conferencias from "../../pages/Conferencias";
 import Premios from "../../pages/Premios";
 import Repositorios from "../../pages/Repositorios";
 
+import {
+  Button,
+} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+
 function PanelSeccion({
   user_data,
   setUserData,
@@ -27,6 +32,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Educacion_Tecnica":
@@ -36,6 +42,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Informacion_Personal":
@@ -45,6 +52,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Experiencias_Laborales":
@@ -54,6 +62,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Idiomas":
@@ -63,6 +72,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Habilidades":
@@ -72,6 +82,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Proyectos":
@@ -81,6 +92,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Publicaciones":
@@ -90,6 +102,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Conferencias":
@@ -99,6 +112,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Premios":
@@ -108,6 +122,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Repositorios":
@@ -117,6 +132,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
       case "Referencias":
@@ -126,6 +142,7 @@ function PanelSeccion({
             setUserData={setUserData}
             manager_bloques={manager_bloques}
             category_manager={category_manager}
+			mostrarTitulo={false}
           />
         );
 
@@ -135,6 +152,9 @@ function PanelSeccion({
     return <></>;
   };
 
-  return <SeleccionPanel opciones={opciones} />;
+  return (<div style={{position : "relative"}}>
+		<Button style={{position: "sticky", left: "0px", top: "0px", color: "yellow", backgroundColor: "#303030", minWidth: "40px", border: "solid 2px #ccc"}} onClick={(e) => {e.target.parentElement.parentElement.style.left = "-150%"}}><CloseIcon style={{pointerEvents: "none"}} /></Button>
+		<SeleccionPanel opciones={opciones} />
+	</div>);
 }
 export default PanelSeccion;

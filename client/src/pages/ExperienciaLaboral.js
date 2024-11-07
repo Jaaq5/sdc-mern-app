@@ -41,6 +41,7 @@ function ExperienciaLaboral({
   setUserData,
   manager_bloques,
   category_manager,
+  mostrarTitulo
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -139,6 +140,9 @@ function ExperienciaLaboral({
       mapToHTML(user_data.bloques.Experiencias_Laborales);
 
       setLoading(false);
+	  
+	  //valor default
+	  mostrarTitulo = mostrarTitulo !== false;
     }
   }, [
     user_data,
@@ -266,11 +270,12 @@ function ExperienciaLaboral({
 
   return (
     <>
-      <div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>
-          Experiencias Laborales
-        </h1>
-      </div>
+      {mostrarTitulo? (<div>
+        <h1 style={{ color: "white", fontSize: "5rem" }}>Experiencias Laborales</h1>
+      </div>)
+	  :
+	  (<></>)
+	}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>

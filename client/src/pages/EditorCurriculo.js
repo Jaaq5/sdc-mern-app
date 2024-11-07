@@ -199,8 +199,9 @@ function EditorCurriculo({
   const pdfCaja = {
     backgroundColor: "#303030",
     height: "1000px",
-    width: "70%",
-    minWidth: celdasPagina[0] * resolucionCeldas + "px",
+    width: "75%",
+	//flexGrow: 1,
+    //minWidth: celdasPagina[0] * resolucionCeldas + "px",
     overflow: "hidden",
     position: "relative",
   };
@@ -208,7 +209,7 @@ function EditorCurriculo({
     backgroundColor: "#303030",
     width: "calc(100% - 20px)",
     minHeight: "60px",
-    height: "60px",
+    minHeight: "60px",
     padding: "5px",
     position: "sticky",
     flexDirection: "row",
@@ -226,6 +227,7 @@ function EditorCurriculo({
   const [minMaxDoc, setMinMaxDoc] = useState([0, 0, 600, 800]);
   const [zoom, setZoom] = useState(1);
   const [controles, setControles] = useState({});
+  const [expandirPanel, setExpandirPanel] = useState(false);
 
   const colores = {
     0: null,
@@ -414,6 +416,7 @@ function EditorCurriculo({
         posicionEnOverlay={posicionEnOverlay}
         setTextoEditar={setTextoEditar}
         texto={seccion[estructura.Editable.Campo]}
+		setOpcionesPanel={setOpcionesPanel}
       />
     );
   };
@@ -534,6 +537,7 @@ function EditorCurriculo({
             posicionEnOverlay={posicionEnOverlay}
             setTextoEditar={setTextoEditar}
             texto={""}
+			setOpcionesPanel={setOpcionesPanel}
           />
 
           {textoMultilinea(
@@ -608,6 +612,7 @@ function EditorCurriculo({
           posicionEnOverlay={posicionEnOverlay}
           setTextoEditar={setTextoEditar}
           texto={""}
+		  setOpcionesPanel={setOpcionesPanel}
         />
       </div>
     );
@@ -668,10 +673,26 @@ function EditorCurriculo({
       case "Estructura":
         const newPath = extenderPath(path, ["Estructura", index]);
         const style = tamanoYPosicion(estructura);
+		const eid = ""+newPath;
         style.pointerEvents = "none";
         estructura.style = style;
         return (
-          <div style={style}>
+          <div id={eid} style={style}>
+		    <BotonEditable
+				estructura={estructura}
+				seccion={seccion}
+				nombreSeccion={nombreSeccion}
+				setEditando={setEditando}
+				path={path}
+				nid={eid}
+				style={editButton}
+				Icon={SwapHorizontalCircleIcon}
+				iconStyle={seccionEditButtonIcon}
+				posicionEnOverlay={posicionEnOverlay}
+				setTextoEditar={setTextoEditar}
+				texto={""}
+				setOpcionesPanel={setOpcionesPanel}
+			  />
             {Object.entries(estructura.Estructura).map(([index, estr]) => (
               <ElementoEstructuradoHTML
                 user_data={user_data}
@@ -728,6 +749,7 @@ function EditorCurriculo({
               posicionEnOverlay={posicionEnOverlay}
               setTextoEditar={setTextoEditar}
               texto={""}
+			  setOpcionesPanel={setOpcionesPanel}
             />
             {list}
           </div>
@@ -822,6 +844,7 @@ function EditorCurriculo({
           posicionEnOverlay={posicionEnOverlay}
           setTextoEditar={setTextoEditar}
           texto={""}
+		  setOpcionesPanel={setOpcionesPanel}
         />
         {Object.entries(documento.diseno.Secciones[seccion].Estructura).map(
           ([index, estructura]) => {
@@ -920,6 +943,7 @@ function EditorCurriculo({
             posicionEnOverlay={posicionEnOverlay}
             setTextoEditar={setTextoEditar}
             texto={""}
+			setOpcionesPanel={setOpcionesPanel}
           />
           {estructura.Estructura ? (
             Object.keys(estructura.Estructura).map((index) => {
@@ -1470,11 +1494,11 @@ function EditorCurriculo({
         </h1>
       </div>
 
-      <div style={{ padding: "10px", width: "110%" }}>
+      <div style={{ padding: "0px", width: "100%", position: "relative" }}>
         <div style={{ display: "flex", minHeight: "100%" }}>
           <div
             style={{
-              width: "30%",
+              width: "0%",
               maxHeight: "1000px",
               position: "relative",
               display: "none",
@@ -1493,9 +1517,9 @@ function EditorCurriculo({
                 Edición de la sección seleccionada
               </div>
             </div>
-
-            <div
-              style={{ marginTop: "50px", height: "1000px", overflow: "auto" }}
+          </div>
+		  <div
+              style={{ marginTop: "50px", height: "calc(1000px - 180px)", overflow: "auto", position: "absolute", width: "510px", top: "120px", border: "solid 2px "+theme.palette.yellow.main ,left: expandirPanel? "0%" : "-150%", transition: "all 0.5s", zIndex: 2000, backgroundColor: pdfCaja.backgroundColor}}
             >
               <PanelSeccion
                 user_data={user_data}
@@ -1504,7 +1528,6 @@ function EditorCurriculo({
                 category_manager={category_manager}
                 opciones={opcionesPanel}
               />
-            </div>
           </div>
           <div id={"Editor_Caja"} style={pdfCaja}>
             <div id={"Titulo_Editor"} style={stripeStyle}>
@@ -1613,7 +1636,7 @@ function EditorCurriculo({
                 label="Color"
                 placeholder="Color"
                 onChange={(e) => setColor(e.target.value)}
-                style={{ width: '100px', color: theme.palette.yellow.main }}
+                style={{ width: '100px', color: theme.palette.yellow.main, display: "none" }}
                 InputProps={{
                   style: { color: theme.palette.yellow.main }, // Change the text color
                 }}
@@ -1622,6 +1645,17 @@ function EditorCurriculo({
                 <MenuItem value={2}>Cyan</MenuItem>
                 <MenuItem value={3}>Naranja</MenuItem>
               </TextField>
+			  {opcionesPanel && opcionesPanel.Seccion? (<Button
+                style={{ color: theme.palette.yellow.main }}
+                onClick={(e) => {
+                  setExpandirPanel(!expandirPanel);
+                }}
+              >
+                Panel de sección
+              </Button>)
+			  :
+			  (<></>)
+			  }
               {process.env.NODE_ENV === "development" ? (
                 <>
                   <Button
@@ -1818,6 +1852,7 @@ function EditorCurriculo({
           </div>
 
           <div
+		    id="Vista_Previa"
             style={{
               height: "100vh",
               display: "flex",
