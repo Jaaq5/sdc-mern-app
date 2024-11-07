@@ -237,9 +237,9 @@ function EditorCurriculo({
   };
 
   const indexes = {
-    "Bloque_1": 0,
-    "Bloque_3": 0,
-    "Bloque_2": 1,
+    "Bloque_1": 2,
+    "Bloque_3": 2,
+    "Bloque_2": 0,
   };
 
   //DEBUG
@@ -1636,7 +1636,7 @@ function EditorCurriculo({
                 label="Color"
                 placeholder="Color"
                 onChange={(e) => setColor(e.target.value)}
-                style={{ width: '100px', color: theme.palette.yellow.main, display: "none" }}
+                style={{ width: '100px', color: theme.palette.yellow.main}}
                 InputProps={{
                   style: { color: theme.palette.yellow.main }, // Change the text color
                 }}
