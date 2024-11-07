@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[935],{8935:(e,t,c)=>{e.exports=c.p+"static/media/Roboto_RegularItalic.cd47f5421512ee65fe22.ttf"}}]);

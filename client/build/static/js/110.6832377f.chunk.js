@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[110],{4110:(e,t,s)=>{e.exports=s.p+"static/media/TimesNewRoman_BoldItalic.b5988560fe936a252789.ttf"}}]);

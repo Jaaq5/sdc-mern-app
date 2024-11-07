@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[220],{2220:(e,t,a)=>{e.exports=a.p+"static/media/Tahoma_Regular.94be730bb07ebf5b3e6f.ttf"}}]);

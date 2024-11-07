@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[448],{7448:(c,e,t)=>{c.exports=t.p+"static/media/Arial_BoldItalic.cfe3eb6f645188c8a5cc.ttf"}}]);

@@ -121,18 +121,18 @@
           },
           "Celdas": [17, 60],
           "Editable": {
-                    "Tipo": "Estilo",
-                    "Titulo": "Editar Nombre",
-                    "Campo": "TituloSeccion",
-                    "Label": "Nombre",
-                    "Celdas": true,
-                    "Pos": true,
-                    "Placeholder": "Tu nombre",
-                    "Fuentes": {
-                      "backgroundColor": true,
-                      "border": true
-                    }
-                  },
+            "Tipo": "Estilo",
+            "Titulo": "Editar Nombre",
+            "Campo": "TituloSeccion",
+            "Label": "Nombre",
+            "Celdas": true,
+            "Pos": true,
+            "Placeholder": "Tu nombre",
+            "Fuentes": {
+              "backgroundColor": true,
+              "border": true
+            }
+          },
 
           "Estructura": []
         },
