@@ -209,6 +209,14 @@ function Repositorios({ user_data, setUserData, manager_bloques, mostrarTitulo }
 
   return (
     <>
+
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    
       {mostrarTitulo? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Repositorios</h1>
       </div>)

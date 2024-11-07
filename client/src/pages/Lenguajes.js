@@ -223,6 +223,14 @@ function Lenguajes({
 
   return (
     <>
+    
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+
       {mostrarTitulo? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Idiomas</h1>
       </div>)
