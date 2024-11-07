@@ -39,7 +39,7 @@ router.patch("/actualizar-usuario", Actualizar_Usuario);
 router.patch("/actualizar-usuario-bloque", Actualizar_Usuario_Bloque);
 router.patch("/actualizar-usuario-curr", Actualizar_Usuario_Curriculum);
 router.delete(
-  "/eliminar-usuario-curr/:usuario_id&:curriculum_id",
+  "/eliminar-usuario-curr/:usuario_id&:curriculum_id&:token",
   Eliminar_Usuario_Curriculum,
 );
 router.delete("/eliminar-usuario/:usuario_id", Eliminar_Usuario);

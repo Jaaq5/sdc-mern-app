@@ -198,6 +198,7 @@ function Habilidades({ user_data, setUserData, manager_bloques, mostrarTitulo })
 
   return (
     <>
+<<<<<<< HEAD
 
     <br ></br>
     <br ></br>
@@ -207,6 +208,9 @@ function Habilidades({ user_data, setUserData, manager_bloques, mostrarTitulo })
     <br ></br>
 
       {mostrarTitulo? (<div>
+=======
+      {mostrarTitulo !== false? (<div>
+>>>>>>> b65c2337ea2ddb1ae17f6211349dbaf08dc52c74
         <h1 style={{ color: "white", fontSize: "5rem" }}>Habilidades</h1>
       </div>)
 	  :

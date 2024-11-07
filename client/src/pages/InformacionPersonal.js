@@ -299,6 +299,7 @@ function InformacionPersonal({
 
   return (
     <>
+<<<<<<< HEAD
     
     <br ></br>
     <br ></br>
@@ -308,6 +309,9 @@ function InformacionPersonal({
     <br ></br>
 
       {mostrarTitulo? (<div>
+=======
+      {mostrarTitulo !== false? (<div>
+>>>>>>> b65c2337ea2ddb1ae17f6211349dbaf08dc52c74
         <h1 style={{ color: "white", fontSize: "5rem" }}>Información Personal</h1>
       </div>)
 	  :

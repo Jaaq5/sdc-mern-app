@@ -270,6 +270,7 @@ function ExperienciaLaboral({
 
   return (
     <>
+<<<<<<< HEAD
 
     <br ></br>
     <br ></br>
@@ -279,6 +280,9 @@ function ExperienciaLaboral({
     <br ></br>
 
       {mostrarTitulo? (<div>
+=======
+      {mostrarTitulo !== false? (<div>
+>>>>>>> b65c2337ea2ddb1ae17f6211349dbaf08dc52c74
         <h1 style={{ color: "white", fontSize: "5rem" }}>Experiencias Laborales</h1>
       </div>)
 	  :
