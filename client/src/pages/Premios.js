@@ -84,8 +84,8 @@ function Premios({ user_data, setUserData, manager_bloques, mostrarTitulo }) {
       // Mapear la lista de premios a HTML
       mapToHTML(user_data.bloques.Premios);
       setLoading(false);
-	  //valor default
-	  mostrarTitulo = mostrarTitulo !== false;
+      //valor default
+      mostrarTitulo = mostrarTitulo !== false;
     }
   }, [user_data, setUserData, navigate]);
 
@@ -161,12 +161,22 @@ function Premios({ user_data, setUserData, manager_bloques, mostrarTitulo }) {
 
   return (
     <>
-      {mostrarTitulo !== false? (<div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>Premios y Reconocimientos</h1>
-      </div>)
-	  :
-	  (<></>)
-	}
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+
+      {mostrarTitulo !== false ? (
+        <div>
+          <h1 style={{ color: "white", fontSize: "5rem" }}>
+            Premios y Reconocimientos
+          </h1>
+        </div>
+      ) : (
+        <></>
+      )}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>

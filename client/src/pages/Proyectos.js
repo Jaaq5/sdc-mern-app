@@ -40,7 +40,7 @@ function Proyectos({
   setUserData,
   manager_bloques,
   category_manager,
-  mostrarTitulo
+  mostrarTitulo,
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
@@ -150,9 +150,9 @@ function Proyectos({
       mapToHTML(user_data.bloques.Proyectos);
 
       setLoading(false);
-	  
-	  //valor default
-	  mostrarTitulo = mostrarTitulo !== false;
+
+      //valor default
+      mostrarTitulo = mostrarTitulo !== false;
     }
   }, [
     user_data,
@@ -274,12 +274,20 @@ function Proyectos({
 
   return (
     <>
-      {mostrarTitulo !== false? (<div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>Proyectos</h1>
-      </div>)
-	  :
-	  (<></>)
-	}
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+
+      {mostrarTitulo !== false ? (
+        <div>
+          <h1 style={{ color: "white", fontSize: "5rem" }}>Proyectos</h1>
+        </div>
+      ) : (
+        <></>
+      )}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>

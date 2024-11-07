@@ -36,14 +36,14 @@ function Lenguajes({
   setUserData,
   manager_bloques,
   category_manager,
-  mostrarTitulo
+  mostrarTitulo,
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [lenguajes, setLenguajes] = useState([]);
   const [cat_lenguajes, setLenguajesCat] = useState([]);
   const [cat_niveles, setNivelesCat] = useState([]);
- 
+
   /*const niveles = [
     { id: 1, nombre: "Bajo" },
     { id: 2, nombre: "Medio" },
@@ -142,9 +142,9 @@ function Lenguajes({
     if (cat_lenguajes.length > 0) {
       mapToHTML(user_data.bloques.Idiomas);
     }
-	
-	//valor default
-	mostrarTitulo = mostrarTitulo !== false;
+
+    //valor default
+    mostrarTitulo = mostrarTitulo !== false;
   }, [cat_lenguajes, user_data]);
 
   if (loading) {
@@ -223,12 +223,20 @@ function Lenguajes({
 
   return (
     <>
-      {mostrarTitulo !== false? (<div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>Idiomas</h1>
-      </div>)
-	  :
-	  (<></>)
-	}
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+
+      {mostrarTitulo !== false ? (
+        <div>
+          <h1 style={{ color: "white", fontSize: "5rem" }}>Idiomas</h1>
+        </div>
+      ) : (
+        <></>
+      )}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
@@ -280,20 +288,19 @@ function Lenguajes({
                     {cat_lenguajes}
                   </Select>
                   <div>
-                  <FormControl style={{ width: "80%", marginTop: "20px" }}>
-                    <InputLabel id="id-nivel-select-label">Nivel</InputLabel>
-                    <Select
-                      labelId="id-nivel-select-label"
-                      id="id-nivel-simple-select"
-                      defaultValue={""}
-
-                      value={nivel}
-                      label="Nivel"
-                      onChange={(e) => setNivel(e.target.value)}
-                    >
-                      {cat_niveles}
-                    </Select>
-                  </FormControl>
+                    <FormControl style={{ width: "80%", marginTop: "20px" }}>
+                      <InputLabel id="id-nivel-select-label">Nivel</InputLabel>
+                      <Select
+                        labelId="id-nivel-select-label"
+                        id="id-nivel-simple-select"
+                        defaultValue={""}
+                        value={nivel}
+                        label="Nivel"
+                        onChange={(e) => setNivel(e.target.value)}
+                      >
+                        {cat_niveles}
+                      </Select>
+                    </FormControl>
                   </div>
                   <TextField
                     style={row}

@@ -32,7 +32,12 @@ import {
   deleteForeverStyle,
 } from "../style";
 
-function Habilidades({ user_data, setUserData, manager_bloques, mostrarTitulo }) {
+function Habilidades({
+  user_data,
+  setUserData,
+  manager_bloques,
+  mostrarTitulo,
+}) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!user_data?.usuario_id);
   const [habilidades, setHabilidades] = useState([]);
@@ -113,9 +118,9 @@ function Habilidades({ user_data, setUserData, manager_bloques, mostrarTitulo })
 
       // Load ability categories
       fetchCategoriasHabilidad();
-	  
-	  //valor default
-	  mostrarTitulo = mostrarTitulo !== false;
+
+      //valor default
+      mostrarTitulo = mostrarTitulo !== false;
     }
   }, [user_data, setUserData, navigate]);
 
@@ -198,12 +203,20 @@ function Habilidades({ user_data, setUserData, manager_bloques, mostrarTitulo })
 
   return (
     <>
-      {mostrarTitulo !== false? (<div>
-        <h1 style={{ color: "white", fontSize: "5rem" }}>Habilidades</h1>
-      </div>)
-	  :
-	  (<></>)
-	}
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+
+      {mostrarTitulo !== false ? (
+        <div>
+          <h1 style={{ color: "white", fontSize: "5rem" }}>Habilidades</h1>
+        </div>
+      ) : (
+        <></>
+      )}
       <div style={{ padding: "10px", width: "100%" }}>
         <Grid align="center" container spacing={0} className="wrapper">
           <div>
