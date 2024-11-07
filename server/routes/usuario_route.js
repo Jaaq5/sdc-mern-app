@@ -29,10 +29,9 @@ router.delete("/eliminar-imagen/:usuario_id", Eliminar_Imagen_Usuario);
 router.post("/log-in-usuario", Log_In);
 router.post("/obtener-pregunta", Obtener_Pregunta);
 router.post("/cambiar", Cambiar_Contrasena);
-router.post("/log-out-usuario", authMiddleware, Log_Out);
+router.post("/log-out-usuario", Log_Out);
 router.get(
   "/obtener-usuario/:usuario_id&:token",
-  authMiddleware,
   Obtener_Datos_Usuario,
 );
 router.post("/crear-curriculum", Crear_Curriculum);
