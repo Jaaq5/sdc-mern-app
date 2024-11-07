@@ -274,7 +274,7 @@ function Proyectos({
 
   return (
     <>
-      {mostrarTitulo? (<div>
+      {mostrarTitulo !== false? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Proyectos</h1>
       </div>)
 	  :

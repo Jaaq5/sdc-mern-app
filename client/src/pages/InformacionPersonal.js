@@ -299,7 +299,7 @@ function InformacionPersonal({
 
   return (
     <>
-      {mostrarTitulo? (<div>
+      {mostrarTitulo !== false? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Información Personal</h1>
       </div>)
 	  :

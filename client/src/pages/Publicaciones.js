@@ -202,7 +202,7 @@ function Publicaciones({
 
   return (
     <>
-      {mostrarTitulo? (<div>
+      {mostrarTitulo !== false? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Publicaciones</h1>
       </div>)
 	  :

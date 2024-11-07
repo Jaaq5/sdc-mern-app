@@ -161,7 +161,7 @@ function Premios({ user_data, setUserData, manager_bloques, mostrarTitulo }) {
 
   return (
     <>
-      {mostrarTitulo? (<div>
+      {mostrarTitulo !== false? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Premios y Reconocimientos</h1>
       </div>)
 	  :

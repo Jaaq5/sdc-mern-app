@@ -249,7 +249,7 @@ function Referencias({
 
   return (
     <>
-      {mostrarTitulo? (<div>
+      {mostrarTitulo !== false? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Referencias</h1>
       </div>)
 	  :
