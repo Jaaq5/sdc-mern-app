@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[486],{486:(e,t,s)=>{e.exports=s.p+"static/media/Comic Sans MS_Regular.e1a8ddd3483d85e2e8fd.ttf"}}]);

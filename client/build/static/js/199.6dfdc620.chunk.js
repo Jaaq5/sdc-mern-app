@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[199],{8199:(e,t,i)=>{e.exports=i.p+"static/media/Arial_Light.12468abe70ed537b184f.ttf"}}]);

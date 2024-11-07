@@ -9,6 +9,9 @@ const Curriculums_Templates = require("./models/Curriculums_Templates_Model");
 
 //const plantilla_simple = require("./Plantillas/simple.json");
 const plantilla_cuadrados = require("./plantillas/cuadrados.json");
+//const plantilla_academico = require("./plantillas/plantilla_academico_simple.json");
+const plantilla_harvard = require("./plantillas/plantilla_harvard.json");
+const plantilla_academica = require("./plantillas/plantilla_academica.json");
 
 const populateData = async () => {
   const catCurriculumData = [
@@ -85,6 +88,19 @@ const populateData = async () => {
       documento: plantilla_cuadrados.Documento,
       categoria_curriculo: plantilla_cuadrados.ID_Categoria_Curriculum,
       categoria_puesto: plantilla_cuadrados.ID_Categoria_Puesto,
+    },
+    {
+      name: plantilla_academica.Nombre,
+      documento: plantilla_academica.Documento,
+      categoria_curriculo: plantilla_academica.ID_Categoria_Curriculum,
+      categoria_puesto: plantilla_academica.ID_Categoria_Puesto,
+    },
+
+    {
+      name: plantilla_harvard.Nombre,
+      documento: plantilla_harvard.Documento,
+      categoria_curriculo: plantilla_harvard.ID_Categoria_Curriculum,
+      categoria_puesto: plantilla_harvard.ID_Categoria_Puesto,
     },
   ];
 
