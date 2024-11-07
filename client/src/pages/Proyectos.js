@@ -274,6 +274,14 @@ function Proyectos({
 
   return (
     <>
+
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+    <br ></br>
+
       {mostrarTitulo? (<div>
         <h1 style={{ color: "white", fontSize: "5rem" }}>Proyectos</h1>
       </div>)
